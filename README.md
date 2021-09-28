@@ -49,4 +49,3 @@ There are different examples in src/tests directory to run and to take inspirati
 
 ### JavaDoc Documentation
 JavaDoc Documentation can be found at https://st4ck.github.io/BBFlow/
-It's updated costantly together with new pushes
