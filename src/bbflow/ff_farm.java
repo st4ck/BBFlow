@@ -1,6 +1,7 @@
 package bbflow;
 
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Fundamental block modeling the Farm paradigm
@@ -14,35 +15,32 @@ public class ff_farm<T> {
     private ff_node<T> collector;
     private LinkedList<ff_node> workers;
     private LinkedList<defaultJob<T>> worker_job;
-    private LinkedList<T> input;
+    private LinkedBlockingQueue<T> input;
+    private int bufferSize;
 
     /**
      *
      * @param worker_job the list of jobs (one for each worker) to be executed of type bbflow.defaultJob. They can be different if needed
      * @param EOF End Of File object used to detect the end of stream from the input channel
+     * @param communication_strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
+     * @param bufferSize buffer size of the channels between emitter/workers and between workers/collector
      */
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy) {
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy, int bufferSize) {
+        this.bufferSize = bufferSize;
         this.workers = new LinkedList<>();
         this.worker_job = worker_job;
-        Object emitterWorkersLock = new Object();
-        Object workersCollectorLock = new Object();
 
         emitter = new ff_node<T>(new defaultEmitter<T>(communication_strategy, EOF));
-        emitter.setOutputLock(emitterWorkersLock);
-
         collector = new ff_node<T>(new defaultCollector<T>(EOF));
-        collector.setInputLock(workersCollectorLock);
 
         for (int i=0;i<worker_job.size();i++) {
             ff_node<T> worker = new ff_node<T>(worker_job.get(i));
-            worker.setInputLock(emitterWorkersLock);
-            worker.setOutputLock(workersCollectorLock);
 
-            LinkedList<T> emitter_worker = new LinkedList<T>();
+            LinkedBlockingQueue<T> emitter_worker = new LinkedBlockingQueue<T>(this.bufferSize);
             emitter.addOutputChannel(emitter_worker);
             worker.addInputChannel(emitter_worker);
 
-            LinkedList<T> worker_collector = new LinkedList<T>();
+            LinkedBlockingQueue<T> worker_collector = new LinkedBlockingQueue<T>(this.bufferSize);
             worker.addOutputChannel(worker_collector);
             collector.addInputChannel(worker_collector);
 
@@ -50,8 +48,16 @@ public class ff_farm<T> {
         }
     }
 
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy) {
+        this(worker_job, EOF, communication_strategy, 4096);
+    }
+
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF) {
+        this(worker_job, EOF, defaultEmitter.ROUNDROBIN, 4096);
+    }
+
     /**
-     * main method to start all farm threads and wait them finishes
+     * main method to start all farm threads
      */
     public void run() {
         for (int i=0; i<workers.size(); i++) {
@@ -59,7 +65,9 @@ public class ff_farm<T> {
         }
         collector.start();
         emitter.start();
+    }
 
+    public void join() {
         try {
             emitter.join();
             for (int i=0; i<workers.size(); i++) {
@@ -75,23 +83,15 @@ public class ff_farm<T> {
      * Push element inside input stream at the bottom of the list
      * @param i element to push
      */
-    public void pushElement(T i) {
-        input.add(i);
-    }
-
-    /**
-     * Push multiple elements inside input stream at the bottom of the list
-     * @param i list to push
-     */
-    public void pushElement(LinkedList<T> i) {
-        input.addAll(i);
+    public void pushElement(T i) throws InterruptedException {
+        input.put(i);
     }
 
     /**
      * add a new input channel to the farm (commonly one) - to the emitter
      * @param input input channel
      */
-    public void addInputChannel(LinkedList<T> input) {
+    public void addInputChannel(LinkedBlockingQueue<T> input) {
         this.input = input;
         emitter.addInputChannel(this.input);
     }
@@ -100,23 +100,7 @@ public class ff_farm<T> {
      * add a new output channel to the collector
      * @param output output channel
      */
-    public void addOutputChannel(LinkedList<T> output) {
+    public void addOutputChannel(LinkedBlockingQueue<T> output) {
         collector.addOutputChannel(output);
-    }
-
-    /**
-     * set lock object needed to wait new elements from emitter input channel
-     * @param l lock object
-     */
-    public void setInputLock(Object l) {
-        emitter.setInputLock(l);
-    }
-
-    /**
-     * set lock object needed to notify output channels of the collectors of the presence of new elements
-     * @param l lock object
-     */
-    public void setOutputLock(Object l) {
-        collector.setOutputLock(l);
     }
 }

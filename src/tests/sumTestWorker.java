@@ -1,11 +1,13 @@
 package tests;
 
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import bbflow.*;
 
 
 /**
- * worker code extending bbflow.defaultJob for the test.test of the farm
+ * worker code extending bbflow.defaultJob for the test of the farm
  * @param <T>
  */
 public class sumTestWorker<T> extends defaultJob<T> {
@@ -16,11 +18,11 @@ public class sumTestWorker<T> extends defaultJob<T> {
 
     Integer mysum = 0;
     @Override
-    public void runJob() {
+    public void runJob() throws InterruptedException {
         T received;
-        LinkedList<T> in_channel = in.get(0);
+        LinkedBlockingQueue<T> in_channel = in.get(0);
 
-        received = in_channel.get(0);
+        received = in_channel.take();
         if (received == EOF) {
             System.out.println(id + ": EOF");
             in.remove(0); // removing input channel, sequence finished
@@ -28,8 +30,7 @@ public class sumTestWorker<T> extends defaultJob<T> {
         }
 
         mysum += (Integer) received;
-        in_channel.remove(0);
 
-        System.out.println(id + ": (" + (Integer) received + ") " + mysum);
+        //System.out.println(id + ": (" + (Integer) received + ") " + mysum);
     }
 }

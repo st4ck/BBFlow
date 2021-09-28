@@ -1,6 +1,7 @@
 package bbflow;
 
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Fundamental building block rapresenting a node
@@ -30,7 +31,7 @@ public class ff_node<T> extends Thread {
      * add a Input channel to the bbflow.ff_node. LinkedList is O(1) adding/removing first element
      * @param input input channel
      */
-    public void addInputChannel(LinkedList<T> input) {
+    public void addInputChannel(LinkedBlockingQueue<T> input) {
         job.addInputChannel(input);
     }
 
@@ -39,23 +40,11 @@ public class ff_node<T> extends Thread {
      * LinkedList is O(1) adding/removing first element
      * @param output output channel
      */
-    public void addOutputChannel(LinkedList<T> output) {
+    public void addOutputChannel(LinkedBlockingQueue<T> output) {
         job.addOutputChannel(output);
     }
 
-    /**
-     * Lock Object used to wait data from input channels up to EOF
-     * @param l Lock Object
-     */
-    public void setInputLock(Object l) {
-        this.job.inputLock = l;
-    }
-
-    /**
-     * Lock Object used to notify the next node on the output channel
-     * @param l Lock Object
-     */
-    public void setOutputLock(Object l) {
-        this.job.outputLock = l;
+    public void setBufferSize(int bufferSize) {
+        job.bufferSize = bufferSize;
     }
 }

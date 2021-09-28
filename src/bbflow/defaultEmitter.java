@@ -1,6 +1,8 @@
 package bbflow;
 
 import java.util.LinkedList;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * default Emitter of bbflow.ff_farm. Implemented various Communication models with workers: ROUNDROBIN, SCATTER, BROADCAST
@@ -16,7 +18,6 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
 
     int strategy = ROUNDROBIN;
     int position = 0;
-    int buffersize = 2;
 
     /**
      * default constructor
@@ -29,47 +30,51 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
     }
 
     @Override
-    public void runJob() {
+    public void runJob() throws InterruptedException {
         T received;
-        LinkedList<T> in_channel = in.get(0);
+        LinkedBlockingQueue<T> in_channel = in.get(0);
 
-        received = in_channel.get(0);
+        received = in_channel.take();
         if (received == EOF) {
             this.strategy = BROADCAST; // EOF sent to everyone
         }
 
         switch (strategy) {
             case ROUNDROBIN:
-                out.get(position).add(received);
-                outputLock.notifyAll();
-                position++;
-                if (position >= out.size()) {
-                    position = 0;
+                boolean inserted = out.get(position).offer(received);
+                while (!inserted) {
+                    // insertion failed, buffer full. Try cyclically all workers
+                    for (int i = 0; i < out.size(); i++) {
+                        position++;
+                        if (position >= out.size()) {
+                            position = 0;
+                        }
+
+                        inserted = out.get(position).offer(received, 50, TimeUnit.MILLISECONDS);
+                        if (inserted) { // found a free worker
+                            break;
+                        }
+                    }
                 }
-                in_channel.remove(0);
                 break;
             case SCATTER:
-                if (in_channel.size() >= out.size()) {
+                if ((in_channel.size()+1) >= out.size()) {
                         /*
                         this works even if elements in input channel are less than output channels
                         necessary to avoid starvation if the elements are not multiple of output channels
                          */
-                    for (int i = 0; i < Math.min(in_channel.size(), out.size()); i++) {
-                        if (i > 0) {
-                            received = in_channel.get(i);
-                        } // first element already retrieved
-                        out.get(i).add(received);
-                        outputLock.notifyAll();
-                        in_channel.remove(i);
+                    for (int i = 0; i < Math.min((in_channel.size()+1), out.size()); i++) {
+                        if (i > 0) { // first element already retrieved
+                            received = in_channel.take();
+                        }
+                        out.get(i).put(received);
                     }
                 }
                 break;
             case BROADCAST:
                 for (int i = 0; i < out.size(); i++) {
-                    out.get(i).add(received);
-                    outputLock.notifyAll();
+                    out.get(i).put(received);
                 }
-                in_channel.remove(0);
                 break;
         }
 

@@ -5,8 +5,6 @@ package bbflow;
  * @param <T> Custom type of channels
  */
 public class defaultCollector<T> extends defaultJob<T> {
-    int buffersize = 2;
-
     /**
      * basic constructor of bbflow.defaultCollector
      * @param EOF End of File symbol to detect stream finished
