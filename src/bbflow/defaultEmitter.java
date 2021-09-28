@@ -41,7 +41,7 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
         switch (strategy) {
             case ROUNDROBIN:
                 out.get(position).add(received);
-                outputLock.notify();
+                outputLock.notifyAll();
                 position++;
                 if (position >= out.size()) {
                     position = 0;
@@ -59,7 +59,7 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
                             received = in_channel.get(i);
                         } // first element already retrieved
                         out.get(i).add(received);
-                        outputLock.notify();
+                        outputLock.notifyAll();
                         in_channel.remove(i);
                     }
                 }
@@ -67,7 +67,7 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
             case BROADCAST:
                 for (int i = 0; i < out.size(); i++) {
                     out.get(i).add(received);
-                    outputLock.notify();
+                    outputLock.notifyAll();
                 }
                 in_channel.remove(0);
                 break;
