@@ -21,7 +21,7 @@ public class ff_farm<T> {
      * @param worker_job the list of jobs to be executed of type defaultJob. They can be different if needed
      * @param EOF End Of File object used to detect the end of stream from the input channel
      */
-    public ff_farm(int n_workers, LinkedList<defaultJob<T>> worker_job, T EOF) {
+    public ff_farm(int n_workers, LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy) {
         if (worker_job.size() != n_workers) { return; } // # of workers different from # of Runnable workers
 
         this.workers = new LinkedList<>();
@@ -29,7 +29,7 @@ public class ff_farm<T> {
         Object emitterWorkersLock = new Object();
         Object workersCollectorLock = new Object();
 
-        emitter = new ff_node<T>(new defaultEmitter<T>(defaultEmitter.ROUNDROBIN, EOF));
+        emitter = new ff_node<T>(new defaultEmitter<T>(communication_strategy, EOF));
         emitter.setOutputLock(emitterWorkersLock);
         emitter.addInputChannel(this.input);
 

@@ -20,7 +20,7 @@ public class test {
             worker_job.add(new testWorker<Integer>(i, EOF));
         }
 
-        ff_farm x = new ff_farm<Integer>(n_workers, worker_job, EOF);
+        ff_farm x = new ff_farm<Integer>(n_workers, worker_job, EOF, defaultEmitter.ROUNDROBIN);
         x.addInputChannel(input_data);
         x.run();
     }
