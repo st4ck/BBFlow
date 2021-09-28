@@ -3,9 +3,9 @@
 # BBFlow
 Basic java version of Fastflow Bulding Blocks implementation
 
-ff_node is the basic block entity composed by a set of input and output channels (LinkedList<T>) and a computation code (runJob())
+**ff_node** is the basic block entity composed by a set of input and output channels (LinkedList<T>) and a computation code (runJob())
   
-ff_farm is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
+**ff_farm** is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
   
 
 ### Implementation choiches
@@ -37,9 +37,9 @@ Being input and output channels fixed (so linear), the complexity for a node of 
 ### Communications strategies
 By default Farm implements already 3 types of communication with the workers
   
-- ROUNDROBIN: given a list of worker (N), each element received by Emitter is sent to the next worker in the list. When last worker reached, the emitter starts again from the first worker
+- **ROUNDROBIN**: given a list of worker (N), each element received by Emitter is sent to the next worker in the list. When last worker reached, the emitter starts again from the first worker
   
-- SCATTER: Emitter breaks data from input channel in N parts and send the correspondent part to each worker. The custom type must be chosen correclty to exploit the scattering properties. In a common type, like Integers, the scatter acts like ROUNDROBIN
+- **SCATTER**: Emitter breaks data from input channel in N parts and send the correspondent part to each worker. The custom type must be chosen correclty to exploit the scattering properties. In a common type, like Integers, the scatter acts like ROUNDROBIN
   
-- BROADCAST: each element received by Emitter is sent to all workers
+- **BROADCAST**: each element received by Emitter is sent to all workers
   
