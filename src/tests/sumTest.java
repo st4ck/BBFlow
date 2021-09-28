@@ -1,4 +1,5 @@
-package sumTest;
+package tests;
+
 import bbflow.*;
 
 import java.util.LinkedList;
