@@ -43,3 +43,6 @@ By default Farm implements already 3 types of communication with the workers
   
 - **BROADCAST**: each element received by Emitter is sent to all workers
   
+### How to use it
+Just import package bbflow and use classes as a library
+There are different examples in src/tests directory to run and to take inspiration from
