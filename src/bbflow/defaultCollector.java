@@ -1,14 +1,14 @@
-import java.util.ArrayList;
+package bbflow;
 
 /**
- * default Collector of ff_farm. Can be extended and runJob() overwritten
+ * default Collector of bbflow.ff_farm. Can be extended and runJob() overwritten
  * @param <T> Custom type of channels
  */
 public class defaultCollector<T> extends defaultJob<T> {
     int buffersize = 2;
 
     /**
-     * basic constructor of defaultCollector
+     * basic constructor of bbflow.defaultCollector
      * @param EOF End of File symbol to detect stream finished
      */
     public defaultCollector(T EOF) {

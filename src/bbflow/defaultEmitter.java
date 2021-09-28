@@ -1,8 +1,9 @@
-import java.util.ArrayList;
+package bbflow;
+
 import java.util.LinkedList;
 
 /**
- * default Emitter of ff_farm. Implemented various Communication models with workers: ROUNDROBIN, SCATTER, BROADCAST
+ * default Emitter of bbflow.ff_farm. Implemented various Communication models with workers: ROUNDROBIN, SCATTER, BROADCAST
  * @param <T> Custom type of channels
  */
 public class defaultEmitter<T> extends defaultJob<T> { // Runnable job

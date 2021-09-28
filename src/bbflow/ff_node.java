@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+package bbflow;
+
 import java.util.LinkedList;
 
 /**
@@ -26,7 +27,7 @@ public class ff_node<T> extends Thread {
     }
 
     /**
-     * add a Input channel to the ff_node. LinkedList is O(1) adding/removing first element
+     * add a Input channel to the bbflow.ff_node. LinkedList is O(1) adding/removing first element
      * @param input input channel
      */
     public void addInputChannel(LinkedList<T> input) {
@@ -34,7 +35,7 @@ public class ff_node<T> extends Thread {
     }
 
     /**
-     * add a Output channel to the ff_node
+     * add a Output channel to the bbflow.ff_node
      * LinkedList is O(1) adding/removing first element
      * @param output output channel
      */

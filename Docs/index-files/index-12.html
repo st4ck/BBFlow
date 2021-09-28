@@ -52,39 +52,39 @@ loadScripts(document, 'script');</script>
 <a href="index-1.html">A</a>&nbsp;<a href="index-2.html">B</a>&nbsp;<a href="index-3.html">C</a>&nbsp;<a href="index-4.html">D</a>&nbsp;<a href="index-5.html">E</a>&nbsp;<a href="index-6.html">F</a>&nbsp;<a href="index-7.html">I</a>&nbsp;<a href="index-8.html">J</a>&nbsp;<a href="index-9.html">M</a>&nbsp;<a href="index-10.html">O</a>&nbsp;<a href="index-11.html">P</a>&nbsp;<a href="index-12.html">R</a>&nbsp;<a href="index-13.html">S</a>&nbsp;<a href="index-14.html">T</a>&nbsp;<a href="index-15.html">W</a>&nbsp;<br><a href="../allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="../allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="../constant-values.html">Constant&nbsp;Field&nbsp;Values</a>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><a href="../defaultEmitter.html#ROUNDROBIN" class="member-name-link">ROUNDROBIN</a> - Static variable in class <a href="../defaultEmitter.html" title="class in Unnamed Package">defaultEmitter</a></dt>
+<dt><a href="../bbflow.defaultEmitter.html#ROUNDROBIN" class="member-name-link">ROUNDROBIN</a> - Static variable in class <a href="../bbflow.defaultEmitter.html" title="class in Unnamed Package">bbflow.defaultEmitter</a></dt>
 <dd>
 <div class="block">Communications model</div>
 </dd>
-<dt><a href="../defaultJob.html#run()" class="member-name-link">run()</a> - Method in class <a href="../defaultJob.html" title="class in Unnamed Package">defaultJob</a></dt>
+<dt><a href="../bbflow.defaultJob.html#run()" class="member-name-link">run()</a> - Method in class <a href="../bbflow.defaultJob.html" title="class in Unnamed Package">bbflow.defaultJob</a></dt>
 <dd>
 <div class="block">default Runnable run method
  This method runs only if there are at least 1 input channel and 1 output channel
  Regarding output channel: if there isn't any node on the other side, just don't send anything in the output channel in runJob
  The input lock object (to be notified of new data) and the output lock object (to notify next node about new data) use by fallback first channel of input or output respectively
- Normally a lock object must be set from the external to be able to interconnect fundamental blocks (like ff_node or ff_farm) to previous/next nodes
+ Normally a lock object must be set from the external to be able to interconnect fundamental blocks (like bbflow.ff_node or bbflow.ff_farm) to previous/next nodes
  All input channels are scanned for elements, if no one present, the function wait on the input lock object for a notification.</div>
 </dd>
-<dt><a href="../ff_farm.html#run()" class="member-name-link">run()</a> - Method in class <a href="../ff_farm.html" title="class in Unnamed Package">ff_farm</a></dt>
+<dt><a href="../bbflow.ff_farm.html#run()" class="member-name-link">run()</a> - Method in class <a href="../bbflow.ff_farm.html" title="class in Unnamed Package">bbflow.ff_farm</a></dt>
 <dd>
 <div class="block">main method to start all farm threads and wait them finishes</div>
 </dd>
-<dt><a href="../ff_node.html#run()" class="member-name-link">run()</a> - Method in class <a href="../ff_node.html" title="class in Unnamed Package">ff_node</a></dt>
+<dt><a href="../bbflow.ff_node.html#run()" class="member-name-link">run()</a> - Method in class <a href="../bbflow.ff_node.html" title="class in Unnamed Package">bbflow.ff_node</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../defaultCollector.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../defaultCollector.html" title="class in Unnamed Package">defaultCollector</a></dt>
+<dt><a href="../bbflow.defaultCollector.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../bbflow.defaultCollector.html" title="class in Unnamed Package">bbflow.defaultCollector</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../defaultEmitter.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../defaultEmitter.html" title="class in Unnamed Package">defaultEmitter</a></dt>
+<dt><a href="../bbflow.defaultEmitter.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../bbflow.defaultEmitter.html" title="class in Unnamed Package">bbflow.defaultEmitter</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../defaultJob.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../defaultJob.html" title="class in Unnamed Package">defaultJob</a></dt>
+<dt><a href="../bbflow.defaultJob.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../bbflow.defaultJob.html" title="class in Unnamed Package">bbflow.defaultJob</a></dt>
 <dd>
-<div class="block">blank function that should be overwritten by class extending defaultJob.</div>
+<div class="block">blank function that should be overwritten by class extending bbflow.defaultJob.</div>
 </dd>
-<dt><a href="../defaultWorker.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../defaultWorker.html" title="class in Unnamed Package">defaultWorker</a></dt>
+<dt><a href="../bbflow.defaultWorker.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../bbflow.defaultWorker.html" title="class in Unnamed Package">bbflow.defaultWorker</a></dt>
 <dd>
 <div class="block">in this method the custom code should be added overriding this class
  see default job for channels and locks name</div>
 </dd>
-<dt><a href="../testWorker.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../testWorker.html" title="class in Unnamed Package">testWorker</a></dt>
+<dt><a href="../sumTest.sumTestWorker.html#runJob()" class="member-name-link">runJob()</a> - Method in class <a href="../sumTest.sumTestWorker.html" title="class in Unnamed Package">sumTest.sumTestWorker</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a href="index-1.html">A</a>&nbsp;<a href="index-2.html">B</a>&nbsp;<a href="index-3.html">C</a>&nbsp;<a href="index-4.html">D</a>&nbsp;<a href="index-5.html">E</a>&nbsp;<a href="index-6.html">F</a>&nbsp;<a href="index-7.html">I</a>&nbsp;<a href="index-8.html">J</a>&nbsp;<a href="index-9.html">M</a>&nbsp;<a href="index-10.html">O</a>&nbsp;<a href="index-11.html">P</a>&nbsp;<a href="index-12.html">R</a>&nbsp;<a href="index-13.html">S</a>&nbsp;<a href="index-14.html">T</a>&nbsp;<a href="index-15.html">W</a>&nbsp;<br><a href="../allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="../allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="../constant-values.html">Constant&nbsp;Field&nbsp;Values</a></main>

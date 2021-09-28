@@ -1,4 +1,5 @@
-import java.util.ArrayList;
+package bbflow;
+
 import java.util.LinkedList;
 
 /**
@@ -17,13 +18,10 @@ public class ff_farm<T> {
 
     /**
      *
-     * @param n_workers number of workers in the farm paradigm
-     * @param worker_job the list of jobs to be executed of type defaultJob. They can be different if needed
+     * @param worker_job the list of jobs (one for each worker) to be executed of type bbflow.defaultJob. They can be different if needed
      * @param EOF End Of File object used to detect the end of stream from the input channel
      */
-    public ff_farm(int n_workers, LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy) {
-        if (worker_job.size() != n_workers) { return; } // # of workers different from # of Runnable workers
-
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy) {
         this.workers = new LinkedList<>();
         this.worker_job = worker_job;
         Object emitterWorkersLock = new Object();
@@ -31,12 +29,11 @@ public class ff_farm<T> {
 
         emitter = new ff_node<T>(new defaultEmitter<T>(communication_strategy, EOF));
         emitter.setOutputLock(emitterWorkersLock);
-        emitter.addInputChannel(this.input);
 
         collector = new ff_node<T>(new defaultCollector<T>(EOF));
         collector.setInputLock(workersCollectorLock);
 
-        for (int i=0;i<n_workers;i++) {
+        for (int i=0;i<worker_job.size();i++) {
             ff_node<T> worker = new ff_node<T>(worker_job.get(i));
             worker.setInputLock(emitterWorkersLock);
             worker.setOutputLock(workersCollectorLock);
@@ -96,6 +93,7 @@ public class ff_farm<T> {
      */
     public void addInputChannel(LinkedList<T> input) {
         this.input = input;
+        emitter.addInputChannel(this.input);
     }
 
     /**

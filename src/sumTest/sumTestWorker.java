@@ -1,12 +1,15 @@
-import java.util.ArrayList;
+package sumTest;
+
 import java.util.LinkedList;
+import bbflow.*;
+
 
 /**
- * worker code extending defaultJob for the test of the farm
+ * worker code extending bbflow.defaultJob for the test.test of the farm
  * @param <T>
  */
-public class testWorker<T> extends defaultJob<T> {
-    public testWorker(int id, T EOF) {
+public class sumTestWorker<T> extends defaultJob<T> {
+    public sumTestWorker(int id, T EOF) {
         this.id = id;
         this.EOF = EOF;
     }
@@ -27,6 +30,6 @@ public class testWorker<T> extends defaultJob<T> {
         mysum += (Integer) received;
         in_channel.remove(0);
 
-        //System.out.println(id + ": (" + (Integer) received + ") " + mysum);
+        System.out.println(id + ": (" + (Integer) received + ") " + mysum);
     }
 }

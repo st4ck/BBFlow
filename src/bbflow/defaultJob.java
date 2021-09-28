@@ -1,18 +1,20 @@
+package bbflow;
+
 import java.util.LinkedList;
 
 /**
- * default Job extecuted by the ff_node. Should be extended and reimplemented with the custom code in runJob() function
+ * default Job extecuted by the bbflow.ff_node. Should be extended and reimplemented with the custom code in runJob() function
  * wait data on channels using input lock and notify output nodes using output lock
  * For more details see run() function doc
  * @param <T> Custom type of the channels
  */
 public class defaultJob<T> implements Runnable {
-    LinkedList<LinkedList<T>> in;
-    LinkedList<LinkedList<T>> out;
+    public LinkedList<LinkedList<T>> in;
+    public LinkedList<LinkedList<T>> out;
     Object inputLock = null;
     Object outputLock = null;
 
-    T EOF = null;
+    public T EOF = null;
     public int id = -1;
 
     public defaultJob() {
@@ -25,7 +27,7 @@ public class defaultJob<T> implements Runnable {
      * This method runs only if there are at least 1 input channel and 1 output channel
      * Regarding output channel: if there isn't any node on the other side, just don't send anything in the output channel in runJob
      * The input lock object (to be notified of new data) and the output lock object (to notify next node about new data) use by fallback first channel of input or output respectively
-     * Normally a lock object must be set from the external to be able to interconnect fundamental blocks (like ff_node or ff_farm) to previous/next nodes
+     * Normally a lock object must be set from the external to be able to interconnect fundamental blocks (like bbflow.ff_node or bbflow.ff_farm) to previous/next nodes
      * All input channels are scanned for elements, if no one present, the function wait on the input lock object for a notification. No active waiting
      */
     @Override
@@ -69,7 +71,7 @@ public class defaultJob<T> implements Runnable {
     }
 
     /**
-     * blank function that should be overwritten by class extending defaultJob.
+     * blank function that should be overwritten by class extending bbflow.defaultJob.
      * Here main computation task is done once we're sure there's data in at least one of the input channels
      */
     public void runJob() {
