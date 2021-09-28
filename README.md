@@ -46,3 +46,7 @@ By default Farm implements already 3 types of communication with the workers
 ### How to use it
 Just import package bbflow and use classes as a library
 There are different examples in src/tests directory to run and to take inspiration from
+
+### JavaDoc Documentation
+JavaDoc Documentation can be found at https://st4ck.github.io/BBFlow/
+It's updated costantly together with new pushes
