@@ -1,9 +1,9 @@
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://github.com/st4ck/BBFlow/blob/master/LICENSE)
 
 # BBFlow
-Basic java version of Fastflow Bulding Blocks implementation
+Basic Java implementation of Fastflow's Bulding Blocks
 
-**ff_node** is the basic block entity composed by a set of input and output channels (LinkedList<T>) and a computation code (runJob())
+**ff_node** is the basic block entity composed by a set of input and output channels (LinkedBlockingQueue<T>) and a computation code (runJob())
   
 **ff_farm** is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
   
