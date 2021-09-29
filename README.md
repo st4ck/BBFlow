@@ -28,14 +28,23 @@ Complexity of the LinkedBlockingQueue is O(1) while appending a new data/list at
 Being input and output channels fixed (so linear), the complexity for a node of scanning all input channels when receive a notification is still O(1)
   
 
-### Communications strategies
-By default Farm implements already 3 types of communication with the workers
+### Farm's emitter communication strategies
+By default Farm's emitter implements already 3 types of communication with the workers
   
 - **ROUNDROBIN**: given a list of worker (N), each element received by Emitter is sent to the next worker in the list. When last worker reached, the emitter starts again from the first worker
   
 - **SCATTER**: Emitter breaks data from input channel in N parts and send the correspondent part to each worker. The custom type must be chosen correclty to exploit the scattering properties. In a common type, like Integers, the scatter acts like ROUNDROBIN
   
 - **BROADCAST**: each element received by Emitter is sent to all workers
+
+### Farm's collector communication strategies
+By default Farm's collector implements already 3 types of inbound communication with the workers
+
+- **FIRSTCOME**: given a list of worker (N), retrieve in ROUNDROBIN manner data from workers when available; otherwise next worker is tried. A waiting timeout is set to 50ms by default
+
+- **ROUNDROBIN**: given a list of worker (N), retrieve in ROUNDROBIN manner data from workers waiting for them
+
+- **GATHER**: Collector joins data broke by SCATTER coming from N input channels. Receive N chunks of data, one chunk per channel and send to the output channel
   
 ### How to use it
 Just import package bbflow and use classes as a library
