@@ -8,6 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Composed by one emitter (single input by default), n_workers workers and one collector
  * Worker must be implemented; the function runJob() contains the computation part
  * Collector has by default one output channel
+ * If collector is not needed and the job ends in the workers, just avoid to send data to the channel between workers and collector and it will be ignored
  * @param <T>
  */
 public class ff_farm<T> {
@@ -22,16 +23,16 @@ public class ff_farm<T> {
      *
      * @param worker_job the list of jobs (one for each worker) to be executed of type bbflow.defaultJob. They can be different if needed
      * @param EOF End Of File object used to detect the end of stream from the input channel
-     * @param communication_strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
+     * @param emitter_strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
      * @param bufferSize buffer size of the channels between emitter/workers and between workers/collector
      */
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy, int bufferSize) {
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
         this.workers = new LinkedList<>();
         this.worker_job = worker_job;
 
-        emitter = new ff_node<T>(new defaultEmitter<T>(communication_strategy, EOF));
-        collector = new ff_node<T>(new defaultCollector<T>(EOF));
+        emitter = new ff_node<T>(new defaultEmitter<T>(emitter_strategy, EOF));
+        collector = new ff_node<T>(new defaultCollector<T>(collector_strategy, EOF));
 
         for (int i=0;i<worker_job.size();i++) {
             ff_node<T> worker = new ff_node<T>(worker_job.get(i));
@@ -48,18 +49,18 @@ public class ff_farm<T> {
         }
     }
 
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int communication_strategy) {
-        this(worker_job, EOF, communication_strategy, 4096);
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int emitter_strategy) {
+        this(worker_job, EOF, emitter_strategy, defaultCollector.ROUNDROBIN, 4096);
     }
 
     public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF) {
-        this(worker_job, EOF, defaultEmitter.ROUNDROBIN, 4096);
+        this(worker_job, EOF, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, 4096);
     }
 
     /**
      * main method to start all farm threads
      */
-    public void run() {
+    public void start() {
         for (int i=0; i<workers.size(); i++) {
             workers.get(i).start(); // start all workers threads
         }

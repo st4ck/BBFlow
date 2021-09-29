@@ -16,12 +16,12 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
     public static final int SCATTER = 2;
     public static final int BROADCAST = 3;
 
-    int strategy = ROUNDROBIN;
+    int strategy;
     int position = 0;
 
     /**
      * default constructor
-     * @param strategy Communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
+     * @param strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
      * @param EOF EOF symbol
      */
     public defaultEmitter(int strategy, T EOF) {
