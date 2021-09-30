@@ -13,7 +13,7 @@ Java implementation of Fastflow's Bulding Blocks
 
 **ff_all2all** block that combine multiple ff_farm together connecting workers in a N to M manner
 
-# Queues / Channels
+### Queues / Channels
 **ff_queue** the default class of the queues (channels). Channels are 1-1 between nodes of type SPSC and FIFO
   
 
