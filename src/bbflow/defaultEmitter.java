@@ -63,7 +63,7 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
                 if (received instanceof Collection<?>) {
                     int inputsize = ((Collection<?>) received).size();
                     if (inputsize < out.size()) {
-                        throw new ArrayIndexOutOfBoundsException("SCATTER Found a collection with less items than "+out.size());
+                        throw new ArrayIndexOutOfBoundsException("SCATTER Found a collection with less items than "+out.size()+ " output channels");
                     }
 
                     int chunksize = inputsize / out.size();
