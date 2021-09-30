@@ -13,6 +13,9 @@ public class pipeline_farm_node {
     public static void main (String[] args) {
         int bufferSize = 16;
 
+        bb_settings.BOUNDED = true;
+        bb_settings.BLOCKING = true;
+
         ff_queue<Integer> input_data = new ff_queue<>(bb_settings.BLOCKING, bb_settings.BOUNDED, bufferSize);
 
         LinkedList<defaultJob<Integer>> worker_job = new LinkedList<>();

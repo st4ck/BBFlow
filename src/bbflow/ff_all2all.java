@@ -17,13 +17,13 @@ public class ff_all2all<T> extends block<T> {
 
     public void combine_farm(ff_farm<T> b) {
         if (a2a.size() > 0) {
-            ff_farm<T> lastElement = a2a.getLast();
+            ff_farm<T> lastElement = a2a.getLast(); // get last farm present (I call it old farm)
             lastElement.collector = null; // dispose collector
             b.emitter = null; // dispose emitter
 
             /**
              * works in this way:
-             * remove collector old farm / emitter new farm
+             * remove collector from old farm and emitter from new farm
              * remove input channels from new farm
              * use old channels (connecting old workers with old collector) to connect old workers to new ones
              */
