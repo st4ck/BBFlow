@@ -26,7 +26,7 @@ public class sumTest {
         x.start();
 
         try {
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 0; i < 4; i++) {
                 input_data.put(i);
             }
             input_data.setEOS();

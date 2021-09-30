@@ -81,7 +81,17 @@ public class ff_queue<T> {
                 // no infinite wait, if there are elements are already in the list
                 return blocking_queue.poll();
             } else {
-                return blocking_queue.take();
+                T i;
+                while (true) {
+                    i = blocking_queue.poll();
+                    if (i != null) {
+                        return i;
+                    } else if (this.EOS) {
+                        return null;
+                    }
+
+                    Thread.sleep(backoff);
+                }
             }
         } else {
             if (bounded) {
@@ -93,6 +103,8 @@ public class ff_queue<T> {
                         i = nonblocking_bounded_queue.poll();
                         if (i != null) {
                             return i;
+                        } else if (this.EOS) {
+                            return null;
                         }
 
                         Thread.sleep(backoff);
@@ -107,6 +119,8 @@ public class ff_queue<T> {
                         i = nonblocking_queue.poll();
                         if (i != null) {
                             return i;
+                        } else if (this.EOS) {
+                            return null;
                         }
 
                         Thread.sleep(backoff);
@@ -133,6 +147,8 @@ public class ff_queue<T> {
                     i = nonblocking_bounded_queue.poll();
                     if (i != null) {
                         return i;
+                    } else if (this.EOS) {
+                        return this.take();
                     }
 
                     if (waited + backoff > ms_timeout) {
@@ -148,6 +164,8 @@ public class ff_queue<T> {
                     i = nonblocking_queue.poll();
                     if (i != null) {
                         return i;
+                    } else if (this.EOS) {
+                        return this.take();
                     }
 
                     if (waited + backoff > ms_timeout) {

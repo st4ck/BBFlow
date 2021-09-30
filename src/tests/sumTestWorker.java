@@ -30,6 +30,6 @@ public class sumTestWorker<T> extends defaultJob<T> {
 
         mysum += (Integer) received;
 
-        System.out.println(id + ": (" + (Integer) received + ") " + mysum);
+        //System.out.println(id + ": (" + (Integer) received + ") " + mysum);
     }
 }
