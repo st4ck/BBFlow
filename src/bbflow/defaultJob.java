@@ -16,8 +16,6 @@ public class defaultJob<T> implements Runnable {
 
     public int id = -1;
 
-    public int bufferSize = 4096;
-
     public defaultJob() {
         in = new LinkedList<>();
         out = new LinkedList<>();

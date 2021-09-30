@@ -8,10 +8,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Composed by one emitter (single input by default), n_workers workers and one collector
  * Worker must be implemented; the function runJob() contains the computation part
  * Collector has by default one output channel
- * If collector is not needed and the job ends in the workers, just avoid to send data to the channel between workers and collector and it will be ignored
+ * If collector is not needed and the job ends in the workers, just avoid sending data to the channel between workers and collector, and it will be ignored
  * @param <T>
  */
-public class ff_farm<T> {
+public class ff_farm<T> extends block<T> {
     private ff_node<T> emitter;
     private ff_node<T> collector;
     private LinkedList<ff_node> workers;
