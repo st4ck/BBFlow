@@ -10,47 +10,39 @@ public class ff_queue<T> {
     squeue<T> nonblocking_bounded_queue;
     private boolean EOS = false;
 
-    public static final int BLOCKING = 1;
-    public static final int NONBLOCKING = 2;
-
-    public static final int BOUNDED = 3;
-    public static final int UNBOUNDED = 4;
-
     boolean blocking = false;
     boolean bounded = false;
 
     public long backoff = 5;
 
-    long queuesize = 0;
-
-    public ff_queue(int blocking, int bounded, int size) {
-        if (blocking == BLOCKING) {
+    public ff_queue(boolean blocking, boolean bounded, int bufferSize) {
+        if (blocking) {
             this.blocking = true;
 
-            if (bounded == BOUNDED) {
+            if (bounded) {
                 this.bounded = true;
 
-                blocking_queue = new LinkedBlockingQueue<>(size);
-            } else if (bounded == UNBOUNDED) {
+                blocking_queue = new LinkedBlockingQueue<>(bufferSize);
+            } else {
                 blocking_queue = new LinkedBlockingQueue<>();
             }
-        } else if (blocking == NONBLOCKING){
-            if (bounded == BOUNDED) {
+        } else {
+            if (bounded) {
                 this.bounded = true;
 
-                nonblocking_bounded_queue = new squeue<>(size);
-            } else if (bounded == UNBOUNDED) {
+                nonblocking_bounded_queue = new squeue<>(bufferSize);
+            } else {
                 nonblocking_queue = new ConcurrentLinkedQueue<>();
             }
         }
     }
 
     public ff_queue() {
-        this(NONBLOCKING, UNBOUNDED, 0);
+        this(bb_settings.BLOCKING, bb_settings.BOUNDED, bb_settings.defaultBufferSize);
     }
 
-    public ff_queue(int blocking) {
-        this(blocking, UNBOUNDED, 0);
+    public ff_queue(boolean blocking) {
+        this(blocking, bb_settings.BOUNDED, bb_settings.defaultBufferSize);
     }
 
     public void put(T i) throws InterruptedException {

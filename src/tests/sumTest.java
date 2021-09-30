@@ -10,10 +10,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class sumTest {
     public static void main (String[] args) {
-        int EOF = -1;
         int bufferSize = 16;
 
-        ff_queue<Integer> input_data = new ff_queue<Integer>(ff_queue.BLOCKING,ff_queue.BOUNDED,bufferSize);
+        ff_queue<Integer> input_data = new ff_queue<Integer>(bb_settings.BLOCKING,bb_settings.BOUNDED, bufferSize);
 
         LinkedList<defaultJob<Integer>> worker_job = new LinkedList<>();
         int n_workers = 4;
@@ -21,7 +20,7 @@ public class sumTest {
             worker_job.add(new sumTestWorker<Integer>(i));
         }
 
-        ff_farm x = new ff_farm<Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, 16);
+        ff_farm x = new ff_farm<Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, bufferSize);
         x.addInputChannel(input_data);
         x.start();
 

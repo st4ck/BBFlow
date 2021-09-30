@@ -22,9 +22,8 @@ public class ff_farm<T> {
     /**
      *
      * @param worker_job the list of jobs (one for each worker) to be executed of type bbflow.defaultJob. They can be different if needed
-     * @param EOF End Of File object used to detect the end of stream from the input channel
      * @param emitter_strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
-     * @param bufferSize buffer size of the channels between emitter/workers and between workers/collector
+     * @param collector_strategy Collector communication strategy chosen between FIRSTCOME, ROUNDROBIN and GATHER
      */
     public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
@@ -37,11 +36,11 @@ public class ff_farm<T> {
         for (int i=0;i<worker_job.size();i++) {
             ff_node<T> worker = new ff_node<T>(worker_job.get(i));
 
-            ff_queue<T> emitter_worker = new ff_queue<T>(ff_queue.BLOCKING, ff_queue.BOUNDED, this.bufferSize);
+            ff_queue<T> emitter_worker = new ff_queue<T>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
             emitter.addOutputChannel(emitter_worker);
             worker.addInputChannel(emitter_worker);
 
-            ff_queue<T> worker_collector = new ff_queue<T>(ff_queue.BLOCKING, ff_queue.BOUNDED, this.bufferSize);
+            ff_queue<T> worker_collector = new ff_queue<T>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
             worker.addOutputChannel(worker_collector);
             collector.addInputChannel(worker_collector);
 
@@ -50,11 +49,11 @@ public class ff_farm<T> {
     }
 
     public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy) {
-        this(worker_job, emitter_strategy, defaultCollector.ROUNDROBIN, 4096);
+        this(worker_job, emitter_strategy, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
     }
 
     public ff_farm(LinkedList<defaultJob<T>> worker_job) {
-        this(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, 4096);
+        this(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
     }
 
     /**
