@@ -1,5 +1,8 @@
 package bbflow;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -18,32 +21,28 @@ public class defaultCollector<T> extends defaultJob<T> {
     /**
      * default constructor
      * @param strategy Collector communication strategy chosen between FIRSTCOME, GATHER and ALLGATHER
-     * @param EOF EOF symbol
      */
-    public defaultCollector(int strategy, T EOF) {
+    public defaultCollector(int strategy) {
         this.strategy = strategy;
-        this.EOF = EOF;
     }
 
     @Override
     public void runJob() throws InterruptedException {
-        T received;
-        LinkedBlockingQueue<T> out_channel = out.get(0);
+        T received = null;
+        ff_queue<T> out_channel = out.get(0);
 
         switch (strategy) {
             case FIRSTCOME:
                 received = in.get(position).poll(50, TimeUnit.MILLISECONDS);
-                if (received != null) {
-                    if (received == EOF) {
-                        in.remove(position); // input channel not needed anymore
-                        position--; // stepping back of 1 position because next there's the increment to the next position that now has the same index
+                if ((received == null) && in.get(position).getEOS()) {
+                    in.remove(position); // input channel not needed anymore
+                    position--; // stepping back of 1 position because next there's the increment to the next position that now has the same index
 
-                        if (in.size() == 0) { // no more input channels, EOF only last time
-                            out_channel.put(EOF);
-                        }
-                    } else {
-                        out_channel.put(received);
+                    if (in.size() == 0) { // no more input channels, EOS only last time
+                        out_channel.setEOS();
                     }
+                } else if (received != null) {
+                    out_channel.put(received);
                 }
 
                 position++;
@@ -53,12 +52,12 @@ public class defaultCollector<T> extends defaultJob<T> {
                 break;
             case ROUNDROBIN:
                 received = in.get(position).take();
-                if (received == EOF) {
+                if (received == null) {
                     in.remove(position); // input channel not needed anymore
                     position--;
 
-                    if (in.size() == 0) { // no more input channels, EOF only last time
-                        out_channel.put(EOF);
+                    if (in.size() == 0) { // no more input channels, EOS only last time
+                        out_channel.setEOS();
                     }
                 } else {
                     out_channel.put(received);
@@ -70,22 +69,36 @@ public class defaultCollector<T> extends defaultJob<T> {
                 }
                 break;
             case GATHER:
-                if (in.size() < out_channel.remainingCapacity()) {
-                    for (int i=0; i<in.size(); i++) {
-                        received = in.get(i).take();
+                // retrieve one element (possibly Collection<?>) per channel
+                ArrayList<Object> vector = new ArrayList<Object>();
 
-                        if (received == EOF) {
-                            in.remove(i); // input channel not needed anymore
+                for (int i=0; i<in.size(); i++) {
+                    received = in.get(i).take();
 
-                            if (in.size() == 0) { // no more input channels, EOF only last time
-                                out_channel.put(EOF);
-                            } else {
-                                i--; // finish the for with all inputs (now size decremented by 1)
-                            }
-                        } else {
-                            out_channel.put(received);
+                    if (received == null) {
+                        in.remove(i); // input channel not needed anymore
+                        i--;
+
+                        if (in.size() == 0) { // no more input channels, EOS only last time
+                            out_channel.setEOS();
                         }
+
+                        continue;
                     }
+
+                    if (received instanceof Collection<?>) { // collection type, SCATTERED by Emitter
+                        Iterator<?> iterator = ((Collection<Object>) received).iterator();
+
+                        while (iterator.hasNext()) {
+                            vector.add(iterator.next());
+                        }
+                    } else {
+                        vector.add(received);
+                    }
+                }
+
+                if (received != null) { // not EOS reached
+                    out_channel.put((T) vector);
                 }
                 break;
         }

@@ -11,10 +11,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param <T> Custom type of the channels
  */
 public class defaultJob<T> implements Runnable {
-    public LinkedList<LinkedBlockingQueue<T>> in;
-    public LinkedList<LinkedBlockingQueue<T>> out;
+    public LinkedList<ff_queue<T>> in;
+    public LinkedList<ff_queue<T>> out;
 
-    public T EOF = null;
     public int id = -1;
 
     public int bufferSize = 4096;
@@ -31,7 +30,6 @@ public class defaultJob<T> implements Runnable {
      */
     @Override
     public void run() {
-        if (EOF == null) { return; } // EOF not defined
         if (in.size() == 0) { return; } // no input channels
         if (out.size() == 0) { return; } // no output channels
 
@@ -72,7 +70,7 @@ public class defaultJob<T> implements Runnable {
      * add new input channel to the Runnable node
      * @param input input channel
      */
-    public void addInputChannel(LinkedBlockingQueue<T> input) {
+    public void addInputChannel(ff_queue<T> input) {
         in.add(input);
     }
 
@@ -80,7 +78,7 @@ public class defaultJob<T> implements Runnable {
      *  add new output channel to the Runnable node
      * @param output output channel
      */
-    public void addOutputChannel(LinkedBlockingQueue<T> output)
+    public void addOutputChannel(ff_queue<T> output)
     {
         out.add(output);
     }

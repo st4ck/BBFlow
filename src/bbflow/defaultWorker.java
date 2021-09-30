@@ -6,9 +6,8 @@ package bbflow;
  * @param <T> Custom type of the channels
  */
 public class defaultWorker<T> extends defaultJob<T> {
-    public defaultWorker(int id, T EOF) {
+    public defaultWorker(int id) {
         this.id = id;
-        this.EOF = EOF;
     }
 
     /**

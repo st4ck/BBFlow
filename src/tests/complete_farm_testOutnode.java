@@ -1,24 +1,24 @@
 package tests;
 
 import bbflow.defaultJob;
+import bbflow.ff_queue;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class complete_farm_testOutnode<T> extends defaultJob<T> {
-    public complete_farm_testOutnode(int id, T EOF) {
+    public complete_farm_testOutnode(int id) {
         this.id = id;
-        this.EOF = EOF;
     }
 
     @Override
     public void runJob() throws InterruptedException {
         T received;
-        LinkedBlockingQueue<T> in_channel = in.get(0);
+        ff_queue<T> in_channel = in.get(0);
 
         received = in_channel.take();
-        if (received == EOF) {
+        if (received == null) {
             in.remove(0); // removing input channel, sequence finished
-            System.out.println(id + ": EOF");
+            System.out.println(id + ": EOS");
             return;
         }
 

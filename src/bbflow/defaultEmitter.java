@@ -24,21 +24,19 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
     /**
      * default constructor
      * @param strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
-     * @param EOF EOF symbol
      */
-    public defaultEmitter(int strategy, T EOF) {
+    public defaultEmitter(int strategy) {
         this.strategy = strategy;
-        this.EOF = EOF;
     }
 
     @Override
     public void runJob() throws InterruptedException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         T received;
-        LinkedBlockingQueue<T> in_channel = in.get(0);
+        ff_queue<T> in_channel = in.get(0);
 
         received = in_channel.take();
-        if (received == EOF) {
-            this.strategy = BROADCAST; // EOF sent to everyone
+        if (received == null) { // EOS
+            this.strategy = BROADCAST; // EOS sent to everyone
         }
 
         switch (strategy) {
@@ -74,16 +72,16 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
                     Iterator<?> iterator = ((Collection<Object>) received).iterator();
 
                     int collection_pos = 0;
-                    ArrayList<Object> newcollection = new ArrayList<Object>();
+                    ArrayList<Object> vector = new ArrayList<Object>();
 
                     while (iterator.hasNext()) {
                         int outpos = collection_pos/chunksize;
 
-                        newcollection.add(iterator.next());
+                        vector.add(iterator.next());
 
-                        if (newcollection.size() == chunksize) {
-                            out.get(outpos).put((T) newcollection);
-                            newcollection = new ArrayList<Object>();
+                        if (vector.size() == chunksize) {
+                            out.get(outpos).put((T) vector);
+                            vector = new ArrayList<Object>();
                         }
 
                         collection_pos++;
@@ -94,12 +92,16 @@ public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
                 break;
             case BROADCAST:
                 for (int i = 0; i < out.size(); i++) {
-                    out.get(i).put(received);
+                    if (received == null) {
+                        out.get(i).setEOS();
+                    } else {
+                        out.get(i).put(received);
+                    }
                 }
                 break;
         }
 
-        if (received == EOF) {
+        if (received == null) {
             in.remove(0); // removing input channel, sequence finished
         }
     }

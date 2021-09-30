@@ -11,26 +11,25 @@ import bbflow.*;
  * @param <T>
  */
 public class sumTestWorker<T> extends defaultJob<T> {
-    public sumTestWorker(int id, T EOF) {
+    public sumTestWorker(int id) {
         this.id = id;
-        this.EOF = EOF;
     }
 
     Integer mysum = 0;
     @Override
     public void runJob() throws InterruptedException {
         T received;
-        LinkedBlockingQueue<T> in_channel = in.get(0);
+        ff_queue<T> in_channel = in.get(0);
 
         received = in_channel.take();
-        if (received == EOF) {
-            System.out.println(id + ": EOF");
+        if (received == null) {
+            System.out.println(id + ": EOS");
             in.remove(0); // removing input channel, sequence finished
             return;
         }
 
         mysum += (Integer) received;
 
-        //System.out.println(id + ": (" + (Integer) received + ") " + mysum);
+        System.out.println(id + ": (" + (Integer) received + ") " + mysum);
     }
 }

@@ -16,7 +16,7 @@ public class ff_farm<T> {
     private ff_node<T> collector;
     private LinkedList<ff_node> workers;
     private LinkedList<defaultJob<T>> worker_job;
-    private LinkedBlockingQueue<T> input;
+    private ff_queue<T> input;
     private int bufferSize;
 
     /**
@@ -26,22 +26,22 @@ public class ff_farm<T> {
      * @param emitter_strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
      * @param bufferSize buffer size of the channels between emitter/workers and between workers/collector
      */
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int emitter_strategy, int collector_strategy, int bufferSize) {
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
         this.workers = new LinkedList<>();
         this.worker_job = worker_job;
 
-        emitter = new ff_node<T>(new defaultEmitter<T>(emitter_strategy, EOF));
-        collector = new ff_node<T>(new defaultCollector<T>(collector_strategy, EOF));
+        emitter = new ff_node<T>(new defaultEmitter<T>(emitter_strategy));
+        collector = new ff_node<T>(new defaultCollector<T>(collector_strategy));
 
         for (int i=0;i<worker_job.size();i++) {
             ff_node<T> worker = new ff_node<T>(worker_job.get(i));
 
-            LinkedBlockingQueue<T> emitter_worker = new LinkedBlockingQueue<T>(this.bufferSize);
+            ff_queue<T> emitter_worker = new ff_queue<T>(ff_queue.BLOCKING, ff_queue.BOUNDED, this.bufferSize);
             emitter.addOutputChannel(emitter_worker);
             worker.addInputChannel(emitter_worker);
 
-            LinkedBlockingQueue<T> worker_collector = new LinkedBlockingQueue<T>(this.bufferSize);
+            ff_queue<T> worker_collector = new ff_queue<T>(ff_queue.BLOCKING, ff_queue.BOUNDED, this.bufferSize);
             worker.addOutputChannel(worker_collector);
             collector.addInputChannel(worker_collector);
 
@@ -49,12 +49,12 @@ public class ff_farm<T> {
         }
     }
 
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF, int emitter_strategy) {
-        this(worker_job, EOF, emitter_strategy, defaultCollector.ROUNDROBIN, 4096);
+    public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy) {
+        this(worker_job, emitter_strategy, defaultCollector.ROUNDROBIN, 4096);
     }
 
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, T EOF) {
-        this(worker_job, EOF, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, 4096);
+    public ff_farm(LinkedList<defaultJob<T>> worker_job) {
+        this(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, 4096);
     }
 
     /**
@@ -92,7 +92,7 @@ public class ff_farm<T> {
      * add a new input channel to the farm (commonly one) - to the emitter
      * @param input input channel
      */
-    public void addInputChannel(LinkedBlockingQueue<T> input) {
+    public void addInputChannel(ff_queue<T> input) {
         this.input = input;
         emitter.addInputChannel(this.input);
     }
@@ -101,7 +101,7 @@ public class ff_farm<T> {
      * add a new output channel to the collector
      * @param output output channel
      */
-    public void addOutputChannel(LinkedBlockingQueue<T> output) {
+    public void addOutputChannel(ff_queue<T> output) {
         collector.addOutputChannel(output);
     }
 }
