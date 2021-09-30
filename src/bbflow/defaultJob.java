@@ -80,4 +80,38 @@ public class defaultJob<T> implements Runnable {
     {
         out.add(output);
     }
+
+    public boolean removeInputChannel(int index) {
+        try {
+            in.remove(index);
+            return true;
+        } catch (IndexOutOfBoundsException x) {
+            return false;
+        }
+    }
+
+    public boolean removeOutputChannel(int index) {
+        try {
+            out.remove(index);
+            return true;
+        } catch (IndexOutOfBoundsException x) {
+            return false;
+        }
+    }
+
+    public ff_queue<T> getOutputChannel(int index) {
+        try {
+            return out.get(index);
+        } catch (IndexOutOfBoundsException x) {
+            return null;
+        }
+    }
+
+    public ff_queue<T> getInputChannel(int index) {
+        try {
+            return in.get(index);
+        } catch (IndexOutOfBoundsException x) {
+            return null;
+        }
+    }
 }

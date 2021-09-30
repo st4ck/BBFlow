@@ -31,4 +31,20 @@ public class node<T> extends Thread {
     public void addOutputChannel(ff_queue<T> output) {
         job.addOutputChannel(output);
     }
+
+    public boolean removeInputChannel(int index) {
+        return job.removeInputChannel(index);
+    }
+
+    public boolean removeOutputChannel(int index) {
+        return job.removeInputChannel(index);
+    }
+
+    public ff_queue<T> getOutputChannel(int index) {
+        return job.getOutputChannel(index);
+    }
+
+    public ff_queue<T> getInputChannel(int index) {
+        return job.getInputChannel(index);
+    }
 }

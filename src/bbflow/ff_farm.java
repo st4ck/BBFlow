@@ -12,10 +12,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param <T>
  */
 public class ff_farm<T> extends block<T> {
-    private ff_node<T> emitter;
-    private ff_node<T> collector;
-    private LinkedList<ff_node> workers;
-    private LinkedList<defaultJob<T>> worker_job;
+    public ff_node<T> emitter;
+    public ff_node<T> collector;
+    public LinkedList<ff_node> workers;
     private ff_queue<T> input;
     private int bufferSize;
 
@@ -28,7 +27,6 @@ public class ff_farm<T> extends block<T> {
     public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
         this.workers = new LinkedList<>();
-        this.worker_job = worker_job;
 
         emitter = new ff_node<T>(new defaultEmitter<T>(emitter_strategy));
         collector = new ff_node<T>(new defaultCollector<T>(collector_strategy));
@@ -63,16 +61,27 @@ public class ff_farm<T> extends block<T> {
         for (int i=0; i<workers.size(); i++) {
             workers.get(i).start(); // start all workers threads
         }
-        collector.start();
-        emitter.start();
+
+        if (collector != null) {
+            collector.start();
+        }
+
+        if (emitter != null) {
+            emitter.start();
+        }
     }
 
     public void join() {
-        emitter.join();
+        if (emitter != null) {
+            emitter.join();
+        }
         for (int i=0; i<workers.size(); i++) {
             workers.get(i).join();
         }
-        collector.join();
+
+        if (collector != null) {
+            collector.join();
+        }
     }
 
     /**
@@ -89,7 +98,9 @@ public class ff_farm<T> extends block<T> {
      */
     public void addInputChannel(ff_queue<T> input) {
         this.input = input;
-        emitter.addInputChannel(this.input);
+        if (emitter != null) {
+            emitter.addInputChannel(this.input);
+        }
     }
 
     /**
@@ -97,6 +108,8 @@ public class ff_farm<T> extends block<T> {
      * @param output output channel
      */
     public void addOutputChannel(ff_queue<T> output) {
-        collector.addOutputChannel(output);
+        if (collector != null) {
+            collector.addOutputChannel(output);
+        }
     }
 }

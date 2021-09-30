@@ -36,6 +36,25 @@ public class ff_node<T> extends block<T> {
         mynode.addOutputChannel(output);
     }
 
+    /**
+     * add a Input channel to the bbflow.ff_node. LinkedList is O(1) adding/removing first element
+     * @param input input channel
+     * @return
+     */
+    public boolean removeInputChannel(int index) {
+        return mynode.removeInputChannel(index);
+    }
+
+    /**
+     * add a Output channel to the bbflow.ff_node
+     * LinkedList is O(1) adding/removing first element
+     * @param output output channel
+     * @return
+     */
+    public boolean removeOutputChannel(int index) {
+        return mynode.removeOutputChannel(index);
+    }
+
     public void start() {
         mynode.start();
     }
@@ -46,5 +65,13 @@ public class ff_node<T> extends block<T> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public ff_queue<T> getOutputChannel(int index) {
+        return mynode.getOutputChannel(index);
+    }
+
+    public ff_queue<T> getInputChannel(int index) {
+        return mynode.getInputChannel(index);
     }
 }
