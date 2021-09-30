@@ -34,7 +34,7 @@ public class complete_farm_test {
             for (int i = 0; i < 10000; i++) {
                 input_data.put(i);
             }
-            input_data.put(-1);
+            input_data.put(-1); // sending EOF
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

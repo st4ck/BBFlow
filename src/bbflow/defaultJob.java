@@ -1,5 +1,6 @@
 package bbflow;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -55,7 +56,7 @@ public class defaultJob<T> implements Runnable {
      * blank function that should be overwritten by class extending bbflow.defaultJob.
      * Here main computation task is done once we're sure there's data in at least one of the input channels
      */
-    public void runJob() throws InterruptedException {
+    public void runJob() throws InterruptedException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
     }
 
