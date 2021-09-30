@@ -13,8 +13,16 @@ public class ff_queue<T> {
     boolean blocking = false;
     boolean bounded = false;
 
-    public long backoff = 5;
-
+    /**
+     * Default constructor of the queue. Types available are 4:
+     * BLOCKING / BOUNDED
+     * BLOCKING / UNBOUNDED
+     * NON BLOCKING / BOUNDED
+     * NON BLOCKING / UNBOUNDED
+     * @param blocking BLOCKING = true / NONBLOCKING = false
+     * @param bounded BOUNDED = true / UNBOUNDED = false
+     * @param bufferSize size of the queue in case it's BOUNDED
+     */
     public ff_queue(boolean blocking, boolean bounded, int bufferSize) {
         if (blocking) {
             this.blocking = true;
@@ -45,6 +53,11 @@ public class ff_queue<T> {
         this(blocking, bb_settings.BOUNDED, bb_settings.defaultBufferSize);
     }
 
+    /**
+     * Inserts the specified element at the tail of this queue, waiting if necessary for space to become available (if bounded)
+     * @param i Element to insert
+     * @throws InterruptedException
+     */
     public void put(T i) throws InterruptedException {
         if (this.EOS) { return; }
 
@@ -52,21 +65,40 @@ public class ff_queue<T> {
             blocking_queue.put(i);
         } else {
             if (bounded) {
-                nonblocking_bounded_queue.add(i);
+                while (true) {
+                    if (nonblocking_bounded_queue.offer(i)) {
+                        return;
+                    }
+
+                    Thread.sleep(bb_settings.backOff);
+                }
             } else {
+                // no wait needed, unbounded
                 nonblocking_queue.add(i);
             }
         }
     }
 
+    /**
+     * tell the Queue the end of stream reached
+     */
     public void setEOS() {
         this.EOS = true;
     }
 
+    /**
+     * check if EOS is in the queue (virtually)
+     */
     public boolean getEOS() {
         return this.EOS;
     }
 
+    /**
+     * Retrieves and removes the head of this queue, waiting if necessary until an element becomes available.
+     * If EOS true and Queue empty, null is returned
+     * @return Element retrieved or null
+     * @throws InterruptedException
+     */
     public T take() throws InterruptedException {
         if (blocking) {
             if (this.EOS) {
@@ -75,14 +107,12 @@ public class ff_queue<T> {
             } else {
                 T i;
                 while (true) {
-                    i = blocking_queue.poll();
+                    i = blocking_queue.poll(bb_settings.backOff, TimeUnit.MILLISECONDS);
                     if (i != null) {
                         return i;
                     } else if (this.EOS) {
                         return null;
                     }
-
-                    Thread.sleep(backoff);
                 }
             }
         } else {
@@ -99,7 +129,7 @@ public class ff_queue<T> {
                             return null;
                         }
 
-                        Thread.sleep(backoff);
+                        Thread.sleep(bb_settings.backOff);
                     }
                 }
             } else {
@@ -115,13 +145,21 @@ public class ff_queue<T> {
                             return null;
                         }
 
-                        Thread.sleep(backoff);
+                        Thread.sleep(bb_settings.backOff);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Retrieves and removes the head of this queue, waiting up to the specified wait time if necessary for an element to become available.
+     * if EOS reached, call take() function returning the element or null (if queue empty)
+     * @param timeout
+     * @param timeunit
+     * @return the element or null. Null if EOS is true, means EOS reached. Null with EOS false means poll timedout
+     * @throws InterruptedException
+     */
     public T poll(long timeout, TimeUnit timeunit) throws InterruptedException {
         if (this.EOS) {
             // no waiting needed, take in EOS is already fine
@@ -143,11 +181,11 @@ public class ff_queue<T> {
                         return this.take();
                     }
 
-                    if (waited + backoff > ms_timeout) {
+                    if (waited + bb_settings.backOff > ms_timeout) {
                         return null;
                     }
 
-                    Thread.sleep(backoff);
+                    Thread.sleep(bb_settings.backOff);
                 }
             } else {
                 T i;
@@ -160,16 +198,21 @@ public class ff_queue<T> {
                         return this.take();
                     }
 
-                    if (waited + backoff > ms_timeout) {
+                    if (waited + bb_settings.backOff > ms_timeout) {
                         return null;
                     }
 
-                    Thread.sleep(backoff);
+                    Thread.sleep(bb_settings.backOff);
                 }
             }
         }
     }
 
+    /**
+     * Inserts the specified element at the tail of this queue if it is possible to do so immediately without exceeding the queue's capacity, returning true upon success and false if this queue is full
+     * @param i element to insert
+     * @return true or false
+     */
     public boolean offer(T i) {
         if (this.EOS) { return false; }
 
@@ -184,6 +227,14 @@ public class ff_queue<T> {
         }
     }
 
+    /**
+     * Inserts the specified element at the tail of this queue, waiting if necessary up to the specified wait time for space to become available.
+     * @param i element to insert
+     * @param timeout time to wait
+     * @param timeunit unit of the time to wait
+     * @return true or false
+     * @throws InterruptedException
+     */
     public boolean offer(T i, long timeout, TimeUnit timeunit) throws InterruptedException {
         if (this.EOS) { return false; }
 
@@ -198,11 +249,11 @@ public class ff_queue<T> {
                         return true;
                     }
 
-                    if (waited + backoff > ms_timeout) {
+                    if (waited + bb_settings.backOff > ms_timeout) {
                         return false;
                     }
 
-                    Thread.sleep(backoff);
+                    Thread.sleep(bb_settings.backOff);
                 }
             } else { // unbounded, never return false
                 return nonblocking_queue.offer(i);
