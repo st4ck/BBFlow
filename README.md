@@ -20,7 +20,7 @@ Java implementation of Fastflow's Bulding Blocks
 ### Implementation choiches
 Running on the actual latest version of Java (17).
 
-~~Each ff_node runs in a Thread and nodes are synchronized using built-in LinkedBlockingQueue.~~
+PART TO UPDATE: ~~Each ff_node runs in a Thread and nodes are synchronized using built-in LinkedBlockingQueue.~~
 
 ~~Channels are LinkedBlockingQueue objects and as per definition, getting and removing only first element in position 0, the complexity of r/w operation is O(1)~~
 
