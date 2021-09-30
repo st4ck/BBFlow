@@ -50,7 +50,7 @@ public class ff_pipeline<T> extends block<T> {
 
     public void addOutputChannel(ff_queue<T> output) {
         if (pipe.size() > 0) {
-            pipe.getFirst().addOutputChannel(output);
+            pipe.getLast().addOutputChannel(output);
         }
     }
 
