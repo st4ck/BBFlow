@@ -19,23 +19,24 @@ Java implementation of Fastflow's Bulding Blocks
 
 ### Implementation choiches
 Running on the actual latest version of Java (17).
-  
-Each ff_node runs in a Thread and nodes are synchronized using built-in LinkedBlockingQueue.
-  
-Channels are LinkedBlockingQueue objects and as per definition, getting and removing only first element in position 0, the complexity of r/w operation is O(1)
-  
-LinkedBlockingQueue are shared in memory between Threads connected each other.
-  
-Nodes can be connected straightly and also feedbacks are possible, just remember to set and send EOF to avoid infinite loops.
+
+~~Each ff_node runs in a Thread and nodes are synchronized using built-in LinkedBlockingQueue.~~
+
+~~Channels are LinkedBlockingQueue objects and as per definition, getting and removing only first element in position 0, the complexity of r/w operation is O(1)~~
+
+~~LinkedBlockingQueue are shared in memory between Threads connected each other.~~
+
+Nodes can be connected straightly and also feedbacks are possible, just remember to set and send EOS to avoid infinite loops.
   
 
 ### Complexity
-Complexity of the LinkedBlockingQueue is O(1) reading/deleting only first element when receiving data on a channel
+Complexity of the ff_queue is O(1) reading/deleting only first element when receiving data on a channel
   
-Complexity of the LinkedBlockingQueue is O(1) while appending a new data/list at the end of the list
+Complexity of the ff_queue is O(1) while appending a new data/list at the end of the list
   
 Being input and output channels fixed (so linear), the complexity for a node of scanning all input channels when receive a notification is still O(1)
   
+An overhead is added only when the throughput of the data is not sufficient to keep channels with at least one element. In this case waiting (and synchronization in the case of BLOCKING queues) can occur.
 
 ### Farm's emitter communication strategies
 By default Farm's emitter implements already 3 types of communication with the workers
