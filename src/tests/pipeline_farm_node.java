@@ -4,6 +4,11 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/**
+ * example of pipeline usage with 2 stages
+ * Stage1: a farm with n_workers
+ * Stage2: a node receiving data from collector and printing to the output
+ */
 public class pipeline_farm_node {
     public static void main (String[] args) {
         int bufferSize = 16;
