@@ -1,5 +1,8 @@
 package bbflow;
 
+/**
+ * Global settings for the bbflow package
+ */
 public class bb_settings {
     /**
      * global settings to decide if the queue should be BLOCKING or NON BLOCKING

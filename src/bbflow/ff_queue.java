@@ -4,6 +4,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Default class of the queues. Queues are channels 1-1 between nodes of type SPSC and FIFO
+ * @param <T> Type of the queue elements
+ */
 public class ff_queue<T> {
     LinkedBlockingQueue<T> blocking_queue;
     ConcurrentLinkedQueue<T> nonblocking_queue;

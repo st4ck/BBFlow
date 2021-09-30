@@ -4,6 +4,11 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Reimplementation of ConcurrentLinkedQueue in Bounded manner
+ * Taken inspiration from Hadoop class BoundedConcurrentLinkedQueue
+ * @param <T> Type of the elements in the queue
+ */
 public class squeue<T> extends ConcurrentLinkedQueue<T> {
     private static final long serialVersionUID = 1L;
     private final AtomicLong size = new AtomicLong(0L);
