@@ -68,15 +68,11 @@ public class ff_farm<T> extends block<T> {
     }
 
     public void join() {
-        try {
-            emitter.join();
-            for (int i=0; i<workers.size(); i++) {
-                workers.get(i).join();
-            }
-            collector.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        emitter.join();
+        for (int i=0; i<workers.size(); i++) {
+            workers.get(i).join();
         }
+        collector.join();
     }
 
     /**

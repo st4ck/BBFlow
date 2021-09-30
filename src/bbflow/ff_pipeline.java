@@ -60,8 +60,8 @@ public class ff_pipeline<T> extends block<T> {
         }
     }
 
-    public void join() throws InterruptedException {
-        for (int i=0; i<pipe.size(); i++) {
+    public void join() {
+        for (int i = 0; i < pipe.size(); i++) {
             pipe.get(i).join();
         }
     }

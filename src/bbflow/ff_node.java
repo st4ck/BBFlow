@@ -40,7 +40,11 @@ public class ff_node<T> extends block<T> {
         mynode.start();
     }
 
-    public void join() throws InterruptedException {
-        mynode.join();
+    public void join() {
+        try {
+            mynode.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
