@@ -3,13 +3,22 @@
 # BBFlow
 Java implementation of Fastflow's Bulding Blocks
 
+**block** basic entity of each building blocks. Each building block is of type block<T>
+
 **ff_node** is the basic block entity composed by a set of input and output channels (LinkedBlockingQueue<T>) and a computation code (runJob())
   
-**ff_farm** is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
+**ff_farm** this block is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
+
+**ff_pipeline** this block is the abstraction of a Pipeline allowing to interconnect blocks easily in pipeline manner. Contains a set of blocks<T> (any building blocks) connected each other. Each block can be added with the appendNewBB() function
+
+**ff_all2all** block that combine multiple ff_farm together connecting workers in a N to M manner
+
+# Queues / Channels
+**ff_queue** the default class of the queues (channels). Channels are 1-1 between nodes of type SPSC and FIFO
   
 
 ### Implementation choiches
-Running on the actual latest version of Java (17) exploits all of the advantages introduced in the last year in the JVM.
+Running on the actual latest version of Java (17).
   
 Each ff_node runs in a Thread and nodes are synchronized using built-in LinkedBlockingQueue.
   
@@ -33,7 +42,7 @@ By default Farm's emitter implements already 3 types of communication with the w
   
 - **ROUNDROBIN**: given a list of worker (N), each element received by Emitter is sent to the next worker in the list. When last worker reached, the emitter starts again from the first worker
   
-- **SCATTER**: Emitter breaks data from input channel in N parts and send the correspondent part to each worker. The custom type must be chosen correclty to exploit the scattering properties. In a common type, like Integers, the scatter acts like ROUNDROBIN
+- **SCATTER**: Emitter breaks vector from input channel in N parts and send the correspondent part to each worker.
   
 - **BROADCAST**: each element received by Emitter is sent to all workers
 
@@ -44,7 +53,7 @@ By default Farm's collector implements already 3 types of inbound communication 
 
 - **ROUNDROBIN**: given a list of worker (N), retrieve in ROUNDROBIN manner data from workers waiting for them
 
-- **GATHER**: Collector joins data broke by SCATTER coming from N input channels. Receive N chunks of data, one chunk per channel and send to the output channel
+- **GATHER**: Collector joins items (or vectors) coming from workers from N input channels. Receive N items (vectors) and generate a new vector containing N items (or the concatenation of source vectors)  and send it to the output channel.
   
 ### How to use it
 Just import package bbflow and use classes as a library
