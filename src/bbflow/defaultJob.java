@@ -48,6 +48,14 @@ public class defaultJob<T> implements Runnable {
                 runJob();
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
             }
         }
     }
