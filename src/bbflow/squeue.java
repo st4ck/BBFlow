@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @param <T> Type of the elements in the queue
  */
 public class squeue<T> extends ConcurrentLinkedQueue<T> {
-    private static final long serialVersionUID = 1L;
     private final AtomicLong size = new AtomicLong(0L);
     private final long maxSize;
 
@@ -83,17 +82,6 @@ public class squeue<T> extends ConcurrentLinkedQueue<T> {
     @Override
     public int size() {
         return (int) size.get();
-    }
-
-    public void drainTo(Collection<T> list) {
-        long removed = 0;
-        for (T element; (element = super.poll()) != null;) {
-            list.add(element);
-            removed++;
-        }
-        // Limit the number of operations on size by only reporting size change after the drain is
-        // completed.
-        size.addAndGet(-removed);
     }
 
     public long remainingCapacity() {
