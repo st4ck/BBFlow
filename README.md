@@ -17,7 +17,7 @@ Java implementation of Fastflow's Bulding Blocks
 
 **ff_all2all** block that combine multiple ff_farm together in different ways. See combine_farm function.
 
-**ff_comb** combine two nodes in one using pipeline. Equivalent to create a ff_pipeline and add the two blocks.  
+**ff_comb** combine two nodes in one using pipeline. Equivalent to create a ff_pipeline and add the two blocks. Channel between blocks is NONBLOCKING and UNBOUNDED.
 
 ### Queues / Channels
 **ff_queue** the default class of the queues (channels). Channels are 1-1 between nodes of type SPSC and FIFO
@@ -26,21 +26,20 @@ Java implementation of Fastflow's Bulding Blocks
 ### Implementation choiches
 Running on the actual latest version of Java (17).
 
-PART TO UPDATE: ~~Each ff_node runs in a Thread and nodes are synchronized using built-in LinkedBlockingQueue.~~
+Every node in BBFlow is of type Block<T>, the simplest block. Each block ff_node is an interface to a Thread (node) executing a task of type defaultJob (Runnable).
 
-~~Channels are LinkedBlockingQueue objects and as per definition, getting and removing only first element in position 0, the complexity of r/w operation is O(1)~~
+The blocks are connected each other using channels of type ff_queue. Each channel can be BLOCKING/NONBLOCKING or BOUNDED/UNBOUNDED.
 
-~~LinkedBlockingQueue are shared in memory between Threads connected each other.~~
+All other blocks are a composition of ff_node and ff_queue classes.
 
-Nodes can be connected straightly and also feedbacks are possible, just remember to set and send EOS to avoid infinite loops.
-  
+Blocks can be connected straightly and also feedbacks are possible, just remember to set and send EOS to avoid infinite loops.
 
 ### Complexity
 Complexity of the ff_queue is O(1) reading/deleting only first element when receiving data on a channel
   
 Complexity of the ff_queue is O(1) while appending a new data/list at the end of the list
   
-Being input and output channels fixed (so linear), the complexity for a node of scanning all input channels when receive a notification is still O(1)
+Being numnber of input and output channels fixed (so linear), the complexity for a node of scanning all input channels when receive a notification is still O(1)
   
 An overhead is added only when the throughput of the data is not sufficient to keep channels with at least one element. In this case waiting (and synchronization in the case of BLOCKING queues) can occur.
 

@@ -32,9 +32,13 @@ public class ff_pipeline<T> extends block<T> {
     }
 
     public void appendNewBB(block<T> b) {
+        appendNewBB(b, bb_settings.BLOCKING, bb_settings.BOUNDED);
+    }
+
+    public void appendNewBB(block<T> b, boolean BLOCKING, boolean BOUNDED) {
         if (pipe.size() > 0) {
             block<T> lastElement = pipe.getLast();
-            ff_queue<T> channel = new ff_queue<>(bb_settings.BLOCKING,bb_settings.BOUNDED,this.bufferSize);
+            ff_queue<T> channel = new ff_queue<>(BLOCKING,BOUNDED,this.bufferSize);
             lastElement.addOutputChannel(channel);
             b.addInputChannel(channel);
         }
