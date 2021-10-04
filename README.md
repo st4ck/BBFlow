@@ -11,7 +11,7 @@ Java implementation of Fastflow's Bulding Blocks
 
 **ff_pipeline** this block is the abstraction of a Pipeline allowing to interconnect blocks easily in pipeline manner. Contains a set of blocks<T> (any building blocks) connected each other. Each block can be added with the appendNewBB() function
 
-**ff_all2all** block that combine multiple ff_farm together connecting workers in a N to M manner
+**ff_all2all** block that combine multiple ff_farm together in different ways. See combine_farm function.
 
 ### Queues / Channels
 **ff_queue** the default class of the queues (channels). Channels are 1-1 between nodes of type SPSC and FIFO
