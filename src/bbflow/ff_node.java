@@ -19,6 +19,10 @@ public class ff_node<T> extends block<T> {
         mynode = new node(job);
     }
 
+    public ff_node(ff_node<T> customEmitterR) {
+        this.mynode = new node(customEmitterR.mynode.job);
+    }
+
     /**
      * add a Input channel to the bbflow.ff_node. LinkedList is O(1) adding/removing first element
      * @param input input channel
