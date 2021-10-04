@@ -3,13 +3,13 @@
 # BBFlow
 Java implementation of Fastflow's Bulding Blocks
 
-## Sequential Building Blocks
+### Sequential Building Blocks
 
 **block** basic entity of each building blocks. Each building block is of type block<T>
 
 **ff_node** is the basic block entity composed by a set of input and output channels (LinkedBlockingQueue<T>) and a computation code (runJob())
 
-## Parallel Building Blocks
+### Parallel Building Blocks
 
 **ff_farm** this block is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
 
