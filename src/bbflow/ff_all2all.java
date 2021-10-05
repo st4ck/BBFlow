@@ -26,7 +26,7 @@ public class ff_all2all<T> extends block<T> {
      * All2All building block. For details see the thesis. 8 Cases considered
      * @param b new farm to add in the all2all block
      * @param customEmitterR custom emitter to use during fusion
-     * @param customCollectorG custom collector to use during fusione
+     * @param customCollectorG custom collector to use during fusion
      * @param merge true, pipeline with single channel generated between farms. False pipeline with multiple channels
      */
     public void combine_farm(ff_farm<T> b, ff_node<T> customEmitterR, ff_node<T> customCollectorG, boolean merge) {
@@ -168,6 +168,19 @@ public class ff_all2all<T> extends block<T> {
         }
 
         a2a.add(b);
+    }
+
+    /**
+     * generic method to combine directly two farms adding them to the all2all block
+     * @param a farm1
+     * @param b farm2
+     * @param customEmitterR custom emitter to use during fusion
+     * @param customCollectorG custom collector to use during fusion
+     * @param merge true, pipeline with single channel generated between farms. False pipeline with multiple channels
+     */
+    public void combine_farm(ff_farm<T> a, ff_farm<T> b, ff_node<T> customEmitterR, ff_node<T> customCollectorG, boolean merge) {
+        combine_farm(a,customEmitterR,customCollectorG,merge);
+        combine_farm(b,customEmitterR,customCollectorG,merge);
     }
 
     public void addInputChannel(ff_queue<T> input) {
