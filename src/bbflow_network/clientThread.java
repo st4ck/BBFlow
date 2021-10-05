@@ -5,6 +5,9 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 
+/**
+ * Thread client of objectClient
+ */
 public class clientThread implements Runnable {
     String host;
     int connPort;

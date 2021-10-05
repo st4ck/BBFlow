@@ -8,6 +8,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
 
+/**
+ * Server socket single threaded used to receive data from another node through TCP channel
+ * @param <T> Type of data received through TCP channel
+ */
 public class objectServer<T> implements Runnable {
     int serverPort = 44444;
     ServerSocket serverSocket = null;

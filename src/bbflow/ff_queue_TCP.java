@@ -5,6 +5,10 @@ import bbflow_network.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Queue extending ff_queue exploting a network channel. The channel is uni-directional and type of it must be specified during initialization (INPUT/OUTPUT)
+ * @param <T> Type of channels of the queue
+ */
 public class ff_queue_TCP<T> extends ff_queue<T> {
     objectClient client = null;
     Thread server = null;
