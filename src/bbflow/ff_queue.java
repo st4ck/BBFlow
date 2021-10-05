@@ -57,6 +57,10 @@ public class ff_queue<T> {
         this(blocking, bb_settings.BOUNDED, bb_settings.defaultBufferSize);
     }
 
+    public ff_queue(int bufferSize) {
+        this(bb_settings.BLOCKING, bb_settings.BOUNDED, bufferSize);
+    }
+
     /**
      * Inserts the specified element at the tail of this queue, waiting if necessary for space to become available (if bounded)
      * @param i Element to insert
