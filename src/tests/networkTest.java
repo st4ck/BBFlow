@@ -9,18 +9,6 @@ import java.util.LinkedList;
 
 public class networkTest {
     public static void main (String[] args) throws InterruptedException, IOException {
-        /*ff_queue<Integer> mq = new ff_queue<>();
-        objectServer<Integer> s = new objectServer<Integer>(1, mq);
-        Thread listen = new Thread(s);
-        listen.start();
-
-        objectClient c = new objectClient(1, "127.0.0.1");
-        Integer x = 55;
-        c.put(x);
-        c.setEOS();
-
-        listen.join();*/
-
         int bufferSize = 16;
 
         bb_settings.BOUNDED = true;
@@ -39,7 +27,6 @@ public class networkTest {
 
         stage1.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "127.0.0.1"));
         stage2.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
-
 
         stage1.addInputChannel(input_data);
         stage2.addOutputChannel(input_data);
