@@ -12,7 +12,7 @@ public class ff_queue<T> {
     LinkedBlockingQueue<T> blocking_queue;
     ConcurrentLinkedQueue<T> nonblocking_queue;
     squeue<T> nonblocking_bounded_queue;
-    private boolean EOS = false;
+    boolean EOS = false;
 
     boolean blocking = false;
     boolean bounded = false;
