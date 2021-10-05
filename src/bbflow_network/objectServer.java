@@ -13,14 +13,14 @@ import java.io.IOException;
  * @param <T> Type of data received through TCP channel
  */
 public class objectServer<T> implements Runnable {
-    int serverPort = 44444;
+    int serverPort;
     ServerSocket serverSocket = null;
     boolean isStopped = false;
     Thread runningThread = null;
     ff_queue<T> queue;
 
     public objectServer(int connectionId, ff_queue<T> q){
-        this.serverPort += connectionId;
+        this.serverPort = bb_settings.serverPort + connectionId;
         queue = q;
     }
 

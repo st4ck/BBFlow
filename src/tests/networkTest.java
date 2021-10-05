@@ -23,7 +23,7 @@ public class networkTest {
         }
 
         ff_farm stage1 = new ff_farm<Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, bufferSize);
-        ff_node stage2 = new ff_node<Integer>(new complete_farm_testOutnode<Integer>(1));
+        ff_node stage2 = new ff_node<Integer>(new complete_farm_testOutnode<Integer>(15));
 
         stage1.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "127.0.0.1"));
         stage2.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));

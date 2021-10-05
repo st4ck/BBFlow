@@ -1,16 +1,14 @@
 package bbflow_network;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.ConnectException;
-import java.net.Socket;
+import bbflow.*;
 
 /**
  * class to manage connection to server socket in order to send data through TCP channel
  * Auto-reconnection in case of fault is implemented
  */
 public class objectClient {
-    int serverPort = 44444;
+    int serverPort = bb_settings.serverPort;
     int connPort;
     String host;
     clientThread cc;

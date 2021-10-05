@@ -24,4 +24,10 @@ public class bb_settings {
      * Milliseconds by default
      */
     public static int backOff = 5;
+
+    /**
+     * listening port used as a base for INPUT network queues. Every INPUT channel will listen on
+     * port = serverPort + channelId
+     */
+    public static int serverPort = 44444;
 }
