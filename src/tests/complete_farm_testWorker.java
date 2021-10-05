@@ -3,8 +3,10 @@ package tests;
 import bbflow.defaultJob;
 import bbflow.ff_queue;
 
-import java.util.concurrent.LinkedBlockingQueue;
-
+/**
+ * workers runJob of the example farm
+ * @param <T> Type of channels
+ */
 public class complete_farm_testWorker<T> extends defaultJob<T> {
     public complete_farm_testWorker(int id) {
         this.id = id;

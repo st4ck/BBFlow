@@ -4,6 +4,9 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/**
+ * ff_farm test with an output node
+ */
 public class complete_farm_test {
     public static void main (String[] args) {
         int bufferSize = 16;

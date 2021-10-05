@@ -5,7 +5,7 @@ import bbflow.*;
 import java.util.LinkedList;
 
 /**
- * example of pipeline usage with 2 stages. Timewatch added to measure performance
+ * example of pipeline usage with 2 stages, timewatch added to measure performance.
  * Stage1: a farm with n_workers
  * Stage2: a node receiving data from collector and printing to the output
  */
