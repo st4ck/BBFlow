@@ -21,6 +21,10 @@ Java implementation of Fastflow's Bulding Blocks
 
 ### Queues / Channels
 **ff_queue** the default class of the queues (channels). Channels are 1-1 between nodes of type SPSC and FIFO
+
+### Network channels
+**ff_queue_TCP** extends ff_queue (of type NONBLOCKING and UNBOUNDED) adding a network layer to send/receive data through TCP connection. The channel is unidirectional and the type (INPUT/OUTPUT) must be specified in creation phase.
+OUTPUT channels wait server to be available and reconnection occurs in case of connection loss. Data are guaranteed to arrive.
   
 
 ### Implementation choiches
