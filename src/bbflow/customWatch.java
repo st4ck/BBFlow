@@ -3,7 +3,7 @@ package bbflow;
 import java.util.ArrayList;
 
 /**
- * custom time watch class to measure & print performance
+ * custom time watch class to measure &amp; print performance
  */
 public class customWatch {
     long starttime = 0;

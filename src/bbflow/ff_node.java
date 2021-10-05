@@ -42,7 +42,7 @@ public class ff_node<T> extends block<T> {
 
     /**
      * add a Input channel to the bbflow.ff_node. LinkedList is O(1) adding/removing first element
-     * @param input input channel
+     * @param index index of channel to remove
      * @return
      */
     public boolean removeInputChannel(int index) {
@@ -52,7 +52,7 @@ public class ff_node<T> extends block<T> {
     /**
      * add a Output channel to the bbflow.ff_node
      * LinkedList is O(1) adding/removing first element
-     * @param output output channel
+     * @param index index of channel to remove
      * @return
      */
     public boolean removeOutputChannel(int index) {

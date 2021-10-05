@@ -8,7 +8,7 @@ import java.util.LinkedList;
  */
 public class ff_all2all<T> extends block<T> {
     /**
-     * collection of block<T> where first and last element are of type ff_farm in any circumstances
+     * collection of blocks where first and last element are of type ff_farm in any circumstances
      */
     LinkedList<block<T>> a2a;
     int bufferSize = bb_settings.defaultBufferSize;
