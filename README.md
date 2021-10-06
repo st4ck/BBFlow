@@ -71,3 +71,7 @@ There are different examples in src/tests directory to run and to take inspirati
 
 ### JavaDoc Documentation
 JavaDoc Documentation can be found at https://st4ck.github.io/BBFlow/
+
+### TODO
+- Test all all-to-all combinations
+- combine reimplementation?
