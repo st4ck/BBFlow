@@ -1,12 +1,12 @@
 package tests;
 import bbflow.*;
-import bbflow_network.*;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.util.LinkedList;
 
+/**
+ * test of the network channels. Stage1 send data to the Stage2 (listening on localhost) through this channel
+ */
 public class networkTest {
     public static void main (String[] args) throws InterruptedException, IOException {
         int bufferSize = 16;

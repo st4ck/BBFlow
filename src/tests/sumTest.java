@@ -3,7 +3,6 @@ package tests;
 import bbflow.*;
 
 import java.util.LinkedList;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Test class with a simple farm and sum of sequential numbers
