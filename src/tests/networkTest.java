@@ -29,7 +29,7 @@ public class networkTest {
         stage2.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
 
         stage1.addInputChannel(input_data);
-        stage2.addOutputChannel(input_data);
+        stage2.addOutputChannel(new ff_queue<>());
 
         stage1.start();
         stage2.start();
