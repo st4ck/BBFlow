@@ -28,11 +28,9 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
     }
 
     public void createPipe(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED) {
-        if (pipe.size() > 0) {
-            ff_queue<U> channel = new ff_queue<>(BLOCKING,BOUNDED,this.bufferSize);
-            b1.addOutputChannel(channel);
-            b2.addInputChannel(channel);
-        }
+        ff_queue<U> channel = new ff_queue<>(BLOCKING,BOUNDED,this.bufferSize);
+        b1.addOutputChannel(channel);
+        b2.addInputChannel(channel);
 
         pipe.add(b1);
         pipe.add(b2);
