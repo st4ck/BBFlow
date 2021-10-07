@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * default Emitter of bbflow.ff_farm. Implemented various Communication models with workers: ROUNDROBIN, SCATTER, BROADCAST
  * @param <T> Custom type of channels
  */
-public class defaultEmitter<T> extends defaultJob<T> { // Runnable job
+public class defaultEmitter<T> extends defaultJob<T,T> { // Runnable job
     /**
      * Communications model
      */

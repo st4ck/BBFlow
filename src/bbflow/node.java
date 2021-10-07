@@ -4,9 +4,9 @@ package bbflow;
  * Thread running the job for ff_node building block
  * @param <T> Custom type of the channels
  */
-public class node<T> extends Thread {
-    defaultJob<T> job;
-    public node(defaultJob<T> job) {
+public class node<T,U> extends Thread {
+    defaultJob<T,U> job;
+    public node(defaultJob<T,U> job) {
         this.job = job;
     }
 
@@ -28,7 +28,7 @@ public class node<T> extends Thread {
      * LinkedList is O(1) adding/removing first element
      * @param output output channel
      */
-    public void addOutputChannel(ff_queue<T> output) {
+    public void addOutputChannel(ff_queue<U> output) {
         job.addOutputChannel(output);
     }
 
@@ -40,7 +40,7 @@ public class node<T> extends Thread {
         return job.removeInputChannel(index);
     }
 
-    public ff_queue<T> getOutputChannel(int index) {
+    public ff_queue<U> getOutputChannel(int index) {
         return job.getOutputChannel(index);
     }
 

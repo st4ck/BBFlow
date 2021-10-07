@@ -5,11 +5,11 @@ package bbflow;
  * if a new custom building block is created, all functions MUST be extended
  * @param <T>
  */
-public class block<T> {
+public class block<T,U> {
     public void addInputChannel(ff_queue<T> input) {
     }
 
-    public void addOutputChannel(ff_queue<T> output) {
+    public void addOutputChannel(ff_queue<U> output) {
     }
 
     public void start() {

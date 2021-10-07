@@ -18,32 +18,23 @@ import java.util.LinkedList;
 /**
  * Pipeline building block allows auto-connection between all types of ff_blocks
  */
-public class ff_pipeline<T> extends block<T> {
-    LinkedList<block<T>> pipe;
+public class ff_pipeline<T,V> extends block<T,V> {
+    LinkedList<pipeline_generic> pipe;
     int bufferSize = bb_settings.defaultBufferSize;
 
-    public ff_pipeline() {
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2) {
+        pipeline_generic<T,Object,V> p = new pipeline_generic<T,Object,V>(bufferSize);
+        p.createPipe(b1,b2);
         pipe = new LinkedList<>();
+        pipe.add(p);
     }
 
-    public ff_pipeline(int bufferSize) {
-        pipe = new LinkedList<>();
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize) {
         this.bufferSize = bufferSize;
-    }
-
-    public void appendNewBB(block<T> b) {
-        appendNewBB(b, bb_settings.BLOCKING, bb_settings.BOUNDED);
-    }
-
-    public void appendNewBB(block<T> b, boolean BLOCKING, boolean BOUNDED) {
-        if (pipe.size() > 0) {
-            block<T> lastElement = pipe.getLast();
-            ff_queue<T> channel = new ff_queue<>(BLOCKING,BOUNDED,this.bufferSize);
-            lastElement.addOutputChannel(channel);
-            b.addInputChannel(channel);
-        }
-
-        pipe.add(b);
+        pipeline_generic<T,Object,V> p = new pipeline_generic<T,Object,V>(bufferSize);
+        p.createPipe(b1,b2);
+        pipe = new LinkedList<>();
+        pipe.add(p);
     }
 
     public void addInputChannel(ff_queue<T> input) {
@@ -52,7 +43,7 @@ public class ff_pipeline<T> extends block<T> {
         }
     }
 
-    public void addOutputChannel(ff_queue<T> output) {
+    public void addOutputChannel(ff_queue<V> output) {
         if (pipe.size() > 0) {
             pipe.getLast().addOutputChannel(output);
         }

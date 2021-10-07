@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  * default Collector of bbflow.ff_farm. Can be extended and runJob() overwritten
  * @param <T> Custom type of channels
  */
-public class defaultCollector<T> extends defaultJob<T> {
+public class defaultCollector<T> extends defaultJob<T,T> {
     public static final int FIRSTCOME = 1;
     public static final int ROUNDROBIN = 2;
     public static final int GATHER = 3;

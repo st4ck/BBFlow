@@ -7,7 +7,7 @@ import bbflow.ff_queue;
  * workers runJob of the example farm
  * @param <T> Type of channels
  */
-public class complete_farm_testWorker<T> extends defaultJob<T> {
+public class complete_farm_testWorker<T,U> extends defaultJob<T,U> {
     public complete_farm_testWorker(int id) {
         this.id = id;
     }
@@ -17,7 +17,7 @@ public class complete_farm_testWorker<T> extends defaultJob<T> {
     public void runJob() throws InterruptedException {
         T received;
         ff_queue<T> in_channel = in.get(0);
-        ff_queue<T> out_channel = out.get(0);
+        ff_queue<U> out_channel = out.get(0);
 
         received = in_channel.take();
         if (received == null) { // EOS
@@ -25,7 +25,7 @@ public class complete_farm_testWorker<T> extends defaultJob<T> {
             out_channel.setEOS();
         } else {
             mysum += (Integer) received;
-            out_channel.put((T)mysum);
+            out_channel.put((U)mysum);
         }
 
         //System.out.println(id + ": (" + (Integer) received + ") " + mysum);

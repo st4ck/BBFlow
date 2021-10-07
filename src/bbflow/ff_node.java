@@ -7,7 +7,7 @@ package bbflow;
  * Single lock for all input channels and a single lock for all output channels
  * @param <T> Custom type of the channels
  */
-public class ff_node<T> extends block<T> {
+public class ff_node<T,U> extends block<T,U> {
     node mynode;
 
     /**
@@ -15,11 +15,11 @@ public class ff_node<T> extends block<T> {
      * @param job generic Runnable of type default Job
      *            extending Runnable
      */
-    public ff_node(defaultJob<T> job) {
+    public ff_node(defaultJob<T,U> job) {
         mynode = new node(job);
     }
 
-    public ff_node(ff_node<T> customEmitterR) {
+    public ff_node(ff_node<T,U> customEmitterR) {
         this.mynode = new node(customEmitterR.mynode.job);
     }
 
@@ -36,7 +36,7 @@ public class ff_node<T> extends block<T> {
      * LinkedList is O(1) adding/removing first element
      * @param output output channel
      */
-    public void addOutputChannel(ff_queue<T> output) {
+    public void addOutputChannel(ff_queue<U> output) {
         mynode.addOutputChannel(output);
     }
 
@@ -71,7 +71,7 @@ public class ff_node<T> extends block<T> {
         }
     }
 
-    public ff_queue<T> getOutputChannel(int index) {
+    public ff_queue<U> getOutputChannel(int index) {
         return mynode.getOutputChannel(index);
     }
 

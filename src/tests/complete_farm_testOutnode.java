@@ -7,7 +7,7 @@ import bbflow.ff_queue;
  * output node of complete_farm_test
  * @param <T> Channels type
  */
-public class complete_farm_testOutnode<T> extends defaultJob<T> {
+public class complete_farm_testOutnode<T,U> extends defaultJob<T,U> {
     public complete_farm_testOutnode(int id) {
         this.id = id;
     }

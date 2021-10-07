@@ -10,9 +10,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * For more details see run() function doc
  * @param <T> Custom type of the channels
  */
-public class defaultJob<T> implements Runnable {
+public class defaultJob<T,U> implements Runnable {
     public LinkedList<ff_queue<T>> in;
-    public LinkedList<ff_queue<T>> out;
+    public LinkedList<ff_queue<U>> out;
 
     public int id = -1;
 
@@ -76,7 +76,7 @@ public class defaultJob<T> implements Runnable {
      *  add new output channel to the Runnable node
      * @param output output channel
      */
-    public void addOutputChannel(ff_queue<T> output)
+    public void addOutputChannel(ff_queue<U> output)
     {
         out.add(output);
     }
@@ -99,7 +99,7 @@ public class defaultJob<T> implements Runnable {
         }
     }
 
-    public ff_queue<T> getOutputChannel(int index) {
+    public ff_queue<U> getOutputChannel(int index) {
         try {
             return out.get(index);
         } catch (IndexOutOfBoundsException x) {

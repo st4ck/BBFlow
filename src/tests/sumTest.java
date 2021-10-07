@@ -13,13 +13,13 @@ public class sumTest {
 
         ff_queue<Integer> input_data = new ff_queue<Integer>(bb_settings.BLOCKING,bb_settings.BOUNDED, bufferSize);
 
-        LinkedList<defaultJob<Integer>> worker_job = new LinkedList<>();
+        LinkedList<defaultJob<Integer,Integer>> worker_job = new LinkedList<>();
         int n_workers = 4;
         for (int i=0; i<n_workers; i++) {
-            worker_job.add(new sumTestWorker<Integer>(i));
+            worker_job.add(new sumTestWorker<Integer,Integer>(i));
         }
 
-        ff_farm x = new ff_farm<Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, bufferSize);
+        ff_farm x = new ff_farm<Integer,Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, bufferSize);
         x.addInputChannel(input_data);
         x.start();
 

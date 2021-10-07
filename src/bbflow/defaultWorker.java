@@ -5,7 +5,7 @@ package bbflow;
  * it should be extended doing nothing
  * @param <T> Custom type of the channels
  */
-public class defaultWorker<T> extends defaultJob<T> {
+public class defaultWorker<T> extends defaultJob<T,T> {
     public defaultWorker(int id) {
         this.id = id;
     }

@@ -11,9 +11,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  * If collector is not needed and the job ends in the workers, just avoid sending data to the channel between workers and collector, and it will be ignored
  * @param <T>
  */
-public class ff_farm<T> extends block<T> {
-    public ff_node<T> emitter;
-    public ff_node<T> collector;
+public class ff_farm<T,U> extends block<T,U> {
+    public ff_node<T,T> emitter;
+    public ff_node<U,U> collector;
     public LinkedList<ff_node> workers;
     private ff_queue<T> input;
     private int bufferSize;
@@ -24,21 +24,21 @@ public class ff_farm<T> extends block<T> {
      * @param emitter_strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
      * @param collector_strategy Collector communication strategy chosen between FIRSTCOME, ROUNDROBIN and GATHER
      */
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
+    public ff_farm(LinkedList<defaultJob<T,U>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
         this.workers = new LinkedList<>();
 
-        emitter = new ff_node<T>(new defaultEmitter<T>(emitter_strategy));
-        collector = new ff_node<T>(new defaultCollector<T>(collector_strategy));
+        emitter = new ff_node<T,T>(new defaultEmitter<T>(emitter_strategy));
+        collector = new ff_node<U,U>(new defaultCollector<U>(collector_strategy));
 
         for (int i=0;i<worker_job.size();i++) {
-            ff_node<T> worker = new ff_node<T>(worker_job.get(i));
+            ff_node<T,U> worker = new ff_node<T,U>(worker_job.get(i));
 
             ff_queue<T> emitter_worker = new ff_queue<T>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
             emitter.addOutputChannel(emitter_worker);
             worker.addInputChannel(emitter_worker);
 
-            ff_queue<T> worker_collector = new ff_queue<T>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
+            ff_queue<U> worker_collector = new ff_queue<U>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
             worker.addOutputChannel(worker_collector);
             collector.addInputChannel(worker_collector);
 
@@ -46,11 +46,11 @@ public class ff_farm<T> extends block<T> {
         }
     }
 
-    public ff_farm(LinkedList<defaultJob<T>> worker_job, int emitter_strategy) {
+    public ff_farm(LinkedList<defaultJob<T,U>> worker_job, int emitter_strategy) {
         this(worker_job, emitter_strategy, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
     }
 
-    public ff_farm(LinkedList<defaultJob<T>> worker_job) {
+    public ff_farm(LinkedList<defaultJob<T,U>> worker_job) {
         this(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
     }
 
@@ -107,7 +107,7 @@ public class ff_farm<T> extends block<T> {
      * add a new output channel to the collector
      * @param output output channel
      */
-    public void addOutputChannel(ff_queue<T> output) {
+    public void addOutputChannel(ff_queue<U> output) {
         if (collector != null) {
             collector.addOutputChannel(output);
         }

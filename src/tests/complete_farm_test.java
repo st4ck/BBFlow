@@ -14,17 +14,17 @@ public class complete_farm_test {
         ff_queue<Integer> input_data = new ff_queue<>(bb_settings.BLOCKING, bb_settings.BOUNDED, bufferSize);
         ff_queue<Integer> farm_outnode = new ff_queue<Integer>(bb_settings.BLOCKING, bb_settings.BOUNDED, bufferSize);
 
-        LinkedList<defaultJob<Integer>> worker_job = new LinkedList<>();
+        LinkedList<defaultJob<Integer,Integer>> worker_job = new LinkedList<>();
         int n_workers = 4;
         for (int i=0; i<n_workers; i++) {
-            worker_job.add(new complete_farm_testWorker<Integer>(i));
+            worker_job.add(new complete_farm_testWorker<Integer,Integer>(i));
         }
 
-        ff_farm x = new ff_farm<Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, 16);
+        ff_farm x = new ff_farm<Integer,Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, 16);
         x.addInputChannel(input_data);
         x.addOutputChannel(farm_outnode);
 
-        ff_node y = new ff_node<Integer>(new complete_farm_testOutnode<Integer>(1));
+        ff_node y = new ff_node<Integer,Integer>(new complete_farm_testOutnode<Integer,Integer>(1));
         y.addInputChannel(farm_outnode);
         y.addOutputChannel(new ff_queue<Integer>());
 

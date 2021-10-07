@@ -7,7 +7,7 @@ import bbflow.*;
  * worker code extending bbflow.defaultJob for the test of the farm
  * @param <T>
  */
-public class sumTestWorker<T> extends defaultJob<T> {
+public class sumTestWorker<T,U> extends defaultJob<T,U> {
     public sumTestWorker(int id) {
         this.id = id;
     }
