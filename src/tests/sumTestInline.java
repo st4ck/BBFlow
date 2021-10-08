@@ -2,11 +2,6 @@ package tests;
 
 import bbflow.*;
 
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
-import java.util.LinkedList;
-
 /**
  * Test class with a simple farm and sum of sequential numbers
  */

@@ -2,8 +2,6 @@ package tests;
 
 import bbflow.*;
 
-import java.util.LinkedList;
-
 /**
  * ff_farm test with an output node
  */
