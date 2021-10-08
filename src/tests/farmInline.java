@@ -27,11 +27,11 @@ public class farmInline {
             }
         };
 
-        defaultJob<Double, Integer> outNode = new defaultJob<>() {
+        defaultJob<Double, String> outNode = new defaultJob<>() {
             Double sum = 0.0;
             Integer elements = 0;
 
-            public Integer runJob(Double x) {
+            public String runJob(Double x) {
                 elements++;
                 sum += x;
                 return null;
@@ -50,10 +50,10 @@ public class farmInline {
             }*/
         };
 
-        ff_farm x = new ff_farm<Integer,Double>(n_workers, workerJob, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, 16);
+        ff_farm x = new ff_farm<>(n_workers, workerJob, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, 16);
         x.addInputChannel(input_data);
         x.addOutputChannel(farm_outnode);
-        ff_node y = new ff_node<Double,Integer>(outNode);
+        ff_node y = new ff_node<>(outNode);
         y.addInputChannel(farm_outnode);
         y.addOutputChannel(new ff_queue<Integer>());
 
