@@ -66,11 +66,15 @@ public class ff_queue<T> {
      * @param i Element to insert
      * @throws InterruptedException
      */
-    public void put(T i) throws InterruptedException {
+    public void put(T i) {
         if (this.EOS) { return; }
 
         if (blocking) {
-            blocking_queue.put(i);
+            try {
+                blocking_queue.put(i);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else {
             if (bounded) {
                 while (true) {
@@ -78,7 +82,11 @@ public class ff_queue<T> {
                         return;
                     }
 
-                    Thread.sleep(bb_settings.backOff);
+                    try {
+                        Thread.sleep(bb_settings.backOff);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 // no wait needed, unbounded

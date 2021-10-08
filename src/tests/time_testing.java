@@ -36,14 +36,12 @@ public class time_testing {
 
         myWatch.watch();
 
-        try {
-            for (int i = 0; i < 10000; i++) {
-                input_data.put(i);
-            }
-            input_data.setEOS(); // sending EOF
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        for (int i = 0; i < 10000; i++) {
+            input_data.put(i);
         }
+        input_data.setEOS(); // sending EOF
+
 
         pipe.join();
 

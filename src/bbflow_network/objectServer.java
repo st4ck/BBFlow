@@ -71,7 +71,7 @@ public class objectServer<T> implements Runnable {
                     queue.put((T) o);
                 }
             }
-        } catch (IOException | ClassNotFoundException | InterruptedException e) {
+        } catch (IOException | ClassNotFoundException e) {
             //report exception somewhere.
             e.printStackTrace();
         }

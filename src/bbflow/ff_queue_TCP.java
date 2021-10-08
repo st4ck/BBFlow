@@ -37,11 +37,15 @@ public class ff_queue_TCP<T> extends ff_queue<T> {
         this(type, connectionId,null);
     }
 
-    public void put(T i) throws InterruptedException {
+    public void put(T i) {
         if (this.EOS) { return; }
 
         if (sockettype == OUTPUT) {
-            client.put(i);
+            try {
+                client.put(i);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         } else if (sockettype == INPUT) {
             super.put(i);
         }

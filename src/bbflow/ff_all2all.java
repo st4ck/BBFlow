@@ -24,7 +24,8 @@ public class ff_all2all<T,U,V,W> extends block<T,V> {
 
     /**
      * All2All building block. For details see the thesis. 8 Cases considered
-     * @param b new farm to add in the all2all block
+     * @param b1 Left farm
+     * @param b2 Right farm
      * @param customEmitterR custom emitter to use during fusion
      * @param customCollectorG custom collector to use during fusion
      * @param merge true, pipeline with single channel generated between farms. False pipeline with multiple channels

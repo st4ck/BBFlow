@@ -32,14 +32,10 @@ public class pipeline_farm_node {
         pipe.addOutputChannel(new ff_queue<Integer>());
         pipe.start();
 
-        try {
-            for (int i = 0; i < 10000; i++) {
-                input_data.put(i);
-            }
-            input_data.setEOS(); // sending EOF
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        for (int i = 0; i < 10000; i++) {
+            input_data.put(i);
         }
+        input_data.setEOS(); // sending EOF
 
         pipe.join();
     }
