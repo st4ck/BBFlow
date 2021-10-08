@@ -42,6 +42,14 @@ public class defaultEmitter<T> extends defaultJob<T,T> { // Runnable job
         switch (strategy) {
             case ROUNDROBIN:
                 boolean inserted = out.get(position).offer(received);
+
+                if (inserted) {
+                    position++;
+                    if (position >= out.size()) {
+                        position = 0;
+                    }
+                }
+
                 while (!inserted) {
                     // insertion failed, buffer full. Try cyclically all workers
                     for (int i = 0; i < out.size(); i++) {

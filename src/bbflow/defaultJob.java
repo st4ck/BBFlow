@@ -1,8 +1,9 @@
 package bbflow;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Currency;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * default Job extecuted by the bbflow.ff_node. Should be extended and reimplemented with the custom code in runJob() function
@@ -11,14 +12,27 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param <T> Custom type of the channels
  */
 public class defaultJob<T,U> implements Runnable {
-    public LinkedList<ff_queue<T>> in;
-    public LinkedList<ff_queue<U>> out;
+    public LinkedList<ff_queue<T>> in = new LinkedList<>();
+    public LinkedList<ff_queue<U>> out = new LinkedList<>();
 
+    public static final int CUSTOM_FUNCTION = 1;
+    public static final int INLINE = 2;
+    public static final int INLINE_MULTI = 3;
+
+    public int runType = CUSTOM_FUNCTION;
     public int id = -1;
+    int position = 0;
 
     public defaultJob() {
-        in = new LinkedList<>();
-        out = new LinkedList<>();
+
+    }
+
+    public defaultJob(int id) {
+        this.id = id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     /**
@@ -41,7 +55,51 @@ public class defaultJob<T,U> implements Runnable {
 
             // elements available
             try {
-                runJob();
+                if (runType == CUSTOM_FUNCTION) {
+                    runJob();
+                } else if (runType == INLINE) {
+
+                    T received;
+                    ff_queue<T> in_channel = in.get(0);
+                    ff_queue<U> out_channel = out.get(0);
+
+                    while (true) {
+                        received = in_channel.take();
+                        if (received == null) { // EOS
+                            in.remove(0); // removing input channel, sequence finished
+                            out_channel.setEOS();
+                            EOS();
+                            break;
+                        } else {
+                            U r = runJob(received);
+                            if (r != null) {
+                                out_channel.put(r);
+                            }
+                        }
+                        break;
+                    }
+                } else if (runType == INLINE_MULTI) {
+                    T received = in.get(position).take();
+                    if (received == null) {
+                        in.remove(position); // input channel not needed anymore
+                        position--;
+
+                        if (in.size() == 0) { // no more input channels, EOS only last time
+                            for (int i=0; i<out.size(); i++) {
+                                out.get(i).setEOS();
+                            }
+
+                            EOS();
+                        }
+                    } else {
+                        runJobMulti(received, out);
+                    }
+
+                    position++;
+                    if (position >= in.size()) {
+                        position = 0;
+                    }
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
@@ -61,6 +119,14 @@ public class defaultJob<T,U> implements Runnable {
      * Here main computation task is done once we're sure there's data in at least one of the input channels
      */
     public void runJob() throws InterruptedException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+
+    }
+
+    public U runJob(T element) throws InterruptedException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        return null;
+    }
+
+    public void runJobMulti(T element, LinkedList<ff_queue<U>> channels_output) {
 
     }
 
@@ -113,5 +179,9 @@ public class defaultJob<T,U> implements Runnable {
         } catch (IndexOutOfBoundsException x) {
             return null;
         }
+    }
+
+    public void EOS() {
+
     }
 }

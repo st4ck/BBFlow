@@ -1,5 +1,9 @@
 package bbflow;
 
+import tests.*;
+
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -25,6 +29,10 @@ public class ff_farm<T,U> extends block<T,U> {
      * @param collector_strategy Collector communication strategy chosen between FIRSTCOME, ROUNDROBIN and GATHER
      */
     public ff_farm(LinkedList<defaultJob<T,U>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
+        create_farm(worker_job, emitter_strategy, collector_strategy, bufferSize);
+    }
+
+    private void create_farm(LinkedList<defaultJob<T,U>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
         this.workers = new LinkedList<>();
 
@@ -52,6 +60,44 @@ public class ff_farm<T,U> extends block<T,U> {
 
     public ff_farm(LinkedList<defaultJob<T,U>> worker_job) {
         this(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
+    }
+
+    public ff_farm(int n_workers, defaultJob<T,U> workerJob, int emitter_strategy, int collector_strategy, int bufferSize) {
+        LinkedList<defaultJob<T,U>> worker_job = new LinkedList<>();
+
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(workerJob);
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+
+            for (int i=0; i<n_workers; i++) {
+                defaultWorker<T,U> WJ = (defaultWorker<T, U>) new ObjectInputStream(bais).readObject();
+                bais.reset();
+                WJ.runType = defaultWorker.INLINE;
+                worker_job.add(WJ);
+            }
+
+            create_farm(worker_job, emitter_strategy, collector_strategy, bufferSize);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public ff_farm(int n_workers, defaultJob<T,U> worker_job, int emitter_strategy) {
+        this(n_workers, worker_job, emitter_strategy, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
+    }
+
+    public ff_farm(int n_workers, defaultJob<T,U> worker_job) {
+        this(n_workers, worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
     }
 
     /**

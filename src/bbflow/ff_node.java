@@ -1,5 +1,9 @@
 package bbflow;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Fundamental building block rapresenting a node
  * Implemented and used by other building blocks
@@ -16,6 +20,19 @@ public class ff_node<T,U> extends block<T,U> {
      *            extending Runnable
      */
     public ff_node(defaultJob<T,U> job) {
+        if (job.getClass().isAnonymousClass()) {
+            job.runType = defaultJob.INLINE;
+
+            Object[] methods = Arrays.stream(job.getClass().getMethods()).toArray();
+            for (int i=0; i<methods.length; i++) {
+                if (((Method)methods[i]).getName() == "runJobMulti") {
+                    if (((Method)methods[i]).getDeclaringClass().getName() != "bbflow.defaultJob") { // overridden method by user
+                        job.runType = defaultJob.INLINE_MULTI;
+                        break;
+                    }
+                }
+            }
+        }
         mynode = new node(job);
     }
 
