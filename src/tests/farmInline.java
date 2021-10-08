@@ -31,23 +31,23 @@ public class farmInline {
             Double sum = 0.0;
             Integer elements = 0;
 
-            /*public Integer runJob(Double x) {
+            public Integer runJob(Double x) {
                 elements++;
                 sum += x;
                 return null;
-            }*/
+            }
 
             public void EOS() {
                 System.out.println("Final integer value: "+sum.intValue() + " of "+elements+" elements");
             }
 
-            public void runJobMulti(Double x, LinkedList<ff_queue<Integer>> out) {
+            /*public void runJobMulti(Double x, LinkedList<ff_queue<Integer>> out) {
                 elements++;
                 sum += x;
 
                 out.get(0).put(sum.intValue());
                 //out.get(1).put(elements);
-            }
+            }*/
         };
 
         ff_farm x = new ff_farm<Integer,Double>(n_workers, workerJob, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, 16);
