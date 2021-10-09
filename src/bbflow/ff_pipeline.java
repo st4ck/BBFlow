@@ -23,7 +23,7 @@ public class ff_pipeline<T,V> extends block<T,V> {
     int bufferSize = bb_settings.defaultBufferSize;
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2) {
-        pipeline_generic<T,Object,V> p = new pipeline_generic<T,Object,V>(bufferSize);
+        pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
         p.createPipe(b1,b2);
         pipe = new LinkedList<>();
         pipe.add(p);
@@ -31,7 +31,7 @@ public class ff_pipeline<T,V> extends block<T,V> {
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize) {
         this.bufferSize = bufferSize;
-        pipeline_generic<T,Object,V> p = new pipeline_generic<T,Object,V>(bufferSize);
+        pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
         p.createPipe(b1,b2);
         pipe = new LinkedList<>();
         pipe.add(p);

@@ -43,7 +43,7 @@ public class ff_all2all<T,U,V,W> extends block<T,V> {
                     combine_farm(b1, b2, null, null, false);
                     return;
                 } else if ((customEmitterR != null) && (customCollectorG == null)) {
-                    // R as new Emitter + default collector
+                    // default collector + R as new Emitter
                     ff_node<U,U> collector = new ff_node<U,U>(new defaultCollector<U>(defaultCollector.ROUNDROBIN));
                     ff_pipeline<U,V> R_G = new ff_pipeline<U,V>((block<U, Object>)collector, (block<Object, V>)customEmitterR);
 
@@ -59,7 +59,7 @@ public class ff_all2all<T,U,V,W> extends block<T,V> {
 
                     a2a.add(R_G);
                 } else if ((customEmitterR == null) && (customCollectorG != null)) {
-                    // G as new Emitter + default collector
+                    // default collector + G as new Emitter
                     ff_node<U,U> collector = new ff_node<U,U>(new defaultCollector<U>(defaultCollector.ROUNDROBIN));
                     ff_pipeline<U,V> R_G = new ff_pipeline<U,V>((block<U, Object>)collector, (block<Object, V>)customCollectorG);
 
@@ -75,7 +75,7 @@ public class ff_all2all<T,U,V,W> extends block<T,V> {
 
                     a2a.add(R_G);
                 } else { // both pointers valid
-                    // compose R & G as new Emitter (in pipeline) + default collector
+                    // default collector + compose R & G as new Emitter (in pipeline)
                     ff_node<U,U> collector = new ff_node<U,U>(new defaultCollector<U>(defaultCollector.ROUNDROBIN));
                     ff_pipeline<U,V> R_G = new ff_pipeline<U,V>(customEmitterR, customCollectorG);
                     ff_queue<U> collector_R_G = new ff_queue<>();
@@ -104,10 +104,13 @@ public class ff_all2all<T,U,V,W> extends block<T,V> {
                      * use old channels (connecting old workers with old collector) to connect old workers to new ones
                      */
                     for (int i = 0; i < b1.workers.size(); i++) {
-                        ff_queue<V> x = b1.workers.get(i).getOutputChannel(0); // U & V types must be equal in this case
+                        b1.workers.get(i).removeOutputChannel(0); // removing channel between worker and removed collector
                         for (int j = 0; j < b2.workers.size(); j++) {
-                            boolean d = b2.workers.get(i).removeInputChannel(0); // remove channel emitter/workers
-                            b2.workers.get(i).addInputChannel(x); // connect each worker out channel (from farm already in) to all workers of new farm
+                            ff_queue<U> b1_b2 = new ff_queue<>();
+                            b2.workers.get(i).removeInputChannel(0); // remove old channel between removed emitter and b2 worker
+                            // connect each worker new out channel (from farm already in) to all workers of new farm
+                            b1.workers.get(i).addOutputChannel(b1_b2);
+                            b2.workers.get(i).addInputChannel(b1_b2); // U & V types must be equal in this case
                         }
                     }
                 } else if ((customEmitterR != null) && (customCollectorG == null)) {
