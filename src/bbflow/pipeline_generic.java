@@ -69,8 +69,8 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
                     }
 
                     int b1_size = ((ff_farm<T, U>) b1).workers.size();
-                    if (b1_size != ((ff_farm<U, V>) b2).workers.size()) { // wrong cardinality!
-                        return;
+                    if (b1_size != ((ff_farm<U, V>) b2).workers.size()) { // wrong cardinality
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_M);
                     } else {
                         for (int i = 0; i < b1_size; i++) { // connect all workers 1 to 1
                             connect(((ff_farm<T, U>) b1).workers.get(i), ((ff_farm<U, V>) b2).workers.get(i), BLOCKING, BOUNDED);
@@ -91,16 +91,43 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
                     }
                 } else if (MULTI == ff_pipeline.TYPE_N_1) {
                     if (((ff_farm<U, V>) b2).emitter == null) {
-                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_N);
+                        connectPipeMulti(b1, b2, BLOCKING, BOUNDED, ff_pipeline.TYPE_N_N);
                         return;
                     } else if (((ff_farm<T, U>) b1).collector != null) {
-                        connect(b1,b2,BLOCKING,BOUNDED);
+                        connect(b1, b2, BLOCKING, BOUNDED);
                         return;
                     }
 
                     for (int i = 0; i < ((ff_farm<T, U>) b1).workers.size(); i++) {
                         connect(((ff_farm<T, U>) b1).workers.get(i), (block<U, V>) ((ff_farm<U, V>) b2).emitter, BLOCKING, BOUNDED);
                     }
+                } else if (MULTI == ff_pipeline.TYPE_N_M) {
+                    if (((ff_farm<T, U>) b1).collector != null) {
+                        if (((ff_farm<U, V>) b2).emitter != null) {
+                            connect(b1, b2, BLOCKING, BOUNDED);
+                        } else {
+                            connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_1_N);
+                        }
+                        return;
+                    } else if (((ff_farm<U, V>) b2).emitter != null) {
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_1);
+                        return;
+                    }
+
+                    for (int i = 0; i < ((ff_farm<T, U>) b1).workers.size(); i++) {
+                        ((ff_farm<T, U>) b1).workers.get(i).removeOutputChannel(0); // removing channel between worker and removed collector
+                        for (int j = 0; j < ((ff_farm<U, V>) b2).workers.size(); j++) {
+                            ff_queue<U> b1_b2 = new ff_queue<>();
+                            if (i==0) {
+                                ((ff_farm<U, V>) b2).workers.get(j).removeInputChannel(0); // remove old channel between removed emitter and b2 worker
+                            }
+                            // connect each worker new out channel (from farm already in) to all workers of new farm
+                            ((ff_farm<T, U>) b1).workers.get(i).addOutputChannel(b1_b2);
+                            ((ff_farm<U, V>) b2).workers.get(j).addInputChannel(b1_b2); // U & V types must be equal in this case
+                        }
+                    }
+
+                    return;
                 } else {
                     connect(b1,b2,BLOCKING,BOUNDED);
                 }

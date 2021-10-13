@@ -13,6 +13,7 @@ public class ff_pipeline<T,V> extends block<T,V> {
     public static byte TYPE_1_N = 1;
     public static byte TYPE_N_1 = 2;
     public static byte TYPE_N_N = 3;
+    public static byte TYPE_N_M = 4;
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2) {
         this(b1,b2,TYPE_1_1);
