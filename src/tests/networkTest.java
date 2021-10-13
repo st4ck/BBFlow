@@ -16,19 +16,21 @@ public class networkTest {
 
         ff_queue<Integer> input_data = new ff_queue<>(bb_settings.BLOCKING, bb_settings.BOUNDED, bufferSize);
 
-        LinkedList<defaultJob<Integer,Integer>> worker_job = new LinkedList<>();
+        LinkedList<defaultJob<Integer,Double>> worker_job = new LinkedList<>();
         int n_workers = 4;
         for (int i=0; i<n_workers; i++) {
-            worker_job.add(new complete_farm_testWorker<Integer,Integer>(i));
+            worker_job.add(new complete_farm_testWorker<Integer,Double>(i));
         }
 
-        ff_farm stage1 = new ff_farm<Integer,Integer>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.FIRSTCOME, bufferSize);
-        ff_node stage2 = new ff_node<Integer,Integer>(new complete_farm_testOutnode<Integer,Integer>(15));
+        ff_farm stage1 = new ff_farm<Integer,Double>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bufferSize);
+        stage1.addInputChannel(input_data);
+        stage1.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "10.0.0.4"));
 
-        stage1.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "127.0.0.1"));
+
+        ff_node stage2 = new ff_node<Double,Integer>(new complete_farm_testOutnode<Double,Integer>(15));
         stage2.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
 
-        stage1.addInputChannel(input_data);
+
         stage2.addOutputChannel(new ff_queue<>());
 
         stage1.start();

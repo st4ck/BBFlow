@@ -35,6 +35,26 @@ public class defaultJob<T,U> implements Runnable {
         this.id = id;
     }
 
+    public void init() { }
+
+    public void sendOut(U element) {
+        for (int i=0; i<out.size(); i++) {
+            out.get(i).put(element);
+        }
+    }
+
+    public void sendOutTo(U element, int index) {
+        if (index >= out.size()) { return; }
+        out.get(index).put(element);
+    }
+
+    public void sendEOS() {
+        for (int i=0; i<out.size(); i++) {
+            out.get(i).setEOS();
+        }
+
+    }
+
     /**
      * default Runnable run method
      * This method runs only if there are at least 1 input channel and 1 output channel
@@ -42,6 +62,8 @@ public class defaultJob<T,U> implements Runnable {
      */
     @Override
     public void run() {
+        init();
+
         if (in.size() == 0) { return; } // no input channels
         if (out.size() == 0) { return; } // no output channels
 
@@ -58,7 +80,6 @@ public class defaultJob<T,U> implements Runnable {
                 if (runType == CUSTOM_FUNCTION) {
                     runJob();
                 } else if (runType == INLINE) {
-
                     T received;
                     ff_queue<T> in_channel = in.get(0);
                     ff_queue<U> out_channel = out.get(0);

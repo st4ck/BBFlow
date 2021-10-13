@@ -65,6 +65,9 @@ public class ff_farm<T,U> extends block<T,U> {
     public ff_farm(int n_workers, defaultJob<T,U> workerJob, int emitter_strategy, int collector_strategy, int bufferSize) {
         LinkedList<defaultJob<T,U>> worker_job = new LinkedList<>();
 
+        if (n_workers < 1) { return; }
+        if (workerJob == null) { return; }
+
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(bos);
@@ -79,6 +82,7 @@ public class ff_farm<T,U> extends block<T,U> {
                 defaultWorker<T,U> WJ = (defaultWorker<T, U>) new ObjectInputStream(bais).readObject();
                 bais.reset();
                 WJ.runType = defaultWorker.INLINE;
+                WJ.id = i;
                 worker_job.add(WJ);
             }
 
@@ -98,6 +102,28 @@ public class ff_farm<T,U> extends block<T,U> {
 
     public ff_farm(int n_workers, defaultJob<T,U> worker_job) {
         this(n_workers, worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bb_settings.defaultBufferSize);
+    }
+
+    public void connectEmitterWorkers() {
+        if (emitter == null) { return; }
+        if (workers.size() == 0) { return; }
+
+        for (int i=0; i<workers.size(); i++) {
+            ff_queue<T> channel = new ff_queue<T>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
+            emitter.addOutputChannel(channel);
+            workers.get(i).addInputChannel(channel);
+        }
+    }
+
+    public void connectWorkersCollector() {
+        if (collector == null) { return; }
+        if (workers.size() == 0) { return; }
+
+        for (int i=0; i<workers.size(); i++) {
+            ff_queue<U> channel = new ff_queue<U>(bb_settings.BLOCKING, bb_settings.BOUNDED, this.bufferSize);
+            collector.addInputChannel(channel);
+            workers.get(i).addOutputChannel(channel);
+        }
     }
 
     /**
@@ -156,6 +182,20 @@ public class ff_farm<T,U> extends block<T,U> {
     public void addOutputChannel(ff_queue<U> output) {
         if (collector != null) {
             collector.addOutputChannel(output);
+        }
+    }
+
+    public void removeEmitter() {
+        emitter = null;
+        for (int i=0; i<workers.size(); i++) {
+            workers.get(i).removeInputChannel(0);
+        }
+    }
+
+    public void removeCollector() {
+        collector = null;
+        for (int i=0; i<workers.size(); i++) {
+            workers.get(i).removeOutputChannel(0);
         }
     }
 }

@@ -37,7 +37,7 @@ public class node<T,U> extends Thread {
     }
 
     public boolean removeOutputChannel(int index) {
-        return job.removeInputChannel(index);
+        return job.removeOutputChannel(index);
     }
 
     public ff_queue<U> getOutputChannel(int index) {

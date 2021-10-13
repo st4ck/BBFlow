@@ -7,12 +7,12 @@ public class bb_settings {
     /**
      * global settings to decide if the queue should be BLOCKING or NON BLOCKING
      */
-    public static boolean BLOCKING = true;
+    public static boolean BLOCKING = false;
 
     /**
      * global settings to decide if the queue should be BOUNDED or UNBOUNDED
      */
-    public static boolean BOUNDED = true;
+    public static boolean BOUNDED = false;
 
     /**
      * defualt buffer size for BOUNDED queues, used if user left blank

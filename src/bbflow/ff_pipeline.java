@@ -1,18 +1,5 @@
 package bbflow;
 
- /* Example
-     *  *     |---------- 3-stage pipeline -----------|
-     *  *     |                   |                   |
-     *  *     |                   v                   |
-     *  *     |            |(stage2_1->stage2_2)|     |
-     *  *     v            |                    |     v
-     *  *    stage1-->farm |(stage2_1->stage2_2)|-->stage3
-     *  *                  |                    |
-     *  *                  |(stage2_1->stage2_2)|
-     *  *                    ^                ^
-     *  *                    |- Farm -|
-     */
-
 import java.util.LinkedList;
 
 /**
@@ -23,18 +10,38 @@ public class ff_pipeline<T,V> extends block<T,V> {
     int bufferSize = bb_settings.defaultBufferSize;
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2) {
+        this(b1,b2,false);
+    }
+
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize) {
+        this(b1,b2,bufferSize,false);
+    }
+
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, boolean MULTI) {
         pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
-        p.createPipe(b1,b2);
+        if (MULTI) {
+            p.createPipeMulti(b1, b2);
+        } else {
+            p.createPipe(b1, b2);
+        }
         pipe = new LinkedList<>();
         pipe.add(p);
     }
 
-    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize) {
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize, boolean MULTI) {
         this.bufferSize = bufferSize;
         pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
-        p.createPipe(b1,b2);
+        if (MULTI) {
+            p.createPipeMulti(b1, b2);
+        } else {
+            p.createPipe(b1, b2);
+        }
         pipe = new LinkedList<>();
         pipe.add(p);
+    }
+
+    public ff_pipeline<T, Object> appendBlock(block<V,Object> x) {
+        return new ff_pipeline<T,Object>((block<T, Object>) this, ((block<Object,Object>) x));
     }
 
     public void addInputChannel(ff_queue<T> input) {
@@ -59,5 +66,21 @@ public class ff_pipeline<T,V> extends block<T,V> {
         for (int i = 0; i < pipe.size(); i++) {
             pipe.get(i).join();
         }
+    }
+
+    public ff_farm getFirstFarm() {
+        if (pipe.size() == 0) {
+            return null;
+        }
+
+        return pipe.getFirst().getFirstFarm();
+    }
+
+    public ff_farm getLastFarm() {
+        if (pipe.size() == 0) {
+            return null;
+        }
+
+        return pipe.getLast().getLastFarm();
     }
 }
