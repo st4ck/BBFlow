@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 /*
  *  |<------------- farm ----------->|   |<------ all-to-all ------>|
- *  |    without the collectort      |
+ *  |    without the collector       |
  *  |    with workers multi-output   |
  *
  *
@@ -18,6 +18,9 @@ import java.util.LinkedList;
  *              |-> Worker --->|         | --> Filter1 -->|
  */
 
+/**
+ * testing multi in / out
+ */
 public class all2all7 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {

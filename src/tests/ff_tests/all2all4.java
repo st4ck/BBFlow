@@ -18,6 +18,9 @@ import java.util.LinkedList;
  *   Generator-->|---> Filter1 ----> Filter2 -->
  */
 
+/**
+ * testing two all2all join with multi-output
+ */
 public class all2all4 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Generator = new defaultWorker<>() {

@@ -4,6 +4,18 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/*
+ *    first _    _ second
+ *           |  |
+ *    first _| -|- second
+ *           |  |
+ *    first -    - second
+ *
+ */
+
+/**
+ * test NxN communication using all2all
+ */
 public class all2all {
     public static void main (String[] args) {
         defaultWorker<Long, Long> firstStage = new defaultWorker<>() {

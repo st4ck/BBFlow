@@ -18,6 +18,9 @@ import java.util.LinkedList;
  *                      | -----> Router-->|
  */
 
+/**
+ * testing multi-input and multi-output on example 2
+ */
 public class all2all3 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Generator = new defaultWorker<>() {

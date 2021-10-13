@@ -16,6 +16,9 @@ import java.util.LinkedList;
  *               |--> Worker ---->  Filter1 -->|
  */
 
+/**
+ * testing join between 3 farms: farm w/o collector + all2all of two filters
+ */
 public class all2all5 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {

@@ -18,6 +18,9 @@ import java.util.LinkedList;
  *              |-> Worker ->|                      | --> Filter1 -->|
  */
 
+/**
+ * testing collector replace and multioutput to a filter
+ */
 public class all2all6 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {

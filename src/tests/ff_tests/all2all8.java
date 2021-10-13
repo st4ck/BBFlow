@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /*
- *  |<------------- farm ----------->|   |<------ all-to-all ------>|
- *  |    without the collectort      |
- *  |    with workers multi-output   |
- *
- *
  *    ________________________________________
  *   |                                        |
  *   |      | --> Filter1 -->|                |
@@ -22,6 +17,9 @@ import java.util.LinkedList;
  *   |________________________________________|
  */
 
+/**
+ * feedback testing 2 stage all2all
+ */
 public class all2all8 {
     public static void main (String[] args) {
         class mypair<T,U> {
@@ -29,34 +27,8 @@ public class all2all8 {
             U second;
         }
 
-        defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
-            public Long runJob(Long x) {
-                return null;
-            }
-
-            public void init() {
-                for (long i = 1; i <=100; ++i) {
-                    sendOutTo(i, ((int)i)%3);
-                }
-                sendEOS();
-            }
-        };
-
-        defaultWorker<Long, Long> MultiInputHelper = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-                sendOut(x);
-            }
-        };
-
-        defaultWorker<Long, Long> Worker = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-                sendOut(x);
-            }
-        };
-
         defaultWorker<mypair<Long,Long>, mypair<Long,Long>> Filter1 = new defaultWorker<>() {
             int nfilter2 = 2;
-            boolean check = true;
             int ntasks;
             public void init() {
                 ntasks = 10*nfilter2;
@@ -71,13 +43,6 @@ public class all2all8 {
             }
 
             public void runJobMulti(mypair<Long,Long> in, LinkedList<ff_queue<mypair<Long,Long>>> o) {
-                if (check) {
-                    if (in.first != id)  {
-                        System.out.println("abort");
-                        return;
-                    }
-                }
-
                 System.out.println("Filter1 "+id+" got back result");
                 if (--ntasks == 0) sendEOS();
             }
@@ -98,6 +63,7 @@ public class all2all8 {
         ff_all2all a2a = new ff_all2all();
         a2a.combine_farm(firstStage,secondStage);
 
+        // pipeline used as feedback (2nd stage -> 1st stage) in N*M connection
         ff_pipeline all = new ff_pipeline(secondStage,firstStage,ff_pipeline.TYPE_N_M);
 
         all.start();

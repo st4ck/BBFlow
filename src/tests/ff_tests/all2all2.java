@@ -19,6 +19,9 @@ import java.util.LinkedList;
  *             ------> Router-->
  */
 
+/**
+ * testing farms connected using all2all
+ */
 public class all2all2 {
     public static void main (String[] args) {
         ff_queue<Long> input_data = new ff_queue<>();
