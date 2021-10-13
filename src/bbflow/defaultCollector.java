@@ -18,6 +18,10 @@ public class defaultCollector<T> extends defaultJob<T,T> {
     int strategy;
     int position = 0;
 
+    public defaultCollector() {
+        this.strategy = FIRSTCOME;
+    }
+
     /**
      * default constructor
      * @param strategy Collector communication strategy chosen between FIRSTCOME, GATHER and ALLGATHER

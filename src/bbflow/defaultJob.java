@@ -88,8 +88,8 @@ public class defaultJob<T,U> implements Runnable {
                         received = in_channel.take();
                         if (received == null) { // EOS
                             in.remove(0); // removing input channel, sequence finished
-                            out_channel.setEOS();
                             EOS();
+                            out_channel.setEOS();
                             break;
                         } else {
                             U r = runJob(received);
@@ -106,11 +106,11 @@ public class defaultJob<T,U> implements Runnable {
                         position--;
 
                         if (in.size() == 0) { // no more input channels, EOS only last time
+                            EOS();
+
                             for (int i=0; i<out.size(); i++) {
                                 out.get(i).setEOS();
                             }
-
-                            EOS();
                         }
                     } else {
                         runJobMulti(received, out);

@@ -5,6 +5,17 @@ import bbflow.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ *  |<------- farm -------->|   |<------ all-to-all ------->|
+ *  |   with no collector   |
+ *
+ *               |--> Worker ---->  Filter1 -->|
+ *               |                             | --> Filter2
+ *   Emitter --> |--> Worker ---->  Filter1 -->|
+ *               |                             | --> Filter2
+ *               |--> Worker ---->  Filter1 -->|
+ */
+
 public class all2all5 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
