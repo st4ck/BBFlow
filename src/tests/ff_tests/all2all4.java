@@ -5,7 +5,7 @@ import bbflow.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
+/*
  *  |<----- all-to-all ----->|   |<------ all-to-all ------->|
  *
  *

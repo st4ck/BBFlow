@@ -8,12 +8,13 @@ import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
- * Fundamental block modeling the Farm paradigm
- * Composed by one emitter (single input by default), n_workers workers and one collector
- * Worker must be implemented; the function runJob() contains the computation part
- * Collector has by default one output channel
- * If collector is not needed and the job ends in the workers, just avoid sending data to the channel between workers and collector, and it will be ignored
- * @param <T>
+ *  * Fundamental block modeling the Farm paradigm
+ *  * Composed by one emitter (single input by default), n_workers workers and one collector
+ *  * Worker must be implemented; the function runJob() contains the computation part
+ *  * Collector has by default one output channel
+ *  * If collector is not needed and the job ends in the workers, just avoid sending data to the channel between workers and collector, and it will be ignored
+ * @param <T> Custom type input
+ * @param <U> Custom type output
  */
 public class ff_farm<T,U> extends block<T,U> {
     public ff_node<T,T> emitter;

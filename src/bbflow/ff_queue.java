@@ -64,7 +64,6 @@ public class ff_queue<T> {
     /**
      * Inserts the specified element at the tail of this queue, waiting if necessary for space to become available (if bounded)
      * @param i Element to insert
-     * @throws InterruptedException
      */
     public void put(T i) {
         if (this.EOS) { return; }

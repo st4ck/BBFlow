@@ -6,7 +6,7 @@ import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
+/*
  *  |<------------- farm ----------->|   |<------ all-to-all ------>|
  *  |    without the collectort      |
  *  |    with workers multi-output   |
