@@ -9,18 +9,23 @@ public class ff_pipeline<T,V> extends block<T,V> {
     LinkedList<pipeline_generic> pipe;
     int bufferSize = bb_settings.defaultBufferSize;
 
+    public static byte TYPE_1_1 = 0;
+    public static byte TYPE_1_N = 1;
+    public static byte TYPE_N_1 = 2;
+    public static byte TYPE_N_N = 3;
+
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2) {
-        this(b1,b2,false);
+        this(b1,b2,TYPE_1_1);
     }
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize) {
-        this(b1,b2,bufferSize,false);
+        this(b1,b2,bufferSize,TYPE_1_1);
     }
 
-    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, boolean MULTI) {
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, byte MULTI) {
         pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
-        if (MULTI) {
-            p.createPipeMulti(b1, b2);
+        if (MULTI != TYPE_1_1) {
+            p.createPipeMulti(b1, b2, MULTI);
         } else {
             p.createPipe(b1, b2);
         }
@@ -28,11 +33,11 @@ public class ff_pipeline<T,V> extends block<T,V> {
         pipe.add(p);
     }
 
-    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize, boolean MULTI) {
+    public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize, byte MULTI) {
         this.bufferSize = bufferSize;
         pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
-        if (MULTI) {
-            p.createPipeMulti(b1, b2);
+        if (MULTI != TYPE_1_1) {
+            p.createPipeMulti(b1, b2, MULTI);
         } else {
             p.createPipe(b1, b2);
         }

@@ -5,6 +5,19 @@ import bbflow.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ *  |<----- all-to-all ----->|   |<------ all-to-all ------->|
+ *
+ *
+ *   Generator-->|---> Filter1 ----> Filter2 -->
+ *               |                              | --> Filter3
+ *               |                              |
+ *   Generator-->|---> Filter1 ----> Filter2 -->|
+ *               |                              | --> Filter3
+ *               |                              |
+ *   Generator-->|---> Filter1 ----> Filter2 -->
+ */
+
 public class all2all4 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Generator = new defaultWorker<>() {
@@ -58,7 +71,7 @@ public class all2all4 {
         ff_all2all stage2 = new ff_all2all();
         stage2.combine_farm(_2_1,_2_2);
 
-        ff_pipeline all = new ff_pipeline(stage1,stage2,true);
+        ff_pipeline all = new ff_pipeline(stage1,stage2,ff_pipeline.TYPE_N_N);
         all.start();
         all.join();
     }

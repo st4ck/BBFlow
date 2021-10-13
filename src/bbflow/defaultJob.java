@@ -37,7 +37,20 @@ public class defaultJob<T,U> implements Runnable {
 
     public void init() { }
 
+
+    int sendpos = 0;
     public void sendOut(U element) {
+        if (out.size() > 0) {
+            if (sendpos >= out.size()) {
+                sendpos = 0;
+            }
+
+            out.get(sendpos).put(element);
+            sendpos++;
+        }
+    }
+
+    public void sendOutToAll(U element) {
         for (int i=0; i<out.size(); i++) {
             out.get(i).put(element);
         }

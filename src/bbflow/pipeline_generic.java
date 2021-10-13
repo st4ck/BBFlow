@@ -44,60 +44,92 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         createPipe(b1,b2,bb_settings.BLOCKING, bb_settings.BOUNDED);
     }
 
-    public void createPipeMulti(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED) {
+    public void createPipeMulti(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED, byte MULTI) {
         pipe.add(b1);
         pipe.add(b2);
 
-        connectPipeMulti(b1,b2,BLOCKING,BOUNDED);
+        connectPipeMulti(b1,b2,BLOCKING,BOUNDED, MULTI);
     }
 
-    public void connectPipeMulti(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED) {
+    public void connectPipeMulti(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED, byte MULTI) {
         if (b1 instanceof ff_farm) {
-            if (((ff_farm<T, U>) b1).collector != null) { // there is collector, normal pipeline single channel
-                connect(b1,b2,BLOCKING,BOUNDED);
-            } else { // no collector, so n channels (= #workers)
-                int b1_size = ((ff_farm<T, U>) b1).workers.size();
-
-                //now we need to determine size of b2 on first layer
-                if (b2 instanceof ff_farm) {
-                    if (((ff_farm<U, V>) b2).emitter != null) {
-                        connect(b1,b2,BLOCKING,BOUNDED);
-                    } else {
-                        if (b1_size != ((ff_farm<U, V>) b2).workers.size()) { // wrong cardinality!
-                            return;
+            //now we need to determine size of b2 on first layer
+            if (b2 instanceof ff_farm) {
+                if (MULTI == ff_pipeline.TYPE_N_N) {
+                    if (((ff_farm<T, U>) b1).collector != null) {
+                        if (((ff_farm<U, V>) b2).emitter != null) {
+                            connect(b1, b2, BLOCKING, BOUNDED);
                         } else {
-                            for (int i=0; i<b1_size; i++) { // connect all workers 1 to 1
-                                connect(((ff_farm<T, U>) b1).workers.get(i),((ff_farm<U, V>) b2).workers.get(i),BLOCKING,BOUNDED);
-                            }
+                            connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_1_N);
+                        }
+                        return;
+                    } else if (((ff_farm<U, V>) b2).emitter != null) {
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_1);
+                        return;
+                    }
+
+                    int b1_size = ((ff_farm<T, U>) b1).workers.size();
+                    if (b1_size != ((ff_farm<U, V>) b2).workers.size()) { // wrong cardinality!
+                        return;
+                    } else {
+                        for (int i = 0; i < b1_size; i++) { // connect all workers 1 to 1
+                            connect(((ff_farm<T, U>) b1).workers.get(i), ((ff_farm<U, V>) b2).workers.get(i), BLOCKING, BOUNDED);
                         }
                     }
-                } else if (b2 instanceof ff_all2all) {
-                    if (((ff_all2all<?, ?, ?, ?>) b2).a2a.size() > 0) {
-                        connectPipeMulti(b1, ((ff_all2all<?, ?, ?, ?>) b2).a2a.getFirst(), BLOCKING, BOUNDED);
-                    }
-
                     return;
-                } else if ((b2 instanceof ff_pipeline) || (b2 instanceof ff_comb)) {
-                    ff_farm ret = ((ff_pipeline<U,V>) b2).getFirstFarm();
-                    if (ret != null) {
-                        connectPipeMulti(b1, ret, BLOCKING, BOUNDED);
-                    } else {
+                } else if (MULTI == ff_pipeline.TYPE_1_N) {
+                    if (((ff_farm<T, U>) b1).collector == null) {
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_N);
+                        return;
+                    } else if (((ff_farm<T, U>) b2).emitter != null) {
                         connect(b1,b2,BLOCKING,BOUNDED);
+                        return;
                     }
 
-                    return;
+                    for (int i = 0; i < ((ff_farm<U, V>) b2).workers.size(); i++) {
+                        connect((block<T, U>) ((ff_farm<T, U>) b1).collector, ((ff_farm<U, V>) b2).workers.get(i), BLOCKING, BOUNDED);
+                    }
+                } else if (MULTI == ff_pipeline.TYPE_N_1) {
+                    if (((ff_farm<U, V>) b2).emitter == null) {
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_N);
+                        return;
+                    } else if (((ff_farm<T, U>) b1).collector != null) {
+                        connect(b1,b2,BLOCKING,BOUNDED);
+                        return;
+                    }
+
+                    for (int i = 0; i < ((ff_farm<T, U>) b1).workers.size(); i++) {
+                        connect(((ff_farm<T, U>) b1).workers.get(i), (block<U, V>) ((ff_farm<U, V>) b2).emitter, BLOCKING, BOUNDED);
+                    }
+                } else {
+                    connect(b1,b2,BLOCKING,BOUNDED);
                 }
+            } else if (b2 instanceof ff_all2all) {
+                if (((ff_all2all<?, ?, ?, ?>) b2).a2a.size() > 0) {
+                    connectPipeMulti(b1, ((ff_all2all<?, ?, ?, ?>) b2).a2a.getFirst(), BLOCKING, BOUNDED, MULTI);
+                }
+
+                return;
+            } else if ((b2 instanceof ff_pipeline) || (b2 instanceof ff_comb)) {
+                ff_farm ret = ((ff_pipeline<U,V>) b2).getFirstFarm();
+                if (ret != null) {
+                    connectPipeMulti(b1, ret, BLOCKING, BOUNDED, MULTI);
+                } else {
+                    connect(b1,b2,BLOCKING,BOUNDED);
+                }
+
+                return;
             }
         } else if (b1 instanceof ff_all2all) {
             if (((ff_all2all<?, ?, ?, ?>) b1).a2a.size() > 0) {
-                connectPipeMulti(((ff_all2all<?, ?, ?, ?>) b1).a2a.getLast(), b2, BLOCKING, BOUNDED);
+                connectPipeMulti(((ff_all2all<?, ?, ?, ?>) b1).a2a.getLast(), b2, BLOCKING, BOUNDED, MULTI);
             }
 
             return;
         } else if ((b1 instanceof ff_pipeline) || (b1 instanceof ff_comb)) {
             ff_farm ret = ((ff_pipeline<T, U>) b1).getLastFarm();
             if (ret != null) {
-                connectPipeMulti(ret, b2, BLOCKING, BOUNDED);
+                connectPipeMulti(ret, b2, BLOCKING, BOUNDED, MULTI);
             } else {
                 connect(b1,b2,BLOCKING,BOUNDED);
             }
@@ -108,8 +140,8 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         }
     }
 
-    public void createPipeMulti(block<T,U> b1, block<U,V> b2) {
-        createPipeMulti(b1,b2,bb_settings.BLOCKING, bb_settings.BOUNDED);
+    public void createPipeMulti(block<T,U> b1, block<U,V> b2, byte MULTI) {
+        createPipeMulti(b1,b2,bb_settings.BLOCKING, bb_settings.BOUNDED, MULTI);
     }
 
     public void addInputChannel(ff_queue<T> input) {

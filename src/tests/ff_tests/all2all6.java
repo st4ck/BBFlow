@@ -6,17 +6,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- *  |<------- farm -------->|   |<------ all-to-all ------->|
- *  |   with no collector   |
+ *  |<----------------- farm ----------------->|   |<------ all-to-all ------>|
+ *  |            with a multi-output           |
+ *  |                  collector               |
  *
- *               |--> Worker ---->  Filter1 -->|
- *               |                             | --> Filter2
- *   Emitter --> |--> Worker ---->  Filter1 -->|
- *               |                             | --> Filter2
- *               |--> Worker ---->  Filter1 -->|
+ *
+ *              |-> Worker ->|                      | --> Filter1 -->|
+ *              |            |                      |                | --> Filter2
+ *   Emitter -> |-> Worker ->|-->Collector/Emitter->| --> Filter1 -->|
+ *              |            |                      |                | --> Filter2
+ *              |-> Worker ->|                      | --> Filter1 -->|
  */
 
-public class all2all5 {
+public class all2all6 {
     public static void main (String[] args) {
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
             public Long runJob(Long x) {
@@ -55,16 +57,15 @@ public class all2all5 {
         firstStage.removeEmitter();
         firstStage.emitter = stage1;
         firstStage.connectEmitterWorkers();
-        firstStage.removeCollector();
+        //firstStage.removeCollector(); - keeping collector
 
         ff_farm filter1 = new ff_farm(3, Filter1);
-        filter1.removeEmitter();
         ff_farm filter2 = new ff_farm(2, Filter2);
 
         ff_all2all secondStage = new ff_all2all();
         secondStage.combine_farm(filter1,filter2);
 
-        ff_pipeline all = new ff_pipeline(firstStage,secondStage,ff_pipeline.TYPE_N_N);
+        ff_pipeline all = new ff_pipeline(firstStage,secondStage);
         all.start();
         all.join();
     }
