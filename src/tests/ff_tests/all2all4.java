@@ -51,7 +51,6 @@ public class all2all4 {
         ff_farm _2_1 = new ff_farm<>(3, Filter2);
         _2_1.removeEmitter();
         ff_farm _2_2 = new ff_farm<>(2, Filter3);
-        _2_2.removeCollector();
 
         ff_all2all stage1 = new ff_all2all();
         stage1.combine_farm(_1_1,_1_2);
