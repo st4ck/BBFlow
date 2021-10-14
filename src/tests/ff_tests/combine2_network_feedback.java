@@ -20,7 +20,7 @@ import java.util.LinkedList;
  */
 
 /**
- * Two combined workers as single one in ff_farm
+ * Two combined workers as single one in ff_farm with network feedback
  */
 public class combine2_network_feedback {
     public static void main (String[] args) {
