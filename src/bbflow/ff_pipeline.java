@@ -6,7 +6,7 @@ import java.util.LinkedList;
  * Pipeline building block allows auto-connection between all types of ff_blocks
  */
 public class ff_pipeline<T,V> extends block<T,V> {
-    LinkedList<pipeline_generic> pipe;
+    pipeline_generic pipe = null;
     int bufferSize = bb_settings.defaultBufferSize;
 
     public static byte TYPE_1_1 = 0;
@@ -30,8 +30,7 @@ public class ff_pipeline<T,V> extends block<T,V> {
         } else {
             p.createPipe(b1, b2);
         }
-        pipe = new LinkedList<>();
-        pipe.add(p);
+        pipe = p;
     }
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize, byte MULTI) {
@@ -42,51 +41,52 @@ public class ff_pipeline<T,V> extends block<T,V> {
         } else {
             p.createPipe(b1, b2);
         }
-        pipe = new LinkedList<>();
-        pipe.add(p);
+        pipe = p;
     }
 
-    public ff_pipeline<T, Object> appendBlock(block<V,Object> x) {
-        return new ff_pipeline<T,Object>((block<T, Object>) this, ((block<Object,Object>) x));
+    public void appendBlock(block<Object,Object> newblock, byte MULTI) {
+        if (pipe != null) {
+            pipe.appendBlock(newblock, MULTI);
+        }
     }
 
     public void addInputChannel(ff_queue<T> input) {
-        if (pipe.size() > 0) {
-            pipe.getFirst().addInputChannel(input);
+        if (pipe != null) {
+            pipe.addInputChannel(input);
         }
     }
 
     public void addOutputChannel(ff_queue<V> output) {
-        if (pipe.size() > 0) {
-            pipe.getLast().addOutputChannel(output);
+        if (pipe != null) {
+            pipe.addOutputChannel(output);
         }
     }
 
     public void start() {
-        for (int i=0; i<pipe.size(); i++) {
-            pipe.get(i).start();
+        if (pipe != null) {
+            pipe.start();
         }
     }
 
     public void join() {
-        for (int i = 0; i < pipe.size(); i++) {
-            pipe.get(i).join();
+        if (pipe != null) {
+            pipe.join();
         }
     }
 
     public ff_farm getFirstFarm() {
-        if (pipe.size() == 0) {
+        if (pipe == null) {
             return null;
         }
 
-        return pipe.getFirst().getFirstFarm();
+        return pipe.getFirstFarm();
     }
 
     public ff_farm getLastFarm() {
-        if (pipe.size() == 0) {
+        if (pipe == null) {
             return null;
         }
 
-        return pipe.getLast().getLastFarm();
+        return pipe.getLastFarm();
     }
 }

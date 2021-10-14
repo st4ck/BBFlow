@@ -238,4 +238,10 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
 
         return null;
     }
+
+    public void appendBlock(block<Object, Object> newblock, byte MULTI) {
+        block b1 = pipe.getLast();
+        pipe.add(newblock);
+        connectPipeMulti(b1, (block<U, V>) newblock,bb_settings.BLOCKING, bb_settings.BOUNDED, MULTI);
+    }
 }

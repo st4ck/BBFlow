@@ -19,9 +19,7 @@ import java.util.LinkedList;
 public class all2all {
     public static void main (String[] args) {
         defaultWorker<Long, Long> firstStage = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-
-            }
+            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {}
 
             public void init() {
                 System.out.println("firstStage started (" + id + ")");
