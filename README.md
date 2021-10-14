@@ -9,15 +9,15 @@ Java implementation of Fastflow's Bulding Blocks
 
 **ff_node** is the basic block entity composed by a set of input and output channels (LinkedBlockingQueue<T>) and a computation code (runJob())
 
-**ff_comb** combine two nodes in one using pipeline. Equivalent to create a ff_pipeline and add the two blocks. Channel between blocks is NONBLOCKING and UNBOUNDED.
+**ff_comb** combine two nodes in one using pipeline 1 to 1. Equivalent to create a ff_pipeline and add the two blocks. Channel between blocks is NONBLOCKING and UNBOUNDED.
 
 ### Parallel Building Blocks
 
-**ff_farm** this block is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed
+**ff_farm** this block is the implementation of the Farm model: Emitter, N Workers and a Collector. All computation code is customizable extending the classes, but normally only the worker needed. Emitter and collector can be removed and replaced. ff_farm can be instantiated blank and everything can be added manually exploiting, anyway, the emitter & collector strategies. 
 
 **ff_pipeline** this block is the abstraction of a Pipeline allowing to interconnect blocks easily in pipeline manner. Contains a set of blocks<T> (any building blocks) connected each other. Blocks can be connected in 1to1, 1xN, Nx1, NtoN, NxM manner. Multichannel (in or out) connection requires ff_farm on the connection side (even if inside a ff_pipeline or all2all).
 
-**ff_all2all** block that combine multiple ff_farm together in different ways. See combine_farm function.
+**ff_all2all** block that combine multiple ff_farm together in different ways. See combine_farm function. In few combinations, it's equal to ff_pipeline.
 
 ### Queues / Channels
 **ff_queue** the default class of the queues (channels). Channels are 1-1 between nodes of type SPSC and FIFO
