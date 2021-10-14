@@ -21,6 +21,10 @@ public class defaultEmitter<T> extends defaultJob<T,T> { // Runnable job
     int strategy;
     int position = 0;
 
+    public defaultEmitter() {
+        this.strategy = ROUNDROBIN;
+    }
+
     /**
      * default constructor
      * @param strategy Emitter communication strategy chosen between ROUNDROBIN, SCATTER and BROADCAST
