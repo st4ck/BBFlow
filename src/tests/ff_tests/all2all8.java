@@ -64,7 +64,7 @@ public class all2all8 {
         a2a.combine_farm(firstStage,secondStage);
 
         // pipeline used as feedback (2nd stage -> 1st stage) in N*M connection
-        ff_pipeline all = new ff_pipeline(secondStage,firstStage,ff_pipeline.TYPE_N_M);
+        ff_pipeline all = new ff_pipeline(secondStage,firstStage,ff_pipeline.TYPE_NxM);
 
         all.start();
         all.join();

@@ -10,10 +10,10 @@ public class ff_pipeline<T,V> extends block<T,V> {
     int bufferSize = bb_settings.defaultBufferSize;
 
     public static byte TYPE_1_1 = 0;
-    public static byte TYPE_1_N = 1;
-    public static byte TYPE_N_1 = 2;
+    public static byte TYPE_1xN = 1;
+    public static byte TYPE_Nx1 = 2;
     public static byte TYPE_N_N = 3;
-    public static byte TYPE_N_M = 4;
+    public static byte TYPE_NxM = 4;
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2) {
         this(b1,b2,TYPE_1_1);

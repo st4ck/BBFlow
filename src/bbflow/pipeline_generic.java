@@ -60,24 +60,24 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
                         if (((ff_farm<U, V>) b2).emitter != null) {
                             connect(b1, b2, BLOCKING, BOUNDED);
                         } else {
-                            connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_1_N);
+                            connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_1xN);
                         }
                         return;
                     } else if (((ff_farm<U, V>) b2).emitter != null) {
-                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_1);
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_Nx1);
                         return;
                     }
 
                     int b1_size = ((ff_farm<T, U>) b1).workers.size();
                     if (b1_size != ((ff_farm<U, V>) b2).workers.size()) { // wrong cardinality
-                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_M);
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_NxM);
                     } else {
                         for (int i = 0; i < b1_size; i++) { // connect all workers 1 to 1
                             connect(((ff_farm<T, U>) b1).workers.get(i), ((ff_farm<U, V>) b2).workers.get(i), BLOCKING, BOUNDED);
                         }
                     }
                     return;
-                } else if (MULTI == ff_pipeline.TYPE_1_N) {
+                } else if (MULTI == ff_pipeline.TYPE_1xN) {
                     if (((ff_farm<T, U>) b1).collector == null) {
                         connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_N);
                         return;
@@ -89,7 +89,7 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
                     for (int i = 0; i < ((ff_farm<U, V>) b2).workers.size(); i++) {
                         connect((block<T, U>) ((ff_farm<T, U>) b1).collector, ((ff_farm<U, V>) b2).workers.get(i), BLOCKING, BOUNDED);
                     }
-                } else if (MULTI == ff_pipeline.TYPE_N_1) {
+                } else if (MULTI == ff_pipeline.TYPE_Nx1) {
                     if (((ff_farm<U, V>) b2).emitter == null) {
                         connectPipeMulti(b1, b2, BLOCKING, BOUNDED, ff_pipeline.TYPE_N_N);
                         return;
@@ -101,16 +101,16 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
                     for (int i = 0; i < ((ff_farm<T, U>) b1).workers.size(); i++) {
                         connect(((ff_farm<T, U>) b1).workers.get(i), (block<U, V>) ((ff_farm<U, V>) b2).emitter, BLOCKING, BOUNDED);
                     }
-                } else if (MULTI == ff_pipeline.TYPE_N_M) {
+                } else if (MULTI == ff_pipeline.TYPE_NxM) {
                     if (((ff_farm<T, U>) b1).collector != null) {
                         if (((ff_farm<U, V>) b2).emitter != null) {
                             connect(b1, b2, BLOCKING, BOUNDED);
                         } else {
-                            connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_1_N);
+                            connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_1xN);
                         }
                         return;
                     } else if (((ff_farm<U, V>) b2).emitter != null) {
-                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_N_1);
+                        connectPipeMulti(b1,b2,BLOCKING,BOUNDED,ff_pipeline.TYPE_Nx1);
                         return;
                     }
 

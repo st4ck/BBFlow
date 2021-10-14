@@ -78,7 +78,7 @@ public class all2all7 {
         ff_all2all secondStage = new ff_all2all();
         secondStage.combine_farm(filter1,filter2);
 
-        ff_pipeline all = new ff_pipeline(firstStage,secondStage,ff_pipeline.TYPE_1_N);
+        ff_pipeline all = new ff_pipeline(firstStage,secondStage,ff_pipeline.TYPE_1xN);
 
         all.start();
         all.join();
