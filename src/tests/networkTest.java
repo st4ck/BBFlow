@@ -24,7 +24,7 @@ public class networkTest {
 
         ff_farm stage1 = new ff_farm<Integer,Double>(worker_job, defaultEmitter.ROUNDROBIN, defaultCollector.ROUNDROBIN, bufferSize);
         stage1.addInputChannel(input_data);
-        stage1.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "10.0.0.4"));
+        stage1.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "127.0.0.1"));
 
 
         ff_node stage2 = new ff_node<Double,Integer>(new complete_farm_testOutnode<Double,Integer>(15));

@@ -1,5 +1,6 @@
 package bbflow;
 
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Currency;
 import java.util.Iterator;
@@ -21,7 +22,7 @@ public class defaultJob<T,U> implements Runnable {
 
     public int runType = CUSTOM_FUNCTION;
     public int id = -1;
-    int position = 0;
+    public int position = 0;
 
     public defaultJob() {
 
@@ -36,6 +37,32 @@ public class defaultJob<T,U> implements Runnable {
     }
 
     public void init() { }
+
+    public static defaultJob uniqueJob(defaultJob obj) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+            return (defaultJob) new ObjectInputStream(bais).readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static defaultJob uniqueJob(defaultJob obj, int id) {
+        defaultJob r = uniqueJob(obj);
+        r.id = id;
+        return r;
+    }
 
 
     int sendpos = 0;

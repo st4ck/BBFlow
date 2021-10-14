@@ -16,10 +16,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @param <T> Custom type input
  * @param <U> Custom type output
  */
-public class ff_farm<T,U> extends block<T,U> {
-    public ff_node<T,T> emitter;
-    public ff_node<U,U> collector;
-    public LinkedList<ff_node> workers;
+public class ff_farm<T,U> extends ff_node<T,U> {
+    public ff_node<T,T> emitter = null;
+    public ff_node<U,U> collector = null;
+    public LinkedList<ff_node> workers = new LinkedList<>();
     private ff_queue<T> input;
     private int bufferSize;
 
@@ -35,7 +35,6 @@ public class ff_farm<T,U> extends block<T,U> {
 
     private void create_farm(LinkedList<defaultJob<T,U>> worker_job, int emitter_strategy, int collector_strategy, int bufferSize) {
         this.bufferSize = bufferSize;
-        this.workers = new LinkedList<>();
 
         emitter = new ff_node<T,T>(new defaultEmitter<T>(emitter_strategy));
         collector = new ff_node<U,U>(new defaultCollector<U>(collector_strategy));

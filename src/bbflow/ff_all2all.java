@@ -6,7 +6,7 @@ import java.util.LinkedList;
  * All2All Building Block able to merge multiple farms
  * @param <T> Custom type of channels
  */
-public class ff_all2all<T,U,V,W> extends block<T,V> {
+public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
     /**
      * collection of blocks where first and last element are of type ff_farm in any circumstances
      */

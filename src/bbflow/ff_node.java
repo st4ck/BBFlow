@@ -1,5 +1,6 @@
 package bbflow;
 
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,30 @@ import java.util.Arrays;
  */
 public class ff_node<T,U> extends block<T,U> {
     node mynode;
+
+    public ff_node() {
+
+    }
+
+    public static ff_node uniqueNode(ff_node obj) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(obj);
+            oos.flush();
+            oos.close();
+            bos.close();
+            byte[] byteData = bos.toByteArray();
+            ByteArrayInputStream bais = new ByteArrayInputStream(byteData);
+            return (ff_node) new ObjectInputStream(bais).readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     /**
      * default constructor

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 /**
  * Pipeline building block allows auto-connection between all types of ff_blocks
  */
-public class ff_pipeline<T,V> extends block<T,V> {
+public class ff_pipeline<T,V> extends ff_node<T,V> {
     pipeline_generic pipe = null;
     int bufferSize = bb_settings.defaultBufferSize;
 
