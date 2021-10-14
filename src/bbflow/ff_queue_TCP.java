@@ -15,16 +15,18 @@ public class ff_queue_TCP<T> extends ff_queue<T> {
     public final static int INPUT = 1;
     public final static int OUTPUT = 2;
     int sockettype;
+    public int connectionId = -1;
     public ff_queue_TCP(int type, int connectionId, String host) {
         super(false, false,0);
+        this.connectionId = connectionId;
         try {
             if (type == INPUT) {
-                objectServer<T> s = new objectServer<T>(1, this);
+                objectServer<T> s = new objectServer<T>(connectionId, this);
                 server = new Thread(s);
                 server.start();
                 sockettype = INPUT;
             } else if ((type == OUTPUT) && (host != null)) {
-                client = new objectClient(1, host);
+                client = new objectClient(connectionId, host);
                 sockettype = OUTPUT;
             }
         } catch (IOException | InterruptedException e) {
