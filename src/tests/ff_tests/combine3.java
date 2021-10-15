@@ -6,7 +6,6 @@ import java.util.LinkedList;
 
 /*
  *
- *  |   with no collector     | |<-- multi-input ->||<- multi-output ->|
  *
  *            |--> Worker1 -->|                                          |-->Worker2->|
  *            |               |                                          |            |
