@@ -13,7 +13,7 @@ import java.util.Arrays;
  * @param <T> Custom type of the channels
  */
 public class ff_node<T,U> extends block<T,U> {
-    node mynode;
+    public node mynode;
 
     /**
      * default constructor for different blocks extending ff_node

@@ -275,4 +275,16 @@ public class ff_queue<T> {
             }
         }
     }
+
+    public int size() {
+        if (blocking) {
+            return blocking_queue.size();
+        } else {
+            if (bounded) {
+                return nonblocking_bounded_queue.size();
+            } else {
+                return nonblocking_queue.size();
+            }
+        }
+    }
 }

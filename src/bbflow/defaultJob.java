@@ -92,7 +92,6 @@ public class defaultJob<T,U> implements Runnable {
         for (int i=0; i<out.size(); i++) {
             out.get(i).setEOS();
         }
-
     }
 
     /**

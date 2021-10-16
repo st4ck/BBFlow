@@ -5,7 +5,7 @@ package bbflow;
  * @param <T> Custom type of the channels
  */
 public class node<T,U> extends Thread {
-    defaultJob<T,U> job;
+    public defaultJob<T,U> job;
     public node(defaultJob<T,U> job) {
         this.job = job;
     }

@@ -34,4 +34,8 @@ public class customWatch {
         System.out.println("Step "+(i)+": "+((endtime-lasttime)/1000)+"us");
         System.out.println("Total execution time: "+((endtime-starttime)/1000)+"us");
     }
+
+    public long getExecutionTime() {
+        return ((endtime-starttime)/1000);
+    }
 }
