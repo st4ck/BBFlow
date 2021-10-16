@@ -15,8 +15,10 @@ public class test_MSOM {
     }
 
     private static void testMSOM(int split) {
-        int depth = 10;
+        int depth = 3;
         MSOM z = new MSOM(1024,depth,split);
+        customWatch myWatch = new customWatch();
+        myWatch.start();
         z.start();
 //        double[] x = {9,90,70};
         /*bestPosition res = z.searchBestPosition(x);
@@ -26,9 +28,7 @@ public class test_MSOM {
         res.bestj = 0;*/
         //System.out.println("Best position found is in matrix "+res.i+","+res.j+" in position "+res.besti+","+res.bestj);
         //System.out.println("Training vector 100 times");
-        customWatch myWatch = new customWatch();
-        myWatch.start();
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<1000; i++) {
             ArrayList<Double> x = new ArrayList<>();
             for (int j=0; j<depth; j++) {
                 x.add(Math.random()*255);
