@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 public class test_MSOM {
     public static void main (String[] args) {
+        //testMSOM(Integer.parseInt(args[0]));
+        testMSOM(1);
         testMSOM(2);
         testMSOM(4);
         testMSOM(8);
@@ -13,11 +15,10 @@ public class test_MSOM {
     }
 
     private static void testMSOM(int split) {
-        int depth = 3;
-        MSOM z = new MSOM(256,depth,split);
+        int depth = 10;
+        MSOM z = new MSOM(1024,depth,split);
         z.start();
-        double[] x = {9,90,70};
-        ArrayList<Double> neuron = SOM.normalize(x,depth);
+//        double[] x = {9,90,70};
         /*bestPosition res = z.searchBestPosition(x);
         res.besti = 0;
         res.i = 1;
@@ -27,8 +28,13 @@ public class test_MSOM {
         //System.out.println("Training vector 100 times");
         customWatch myWatch = new customWatch();
         myWatch.start();
-        for (int i=0; i<1000; i++) {
-            bestPosition res = z.searchBestPosition(x);
+        for (int i=0; i<100; i++) {
+            ArrayList<Double> x = new ArrayList<>();
+            for (int j=0; j<depth; j++) {
+                x.add(Math.random()*255);
+            }
+            ArrayList<Double> neuron = SOM.normalize(x,depth);
+            bestPosition res = z.searchBestPosition(neuron);
             z.learnVector(neuron, res.besti, res.bestj, res.i, res.j);
             myWatch.watch();
         }

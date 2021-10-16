@@ -75,19 +75,19 @@ public class SOM extends defaultWorker<Pair,Pair> {
         for (int w=0; w<size; w++) {
             for (int h=0; h<size; h++) {
                 for (int d=0; d<depth; d++) {
-                    //som[w][h][d] = (int)(Math.random()*100);
-                    som[w][h][d] = w*h*d%100;
+                    som[w][h][d] = (int)(Math.random()*255);
+                    //som[w][h][d] = 0;
                 }
             }
         }
     }
 
-    public static ArrayList<Double> normalize(double[] line, int depth) {
+    public static ArrayList<Double> normalize(ArrayList<Double> line, int depth) {
         ArrayList<Double> neuron = new ArrayList<>(depth);
 
-        double n_min = 10000;
+        double n_min = Double.MAX_VALUE;
         for (int n=0; n<depth; n++) {
-            neuron.add(line[n]);
+            neuron.add(line.get(n));
             // find minimum excluding last
             if (n < (depth-1)) {
                 if (n_min > neuron.get(n)) {
@@ -104,7 +104,7 @@ public class SOM extends defaultWorker<Pair,Pair> {
         return neuron;
     }
 
-    public bestPosition searchBestPosition(double[] neuron) {
+    public bestPosition searchBestPosition(ArrayList<Double> neuron) {
         //Searching nearest similar vector
         int besti = 0;
         int bestj = 0;
@@ -117,7 +117,7 @@ public class SOM extends defaultWorker<Pair,Pair> {
                 // Euclidean distance between D-dimensional points
                 double distance = 0;
                 for (int d=0; d<depth; d++) {
-                    distance += (som[w][h][d] - neuron[d]) * (som[w][h][d] - neuron[d]);
+                    distance += (som[w][h][d] - neuron.get(d)) * (som[w][h][d] - neuron.get(d));
 
                     if (distance > bestdist) { // avoid unuseful loops
                         break;
@@ -132,7 +132,7 @@ public class SOM extends defaultWorker<Pair,Pair> {
             }
         }
 
-        bestPosition b = new bestPosition(depth);
+        bestPosition b = new bestPosition();
         b.besti = besti;
         b.bestj = bestj;
         b.bestdist = bestdist;

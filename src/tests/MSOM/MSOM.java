@@ -98,8 +98,8 @@ public class MSOM {
         return soms.get((x*split)+y);
     }
 
-    public bestPosition searchBestPositionThread(double[] neuron) {
-        bestPosition result = new bestPosition(depth);
+    public bestPosition searchBestPositionThread(ArrayList<Double> neuron) {
+        bestPosition result = new bestPosition();
         ArrayList<Thread> threads_list = new ArrayList<>();
         ArrayList<bestPosition> results = new ArrayList<>();
         int pindex = 0;
@@ -143,8 +143,8 @@ public class MSOM {
         return result;
     }
 
-    public bestPosition searchBestPosition(double[] neuron) {
-        bestPosition result = new bestPosition(depth);
+    public bestPosition searchBestPosition(ArrayList<Double> neuron) {
+        bestPosition result = new bestPosition();
         for (int x=0; x<split; x++) {
             for (int y = 0; y < split; y++) {
                 SOM s = accessSOM_Matrix(x, y);
