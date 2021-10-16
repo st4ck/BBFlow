@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class test_MSOM {
     public static void main (String[] args) {
         //testMSOM(Integer.parseInt(args[0]));
-        //testMSOM(1);
+        testMSOM(1);
         testMSOM(2);
         testMSOM(4);
         testMSOM(8);
@@ -16,6 +16,7 @@ public class test_MSOM {
 
     private static void testMSOM(int split) {
         int depth = 3;
+        int searchMaxThreads = 8;
         MSOM z = new MSOM(1024,depth,split);
         z.start();
         customWatch myWatch = new customWatch();
@@ -34,7 +35,7 @@ public class test_MSOM {
                 vector.add(Math.random()*255);
             }
             ArrayList<Double> neuron = SOM.normalize(vector,depth);
-            bestPosition res = z.searchBestPosition(neuron);
+            bestPosition res = z.searchBestPositionThreaded(neuron, searchMaxThreads);
 
             /*for (int x=Math.max(0,res.i-1); x<=Math.min(res.i+1, split-1); x++) {
                 for (int y=Math.max(0,res.j-1); y<=Math.min(res.j+1, split-1); y++) {

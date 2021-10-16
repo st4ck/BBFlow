@@ -111,7 +111,7 @@ public class MSOM {
         return soms.get((x*split)+y);
     }
 
-    public bestPosition searchBestPositionThread(ArrayList<Double> neuron) {
+    public bestPosition searchBestPositionThreaded(ArrayList<Double> neuron, int threads) {
         bestPosition result = new bestPosition();
         ArrayList<Thread> threads_list = new ArrayList<>();
         ArrayList<bestPosition> results = new ArrayList<>();
@@ -132,8 +132,20 @@ public class MSOM {
             }
         }
 
+        int running = 0;
+        int tpos = 0;
         for (int i=0; i<threads_list.size(); i++) {
+            if (running > threads) {
+                try {
+                    threads_list.get(tpos).join();
+                    running--;
+                    tpos++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             threads_list.get(i).start();
+            running++;
         }
 
         for (int i=0; i<threads_list.size(); i++) {
