@@ -14,6 +14,8 @@ public class MSOM {
     int split;
     ArrayList<ff_node<Pair,Pair>> soms = new ArrayList<>();
 
+    boolean[][] started;
+
     public MSOM(int size, int depth, int split) {
         bb_settings.BLOCKING = false;
         bb_settings.BOUNDED = false;
@@ -23,6 +25,8 @@ public class MSOM {
         this.depth = depth;
         this.size = size;
         this.split = split;
+
+        started = new boolean[split][split];
 
         for (int i=0; i<parts; i++) {
             SOM s = new SOM(side,side,depth);
@@ -35,6 +39,8 @@ public class MSOM {
 
         for (int x=0; x<split; x++) {
             for (int y=0; y<split; y++) {
+                started[x][y] = false;
+
                 // with top
                 if (x > 0) {
                     ff_queue<Pair> q = new ff_queue<Pair>();
@@ -79,6 +85,13 @@ public class MSOM {
             for (int y = 0; y < split; y++) {
                 accessSOM_Node(x, y).start();
             }
+        }
+    }
+
+    public void start(int x, int y) {
+        if (!started[x][y]) {
+            started[x][y] = true;
+            accessSOM_Node(x, y).start();
         }
     }
 

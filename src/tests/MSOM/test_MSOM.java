@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class test_MSOM {
     public static void main (String[] args) {
         //testMSOM(Integer.parseInt(args[0]));
-        testMSOM(1);
+        //testMSOM(1);
         testMSOM(2);
         testMSOM(4);
         testMSOM(8);
@@ -17,9 +17,9 @@ public class test_MSOM {
     private static void testMSOM(int split) {
         int depth = 3;
         MSOM z = new MSOM(1024,depth,split);
+        z.start();
         customWatch myWatch = new customWatch();
         myWatch.start();
-        z.start();
 //        double[] x = {9,90,70};
         /*bestPosition res = z.searchBestPosition(x);
         res.besti = 0;
@@ -28,13 +28,19 @@ public class test_MSOM {
         res.bestj = 0;*/
         //System.out.println("Best position found is in matrix "+res.i+","+res.j+" in position "+res.besti+","+res.bestj);
         //System.out.println("Training vector 100 times");
-        for (int i=0; i<1000; i++) {
-            ArrayList<Double> x = new ArrayList<>();
+        for (int i=0; i<100; i++) {
+            ArrayList<Double> vector = new ArrayList<>();
             for (int j=0; j<depth; j++) {
-                x.add(Math.random()*255);
+                vector.add(Math.random()*255);
             }
-            ArrayList<Double> neuron = SOM.normalize(x,depth);
+            ArrayList<Double> neuron = SOM.normalize(vector,depth);
             bestPosition res = z.searchBestPosition(neuron);
+
+            /*for (int x=Math.max(0,res.i-1); x<=Math.min(res.i+1, split-1); x++) {
+                for (int y=Math.max(0,res.j-1); y<=Math.min(res.j+1, split-1); y++) {
+                    z.start(x,y);
+                }
+            }*/
             z.learnVector(neuron, res.besti, res.bestj, res.i, res.j);
             myWatch.watch();
         }
