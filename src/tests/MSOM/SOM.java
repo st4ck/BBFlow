@@ -42,8 +42,11 @@ public class SOM extends defaultWorker<Pair,Pair> {
         if (element.redirect != null) {
             int t = element.redirect;
             element.redirect = null;
-            //System.out.println("Redirecting training vector");
-            sendOutTo(element,t);
+
+            if (out.get(t) != null) {
+                //System.out.println("Redirecting training vector");
+                sendOutTo(element, t);
+            }
         } else {
             //System.out.println("Training received vector from the border");
             learnVector(element.neuron, element.train_i, element.train_j, element.curve);
@@ -72,7 +75,8 @@ public class SOM extends defaultWorker<Pair,Pair> {
         for (int w=0; w<size; w++) {
             for (int h=0; h<size; h++) {
                 for (int d=0; d<depth; d++) {
-                    som[w][h][d] = (int)(Math.random()*100);
+                    //som[w][h][d] = (int)(Math.random()*100);
+                    som[w][h][d] = w*h*d%100;
                 }
             }
         }

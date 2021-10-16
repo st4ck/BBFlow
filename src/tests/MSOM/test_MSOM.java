@@ -13,10 +13,11 @@ public class test_MSOM {
     }
 
     private static void testMSOM(int split) {
-        MSOM z = new MSOM(1024,10,split);
+        int depth = 3;
+        MSOM z = new MSOM(256,depth,split);
         z.start();
-        double[] x = {9,90,244,15,2,0,42,0,9,12};
-        ArrayList<Double> neuron = SOM.normalize(x,10);
+        double[] x = {9,90,70};
+        ArrayList<Double> neuron = SOM.normalize(x,depth);
         /*bestPosition res = z.searchBestPosition(x);
         res.besti = 0;
         res.i = 1;
@@ -26,7 +27,7 @@ public class test_MSOM {
         //System.out.println("Training vector 100 times");
         customWatch myWatch = new customWatch();
         myWatch.start();
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<1000; i++) {
             bestPosition res = z.searchBestPosition(x);
             z.learnVector(neuron, res.besti, res.bestj, res.i, res.j);
             myWatch.watch();

@@ -98,7 +98,7 @@ public class MSOM {
         return soms.get((x*split)+y);
     }
 
-    public bestPosition searchBestPosition(double[] neuron) {
+    public bestPosition searchBestPositionThread(double[] neuron) {
         bestPosition result = new bestPosition(depth);
         ArrayList<Thread> threads_list = new ArrayList<>();
         ArrayList<bestPosition> results = new ArrayList<>();
@@ -131,16 +131,31 @@ public class MSOM {
             }
 
             bestPosition x_res = results.get(i);
-            if (x_res == null) {
-                i--;
-                continue;
-            }
             if (x_res.bestdist < result.bestdist) {
                 result.bestdist = x_res.bestdist;
                 result.besti = x_res.besti;
                 result.bestj = x_res.bestj;
                 result.i = i/split;
                 result.j = i%split;
+            }
+        }
+
+        return result;
+    }
+
+    public bestPosition searchBestPosition(double[] neuron) {
+        bestPosition result = new bestPosition(depth);
+        for (int x=0; x<split; x++) {
+            for (int y = 0; y < split; y++) {
+                SOM s = accessSOM_Matrix(x, y);
+                bestPosition x_res = s.searchBestPosition(neuron);
+                if (x_res.bestdist < result.bestdist) {
+                    result.bestdist = x_res.bestdist;
+                    result.besti = x_res.besti;
+                    result.bestj = x_res.bestj;
+                    result.i = x;
+                    result.j = y;
+                }
             }
         }
 
