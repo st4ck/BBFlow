@@ -23,7 +23,7 @@ public class SOM extends defaultWorker<Pair,Pair> {
                     element = in.get(i).take();
                     if (element != null) {
                         if (element.neuron == null) {
-                            // received EOSs
+                            // received EOS
                             in.set(i, null);
                             return;
                         }

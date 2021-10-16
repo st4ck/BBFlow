@@ -11,7 +11,7 @@ public class test_MSOM {
         bb_settings.BOUNDED = false;
 
         //testMSOM(Integer.parseInt(args[0]));
-        //testMSOM(1024,1);
+        testMSOM(1024,1);
         testMSOM(1024,2);
         testMSOM(1023,3);
         testMSOM(1024,4);
@@ -30,7 +30,7 @@ public class test_MSOM {
     }
 
     private static void testMSOM(int size, int split) {
-        int depth = 3;
+        int depth = 10;
         int searchMaxThreads = 8;
         MSOM z = new MSOM(size,depth,split);
         z.start();
