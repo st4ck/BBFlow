@@ -19,7 +19,8 @@ public class SOM extends defaultWorker<Pair,Pair> {
             if (in.get(i) != null) {
                 allnull = false;
                 try {
-                    element = in.get(i).poll(100, TimeUnit.MILLISECONDS);
+                    //element = in.get(i).poll(100, TimeUnit.MILLISECONDS);
+                    element = in.get(i).take();
                     if (element != null) {
                         if (element.neuron == null) {
                             // received EOSs

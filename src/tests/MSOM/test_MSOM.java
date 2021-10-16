@@ -1,13 +1,17 @@
 package tests.MSOM;
 
+import bbflow.bb_settings;
 import bbflow.customWatch;
 
 import java.util.ArrayList;
 
 public class test_MSOM {
     public static void main (String[] args) {
+        bb_settings.BLOCKING = true;
+        bb_settings.BOUNDED = false;
+
         //testMSOM(Integer.parseInt(args[0]));
-        testMSOM(1024,1);
+        //testMSOM(1024,1);
         testMSOM(1024,2);
         testMSOM(1023,3);
         testMSOM(1024,4);

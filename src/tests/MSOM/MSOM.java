@@ -17,9 +17,6 @@ public class MSOM {
     boolean[][] started;
 
     public MSOM(int size, int depth, int split) {
-        bb_settings.BLOCKING = false;
-        bb_settings.BOUNDED = false;
-
         this.parts = (int) Math.pow(split,2);
         this.side = size/split;
         this.depth = depth;
