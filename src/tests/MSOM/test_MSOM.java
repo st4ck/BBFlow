@@ -40,7 +40,7 @@ public class test_MSOM {
         res.bestj = 0;*/
         //System.out.println("Best position found is in matrix "+res.i+","+res.j+" in position "+res.besti+","+res.bestj);
         //System.out.println("Training vector 100 times");
-        for (int i=0; i<10; i++) {
+        for (int i=0; i<100; i++) {
             ArrayList<Double> vector = new ArrayList<>();
             for (int j=0; j<depth; j++) {
                 vector.add(Math.random()*255);
