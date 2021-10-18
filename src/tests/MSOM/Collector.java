@@ -4,7 +4,7 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
-public class Postfilter extends defaultCollector<SOMData> {
+public class Collector extends defaultCollector<SOMData> {
     int receivedcount = 0;
     bestPosition result = new bestPosition();
     int parts;
@@ -14,7 +14,7 @@ public class Postfilter extends defaultCollector<SOMData> {
     public final int WAITSINGLE = 10;
     int waitingnode = 0;
 
-    public Postfilter(int parts) {
+    public Collector(int parts) {
         this.parts = parts;
         this.split = (int) Math.sqrt(parts);
     }

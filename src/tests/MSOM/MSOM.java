@@ -1,15 +1,11 @@
 package tests.MSOM;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import bbflow.*;
 
 public class MSOM {
     public static final boolean DEBUG = false;
-    int size;
-    int depth;
-    int side;
     int parts;
     int split;
     LinkedList<ff_node> soms = new LinkedList<>();
@@ -20,9 +16,7 @@ public class MSOM {
 
     public MSOM(int size, int depth, int split) {
         this.parts = (int) Math.pow(split,2);
-        this.side = size/split;
-        this.depth = depth;
-        this.size = size;
+        int side = size/split;
         this.split = split;
 
         for (int i=0; i<parts; i++) {
@@ -76,8 +70,8 @@ public class MSOM {
 
         all = new ff_farm(0, null);
         all.workers = soms;
-        all.collector = new ff_node(new Postfilter(parts));
-        all.emitter = new ff_node(new Prefilter());
+        all.collector = new ff_node(new Collector(parts));
+        all.emitter = new ff_node(new Emitter());
         all.connectWorkersCollector();
         all.connectEmitterWorkers();
 

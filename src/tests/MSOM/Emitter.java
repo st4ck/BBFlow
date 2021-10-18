@@ -3,7 +3,7 @@ package tests.MSOM;
 import java.util.LinkedList;
 import bbflow.*;
 
-public class Prefilter extends defaultEmitter<SOMData> {
+public class Emitter extends defaultEmitter<SOMData> {
     int command_channel = 0;
     int feedback_channel = 1;
 
