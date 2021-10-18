@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class test_MSOM {
     public static void main (String[] args) {
-        bb_settings.BLOCKING = true;
+        bb_settings.BLOCKING = false;
         bb_settings.BOUNDED = false;
 
         //testMSOM(Integer.parseInt(args[0]));

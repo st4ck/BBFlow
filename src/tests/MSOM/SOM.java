@@ -19,30 +19,30 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         }
     }*/
 
-    public void runJob() {
+    public void runJob() throws InterruptedException {
         SOMData element = null;
-        for (int i = 0; i < in.size(); i++) {
-            if (in.get(i) != null) {
-                try {
-                    element = in.get(i).poll(50, TimeUnit.MILLISECONDS);
-                    if (element != null) {
-                        position = i;
-                        if (element.dataType == SOMData.EOS) {
-                            sendOutTo(element, 4);
-                            out.get(4).setEOS();
-                            in = new LinkedList<>();
-                            return;
-                        }
-                        break;
+        while (element == null) {
+            element = in.get(4).poll(0, TimeUnit.MILLISECONDS);
+            if (element != null) { break; }
+
+            if (in.get(position) != null) {
+                element = in.get(position).poll(5, TimeUnit.MILLISECONDS);
+
+                if (element != null) {
+                    if (element.dataType == SOMData.EOS) {
+                        sendOutTo(element, 4);
+                        out.get(4).setEOS();
+                        in = new LinkedList<>();
+                        return;
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    break;
                 }
             }
-        }
 
-        if (element == null) {
-            return;
+            position++;
+            if (position>3) {
+                position = 0;
+            }
         }
 
         switch (element.dataType) {
