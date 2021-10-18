@@ -22,11 +22,6 @@ public class test_MSOM {
         testMSOM(1026,9);
         testMSOM(1030,10);
         testMSOM(1023,11);
-        testMSOM(1020,12);
-        testMSOM(1027,13);
-        testMSOM(1022,14);
-        testMSOM(1020,15);
-        testMSOM(1024,16);
     }
 
     private static void testMSOM(int size, int split) {
