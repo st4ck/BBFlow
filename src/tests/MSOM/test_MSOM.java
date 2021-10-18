@@ -10,20 +10,8 @@ public class test_MSOM {
         bb_settings.BLOCKING = true;
         bb_settings.BOUNDED = false;
 
-        int cores = Runtime.getRuntime().availableProcessors();
-        System.out.println("Cores on machine: "+cores);
-        int i = 1;
-        int threads = 1;
-        while (threads<cores) {
-            int newSize = (1024/threads)*threads;
-            System.out.println("Running SOM of size "+newSize+" with "+threads+" threads");
-            testMSOM(newSize, i);
-            i++;
-            threads = (int) Math.pow(i,2);
-        }
-
         //testMSOM(Integer.parseInt(args[0]));
-        /*testMSOM(1024,1);
+        testMSOM(1024,1);
         testMSOM(1024,2);
         testMSOM(1023,3);
         testMSOM(1024,4);
@@ -33,7 +21,7 @@ public class test_MSOM {
         testMSOM(1024,8);
         testMSOM(1026,9);
         testMSOM(1030,10);
-        testMSOM(1023,11);*/
+        testMSOM(1023,11);
     }
 
     private static void testMSOM(int size, int split) {
