@@ -7,7 +7,6 @@ import bbflow.*;
 
 public class MSOM {
     public static final boolean DEBUG = false;
-    int layers = 1;
     int size;
     int depth;
     int side;
@@ -39,7 +38,7 @@ public class MSOM {
             for (int y=0; y<split; y++) {
                 // with top
                 if (x > 0) {
-                    ff_queue<SOMData> q = new ff_queue<SOMData>();
+                    ff_queue<SOMData> q = new ff_queue<>();
                     accessSOM_Matrix(x,y).out.remove(SOM.TOP);
                     accessSOM_Matrix(x,y).out.add(SOM.TOP, q);
                     accessSOM_Matrix(x-1,y).in.remove(SOM.BOTTOM);
@@ -48,7 +47,7 @@ public class MSOM {
 
                 // with left
                 if (y > 0) {
-                    ff_queue<SOMData> q = new ff_queue<SOMData>();
+                    ff_queue<SOMData> q = new ff_queue<>();
                     accessSOM_Matrix(x,y).out.remove(SOM.LEFT);
                     accessSOM_Matrix(x,y).out.add(SOM.LEFT, q);
                     accessSOM_Matrix(x,y-1).in.remove(SOM.RIGHT);
@@ -57,7 +56,7 @@ public class MSOM {
 
                 // with bottom
                 if (x < split-1) {
-                    ff_queue<SOMData> q = new ff_queue<SOMData>();
+                    ff_queue<SOMData> q = new ff_queue<>();
                     accessSOM_Matrix(x,y).out.remove(SOM.BOTTOM);
                     accessSOM_Matrix(x,y).out.add(SOM.BOTTOM, q);
                     accessSOM_Matrix(x+1,y).in.remove(SOM.TOP);
@@ -66,7 +65,7 @@ public class MSOM {
 
                 // with right
                 if (y < split-1) {
-                    ff_queue<SOMData> q = new ff_queue<SOMData>();
+                    ff_queue<SOMData> q = new ff_queue<>();
                     accessSOM_Matrix(x,y).out.remove(SOM.RIGHT);
                     accessSOM_Matrix(x,y).out.add(SOM.RIGHT, q);
                     accessSOM_Matrix(x,y+1).in.remove(SOM.LEFT);
@@ -118,100 +117,8 @@ public class MSOM {
         return soms.get((x*split)+y);
     }
 
-    public bestPosition searchBestPositionThreaded(ArrayList<Double> neuron, int threads) {
-        bestPosition result = new bestPosition();
-        ArrayList<Thread> threads_list = new ArrayList<>();
-        ArrayList<bestPosition> results = new ArrayList<>();
-        int pindex = 0;
-        for (int x=0; x<split; x++) {
-            for (int y = 0; y < split; y++) {
-                SOM s = accessSOM_Matrix(x,y);
-
-                results.add(null);
-                final Integer finalPindex = pindex;
-                Thread z = new Thread(new Runnable() {
-                    public void run(){
-                        results.set(finalPindex, s.searchBestPosition(neuron));
-                    }
-                });
-                threads_list.add(z);
-                pindex++;
-            }
-        }
-
-        int running = 0;
-        int tpos = 0;
-        for (int i=0; i<threads_list.size(); i++) {
-            if (running > threads) {
-                try {
-                    threads_list.get(tpos).join();
-                    running--;
-                    tpos++;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            threads_list.get(i).start();
-            running++;
-        }
-
-        for (int i=0; i<threads_list.size(); i++) {
-            try {
-                threads_list.get(i).join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            bestPosition x_res = results.get(i);
-            if (x_res.bestdist < result.bestdist) {
-                result.bestdist = x_res.bestdist;
-                result.besti = x_res.besti;
-                result.bestj = x_res.bestj;
-                result.i = i/split;
-                result.j = i%split;
-            }
-        }
-
-        return result;
-    }
-
-    public bestPosition searchBestPosition(ArrayList<Double> neuron) {
-        bestPosition result = new bestPosition();
-        for (int x=0; x<split; x++) {
-            for (int y = 0; y < split; y++) {
-                SOM s = accessSOM_Matrix(x, y);
-                bestPosition x_res = s.searchBestPosition(neuron);
-                if (x_res.bestdist < result.bestdist) {
-                    result.bestdist = x_res.bestdist;
-                    result.besti = x_res.besti;
-                    result.bestj = x_res.bestj;
-                    result.i = x;
-                    result.j = y;
-                }
-            }
-        }
-
-        return result;
-    }
-
-    public void learnVector(ArrayList<Double> neuron, int besti, int bestj, int i, int j) {
-        accessSOM_Matrix(i,j).learnVector(neuron, besti, bestj);
-    }
 
     public void setEOS() {
-        /*for (int x=0; x<split; x++) {
-            for (int y = 0; y < split; y++) {
-                LinkedList<ff_queue<SOMData>> out = accessSOM_Matrix(x, y).out;
-                for (int i=0; i<out.size(); i++) {
-                    if (out.get(i) != null) {
-                        out.get(i).put(new SOMData(SOMData.EOS,-1));
-                        out.get(i).setEOS();
-                    }
-                }
-            }
-        }
-         */
-
         push(new SOMData(SOMData.EOS,-1));
     }
 

@@ -12,13 +12,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
     public static final int RIGHT = 3;
     public int waiting_learners = 0;
 
-    /*@Override
-    public void init() {
-        for (int i=0; i<5; i++) {
-            EOS_sent[i] = false;
-        }
-    }*/
-
     public void runJob() throws InterruptedException {
         SOMData element = null;
         while (true) {
@@ -175,7 +168,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         double bestdist = Double.MAX_VALUE;
 
         for (int w=0; w<size; w++) {
-            //cout << "Row " << (w+1) << "\n";
             for (int h=0; h<size; h++) {
                 // Euclidean distance between D-dimensional points
                 double distance = 0;
@@ -243,9 +235,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
 
     void learnVector(ArrayList<Double> neuron, int besti, int bestj) {
         int circ = 5;
-
-        /*for (int i=Math.max(0,bestw-circ); i<=Math.min(width-1,bestw+circ); i++) {
-            for (int j=Math.max(0,besth-circ); j<=Math.min(height-1,besth+circ); j++) {*/
         waiting_learners++;
 
         for (int i=besti-circ; i<=besti+circ; i++) {
