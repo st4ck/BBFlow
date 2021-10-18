@@ -12,9 +12,13 @@ public class MSOM {
     int side;
     int parts;
     int split;
-    ArrayList<ff_node<Pair,Pair>> soms = new ArrayList<>();
+    LinkedList<ff_node> soms = new LinkedList<>();
 
-    boolean[][] started;
+    ff_farm<SOMData, SOMData> all;
+    ff_queue<SOMData> feedback;
+    ff_node<SOMData, SOMData> postfilter;
+    ff_node<SOMData, SOMData> prefilter;
+    ff_queue<SOMData> externalInput;
 
     public MSOM(int size, int depth, int split) {
         this.parts = (int) Math.pow(split,2);
@@ -23,10 +27,8 @@ public class MSOM {
         this.size = size;
         this.split = split;
 
-        started = new boolean[split][split];
-
         for (int i=0; i<parts; i++) {
-            SOM s = new SOM(side,side,depth);
+            SOM s = new SOM(side,side,depth,i);
             for (int j=0;j<4; j++) {
                 s.in.add(null);
                 s.out.add(null);
@@ -36,11 +38,9 @@ public class MSOM {
 
         for (int x=0; x<split; x++) {
             for (int y=0; y<split; y++) {
-                started[x][y] = false;
-
                 // with top
                 if (x > 0) {
-                    ff_queue<Pair> q = new ff_queue<Pair>();
+                    ff_queue<SOMData> q = new ff_queue<SOMData>();
                     accessSOM_Matrix(x,y).out.remove(SOM.TOP);
                     accessSOM_Matrix(x,y).out.add(SOM.TOP, q);
                     accessSOM_Matrix(x-1,y).in.remove(SOM.BOTTOM);
@@ -49,7 +49,7 @@ public class MSOM {
 
                 // with left
                 if (y > 0) {
-                    ff_queue<Pair> q = new ff_queue<Pair>();
+                    ff_queue<SOMData> q = new ff_queue<SOMData>();
                     accessSOM_Matrix(x,y).out.remove(SOM.LEFT);
                     accessSOM_Matrix(x,y).out.add(SOM.LEFT, q);
                     accessSOM_Matrix(x,y-1).in.remove(SOM.RIGHT);
@@ -58,7 +58,7 @@ public class MSOM {
 
                 // with bottom
                 if (x < split-1) {
-                    ff_queue<Pair> q = new ff_queue<Pair>();
+                    ff_queue<SOMData> q = new ff_queue<SOMData>();
                     accessSOM_Matrix(x,y).out.remove(SOM.BOTTOM);
                     accessSOM_Matrix(x,y).out.add(SOM.BOTTOM, q);
                     accessSOM_Matrix(x+1,y).in.remove(SOM.TOP);
@@ -67,7 +67,7 @@ public class MSOM {
 
                 // with right
                 if (y < split-1) {
-                    ff_queue<Pair> q = new ff_queue<Pair>();
+                    ff_queue<SOMData> q = new ff_queue<SOMData>();
                     accessSOM_Matrix(x,y).out.remove(SOM.RIGHT);
                     accessSOM_Matrix(x,y).out.add(SOM.RIGHT, q);
                     accessSOM_Matrix(x,y+1).in.remove(SOM.LEFT);
@@ -75,6 +75,31 @@ public class MSOM {
                 }
             }
         }
+
+        all = new ff_farm(0, null);
+        all.workers = soms;
+        all.collector = new ff_node(new defaultCollector(defaultCollector.FIRSTCOME));
+        all.emitter = new ff_node(new defaultEmitter(defaultEmitter.BROADCAST));
+        all.connectWorkersCollector();
+        all.connectEmitterWorkers();
+
+        ff_queue<SOMData> collectorFilter = new ff_queue();
+        postfilter = new ff_node(new Postfilter(parts));
+        all.collector.addOutputChannel(collectorFilter);
+        postfilter.addInputChannel(collectorFilter);
+
+        prefilter = new ff_node(new Prefilter());
+
+        externalInput = new ff_queue<>();
+        prefilter.addInputChannel(externalInput);
+
+        feedback = new ff_queue<>();
+        postfilter.addOutputChannel(feedback);
+        prefilter.addInputChannel(feedback);
+
+        ff_queue<SOMData> filterEmitter = new ff_queue();
+        prefilter.addOutputChannel(filterEmitter);
+        all.emitter.addInputChannel(filterEmitter);
     }
 
     public void start() {
@@ -83,13 +108,10 @@ public class MSOM {
                 accessSOM_Node(x, y).start();
             }
         }
-    }
-
-    public void start(int x, int y) {
-        if (!started[x][y]) {
-            started[x][y] = true;
-            accessSOM_Node(x, y).start();
-        }
+        all.collector.start();
+        all.emitter.start();
+        prefilter.start();
+        postfilter.start();
     }
 
     public void join() {
@@ -98,6 +120,10 @@ public class MSOM {
                 accessSOM_Node(x, y).join();
             }
         }
+        all.collector.join();
+        all.emitter.join();
+        prefilter.join();
+        postfilter.join();
     }
 
     public SOM accessSOM_Matrix(int x, int y) {
@@ -189,16 +215,23 @@ public class MSOM {
     }
 
     public void setEOS() {
-        for (int x=0; x<split; x++) {
+        /*for (int x=0; x<split; x++) {
             for (int y = 0; y < split; y++) {
-                LinkedList<ff_queue<Pair>> out = accessSOM_Matrix(x, y).out;
+                LinkedList<ff_queue<SOMData>> out = accessSOM_Matrix(x, y).out;
                 for (int i=0; i<out.size(); i++) {
                     if (out.get(i) != null) {
-                        out.get(i).put(new Pair());
+                        out.get(i).put(new SOMData(SOMData.EOS,-1));
                         out.get(i).setEOS();
                     }
                 }
             }
         }
+         */
+
+        push(new SOMData(SOMData.EOS,-1));
+    }
+
+    public void push(SOMData d) {
+        externalInput.put(d);
     }
 }
