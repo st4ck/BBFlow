@@ -1,4 +1,4 @@
 /**
- * Scratch of a neural network implementation using BBFlow. Still incomplete
+ * Multi-Self Organizing Map Neural network implementation using BBFlow.
  */
 package tests.MSOM;
