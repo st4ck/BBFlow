@@ -3,7 +3,7 @@ package tests.MSOM;
 import java.util.LinkedList;
 import bbflow.*;
 
-public class Prefilter extends defaultWorker<SOMData,SOMData> {
+public class Prefilter extends defaultEmitter<SOMData> {
     int command_channel = 0;
     int feedback_channel = 1;
 
@@ -30,7 +30,7 @@ public class Prefilter extends defaultWorker<SOMData,SOMData> {
                     element.train_j = 0;
                     element.to = 4;*/
 
-                    sendOut(element);
+                    sendOutTo(element, element.to);
                     return;
                 }
             } else {
@@ -38,14 +38,14 @@ public class Prefilter extends defaultWorker<SOMData,SOMData> {
                 commandRunning = true;
 
                 if (element.dataType == SOMData.EOS) {
-                    sendOut(element);
+                    sendOutToAll(element);
                     sendEOS();
                     in = new LinkedList<>();
                     return;
                 }
 
                 // sending new command
-                sendOut(element);
+                sendOutToAll(element);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -4,11 +4,15 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
-public class Postfilter extends defaultWorker<SOMData,SOMData> {
+public class Postfilter extends defaultCollector<SOMData> {
     int receivedcount = 0;
     bestPosition result = new bestPosition();
     int parts;
     int split;
+
+    int listeningState = defaultCollector.ROUNDROBIN;
+    public final int WAITSINGLE = 10;
+    int waitingnode = 0;
 
     public Postfilter(int parts) {
         this.parts = parts;
@@ -16,34 +20,58 @@ public class Postfilter extends defaultWorker<SOMData,SOMData> {
     }
 
     @Override
-    public void runJob() {
-        try {
-            SOMData x = in.get(0).take();
-            if (x.dataType == SOMData.SEARCH_AND_LEARN) {
-                receivedcount++;
-                if (result.bestdist > x.searchResult.bestdist) {
-                    result.bestdist = x.searchResult.bestdist;
-                    result.besti = x.searchResult.besti;
-                    result.bestj = x.searchResult.bestj;
-                    result.id = x.from;
+    public void runJob() throws InterruptedException {
+        SOMData received = null;
+        ff_queue<SOMData> out_channel = out.get(0);
+
+        switch (listeningState) {
+            case defaultCollector.ROUNDROBIN:
+                received = in.get(position).take();
+                if (received == null) {
+                    in.remove(position); // input channel not needed anymore
+                    position--;
+
+                    if (in.size() == 0) { // no more input channels, EOS only last time
+                        out_channel.setEOS();
+                    }
                 }
 
-                if (receivedcount == parts) {
-                    x.dataType = SOMData.LEARN;
-                    receivedcount = 0;
-                    x.searchResult = result;
-                    x.from = -1;
-                    sendOut(x);
+                position++;
+                if (position >= in.size()) {
+                    position = 0;
                 }
-            } else if (x.dataType == SOMData.EOS) {
-                in = new LinkedList<>();
-                return;
-            } else {
-                x.dataType = SOMData.FINISHED;
-                sendOut(x);
+                break;
+            case WAITSINGLE:
+                received = in.get(waitingnode).take();
+                position = 0;
+                listeningState = defaultCollector.ROUNDROBIN;
+                break;
+        }
+
+        if (received.dataType == SOMData.SEARCH_AND_LEARN) {
+            receivedcount++;
+            if (result.bestdist > received.searchResult.bestdist) {
+                result.bestdist = received.searchResult.bestdist;
+                result.besti = received.searchResult.besti;
+                result.bestj = received.searchResult.bestj;
+                result.id = received.from;
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+            if (receivedcount == parts) {
+                received.dataType = SOMData.LEARN;
+                receivedcount = 0;
+                received.searchResult = result;
+                received.from = -1;
+                sendOut(received);
+                listeningState = WAITSINGLE;
+                waitingnode = result.id;
+            }
+        } else if (received.dataType == SOMData.EOS) {
+            in = new LinkedList<>();
+            return;
+        } else {
+            received.dataType = SOMData.FINISHED;
+            sendOut(received);
         }
     }
 

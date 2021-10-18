@@ -154,8 +154,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         //Searching nearest similar vector
         int besti = 0;
         int bestj = 0;
-        double bestdist = (depth*depth) * (depth*depth);
-        bestdist = bestdist*bestdist;
+        double bestdist = Double.MAX_VALUE;
 
         for (int w=0; w<size; w++) {
             //cout << "Row " << (w+1) << "\n";

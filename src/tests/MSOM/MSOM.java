@@ -16,8 +16,6 @@ public class MSOM {
 
     ff_farm<SOMData, SOMData> all;
     ff_queue<SOMData> feedback;
-    ff_node<SOMData, SOMData> postfilter;
-    ff_node<SOMData, SOMData> prefilter;
     ff_queue<SOMData> externalInput;
 
     public MSOM(int size, int depth, int split) {
@@ -78,28 +76,17 @@ public class MSOM {
 
         all = new ff_farm(0, null);
         all.workers = soms;
-        all.collector = new ff_node(new defaultCollector(defaultCollector.FIRSTCOME));
-        all.emitter = new ff_node(new defaultEmitter(defaultEmitter.BROADCAST));
+        all.collector = new ff_node(new Postfilter(parts));
+        all.emitter = new ff_node(new Prefilter());
         all.connectWorkersCollector();
         all.connectEmitterWorkers();
 
-        ff_queue<SOMData> collectorFilter = new ff_queue();
-        postfilter = new ff_node(new Postfilter(parts));
-        all.collector.addOutputChannel(collectorFilter);
-        postfilter.addInputChannel(collectorFilter);
-
-        prefilter = new ff_node(new Prefilter());
-
         externalInput = new ff_queue<>();
-        prefilter.addInputChannel(externalInput);
+        all.emitter.addInputChannel(externalInput);
 
         feedback = new ff_queue<>();
-        postfilter.addOutputChannel(feedback);
-        prefilter.addInputChannel(feedback);
-
-        ff_queue<SOMData> filterEmitter = new ff_queue();
-        prefilter.addOutputChannel(filterEmitter);
-        all.emitter.addInputChannel(filterEmitter);
+        all.collector.addOutputChannel(feedback);
+        all.emitter.addInputChannel(feedback);
     }
 
     public void start() {
@@ -110,8 +97,6 @@ public class MSOM {
         }
         all.collector.start();
         all.emitter.start();
-        prefilter.start();
-        postfilter.start();
     }
 
     public void join() {
@@ -122,8 +107,6 @@ public class MSOM {
         }
         all.collector.join();
         all.emitter.join();
-        prefilter.join();
-        postfilter.join();
     }
 
     public SOM accessSOM_Matrix(int x, int y) {

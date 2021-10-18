@@ -16,7 +16,7 @@ public class defaultCollector<T> extends defaultJob<T,T> {
     public static final int GATHER = 3;
 
     int strategy;
-    int position = 0;
+    public int position = 0;
 
     public defaultCollector() {
         this.strategy = FIRSTCOME;
