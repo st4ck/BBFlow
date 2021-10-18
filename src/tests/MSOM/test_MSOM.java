@@ -11,11 +11,11 @@ public class test_MSOM {
         bb_settings.BOUNDED = false;
 
         //testMSOM(Integer.parseInt(args[0]));
-        testMSOM(1024,1);
+        /*testMSOM(1024,1);
         testMSOM(1024,2);
-        testMSOM(1023,3);
-        testMSOM(1024,4);
-        testMSOM(1025,5);
+        testMSOM(1023,3);*/
+        testMSOM(1024,2);
+        /*testMSOM(1025,5);
         testMSOM(1026,6);
         testMSOM(1029,7);
         testMSOM(1024,8);
@@ -26,11 +26,11 @@ public class test_MSOM {
         testMSOM(1027,13);
         testMSOM(1022,14);
         testMSOM(1020,15);
-        testMSOM(1024,16);
+        testMSOM(1024,16);*/
     }
 
     private static void testMSOM(int size, int split) {
-        int depth = 100;
+        int depth = 10;
         int searchMaxThreads = 8;
         MSOM z = new MSOM(size,depth,split);
         z.start();

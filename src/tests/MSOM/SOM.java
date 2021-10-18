@@ -21,29 +21,26 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
 
     public void runJob() throws InterruptedException {
         SOMData element = null;
-        while (element == null) {
-            element = in.get(4).poll(0, TimeUnit.MILLISECONDS);
-            if (element != null) { break; }
+        while (true) {
+            if (position>3) {
+                position = 0;
+            }
+
+            element = in.get(4).poll(5, TimeUnit.MILLISECONDS);
+            if (element != null) { position = 4; break; }
 
             if (in.get(position) != null) {
                 element = in.get(position).poll(5, TimeUnit.MILLISECONDS);
 
                 if (element != null) {
-                    if (element.dataType == SOMData.EOS) {
-                        sendOutTo(element, 4);
-                        out.get(4).setEOS();
-                        in = new LinkedList<>();
-                        return;
-                    }
                     break;
                 }
             }
 
             position++;
-            if (position>3) {
-                position = 0;
-            }
         }
+
+        if (MSOM.DEBUG) System.out.println(id+" received "+element.dataType+" from "+element.packetId);
 
         switch (element.dataType) {
             case SOMData.SEARCH_AND_LEARN:
@@ -66,34 +63,55 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
 
                     if (out.get(t) != null) {
                         //System.out.println("Redirecting training vector");
+                        element.replyredirect = position;
                         sendOutTo(element, t);
                     } else {
                         // no SOM to train, reply with ACK
                         SOMData rd = new SOMData(SOMData.LEARN_FINISHED, id);
-                        rd.replyredirect = position;
+                        if (MSOM.DEBUG) rd.debugString = "ACK";
                         sendOutTo(rd, position);
                     }
                 } else {
                     //System.out.println("Training received vector from the border");
                     learnVector(element.neuron, element.train_i, element.train_j, element.curve);
-                    sendOutTo(new SOMData(SOMData.LEARN_FINISHED, id), position);
+                    SOMData rp = new SOMData(SOMData.LEARN_FINISHED, id);
+                    if (MSOM.DEBUG) rp.debugString = "REPLY";
+
+                    if (element.replyredirect != null) {
+                        if (MSOM.DEBUG) rp.debugString = "REDIRECT_REPLY";
+                        rp.replyredirect = element.replyredirect;
+                    }
+
+                    sendOutTo(rp, position);
                 }
                 break;
             case SOMData.LEARN_FINISHED:
                 if (element.replyredirect != null) {
                     int rd = element.replyredirect;
                     element.replyredirect = null;
+                    if (MSOM.DEBUG) element.debugString = "LEARN_REDIRECTED_REPLY";
                     sendOutTo(element, rd);
                 } else {
+                    if (MSOM.DEBUG) System.out.println("Node " + id + " received LF ("+element.debugString+") from " + element.packetId + " - "+(waiting_learners-1));
                     if (waiting_learners > 0) {
                         waiting_learners--;
                     }
 
                     if (waiting_learners == 0) {
-                        sendOutTo(new SOMData(SOMData.LEARN_FINISHED, id), 4);
+                        if (MSOM.DEBUG) System.out.println("Sending learn finished to collector");
+                        SOMData rd = new SOMData(SOMData.LEARN_FINISHED, id);
+                        if (MSOM.DEBUG) rd.debugString = "LEARN_FINISHED";
+                        sendOutTo(rd, 4);
                     }
                 }
                 break;
+            case SOMData.FINISHED:
+                break;
+            case SOMData.EOS:
+                sendOutTo(element, 4);
+                out.get(4).setEOS();
+                in = new LinkedList<>();
+                return;
         }
     }
 
@@ -217,7 +235,10 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
             som[i][j][d] = som[i][j][d] * (1-curve) + neuron.get(d) * curve;
             som[i][j][d] = Math.round(som[i][j][d]*100)/100;
         }
-        waiting_learners--;
+
+        if (waiting_learners > 0) {
+            waiting_learners--;
+        }
     }
 
     void learnVector(ArrayList<Double> neuron, int besti, int bestj) {
@@ -237,14 +258,21 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
             }
         }
 
-        waiting_learners--;
-        in.get(4).put(new SOMData(SOMData.LEARN_FINISHED, id));
+        SOMData rd = new SOMData(SOMData.LEARN_FINISHED, id);
+        if (MSOM.DEBUG) rd.debugString = "LOCAL_LEARN";
+        in.get(4).put(rd);
     }
 
-    private void train(Integer pos1, Integer pos2, ArrayList<Double> neuron, double curve, int i, int j) {
-        if (out.get(pos1) == null) { return; }
+    int counter = 0;
 
-        SOMData tosend = new SOMData(SOMData.LEARN_NEIGHBOURS, -1);
+    private void train(Integer pos1, Integer pos2, ArrayList<Double> neuron, double curve, int i, int j) {
+        if (out.get(pos1) == null) {
+            // NO OUT CHANNEL
+            waiting_learners--;
+            return;
+        }
+
+        SOMData tosend = new SOMData(SOMData.LEARN_NEIGHBOURS, id);
         tosend.redirect = pos2;
         tosend.neuron = neuron;
         tosend.curve = curve;

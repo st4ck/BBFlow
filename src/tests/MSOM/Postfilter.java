@@ -42,7 +42,10 @@ public class Postfilter extends defaultCollector<SOMData> {
                 }
                 break;
             case WAITSINGLE:
+                //waitingnode = 2;
+                if (MSOM.DEBUG) System.out.println("Waiting on node "+waitingnode);
                 received = in.get(waitingnode).take();
+                if (MSOM.DEBUG) System.out.println("Done waiting on node "+waitingnode);
                 position = 0;
                 listeningState = defaultCollector.ROUNDROBIN;
                 break;
@@ -76,6 +79,6 @@ public class Postfilter extends defaultCollector<SOMData> {
     }
 
     public void EOS() {
-        System.out.println("Collector EOS received");
+        if (MSOM.DEBUG) System.out.println("Collector EOS received");
     }
 }

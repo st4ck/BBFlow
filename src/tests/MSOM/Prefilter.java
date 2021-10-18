@@ -28,10 +28,13 @@ public class Prefilter extends defaultEmitter<SOMData> {
 
                     /*element.train_i = 0;
                     element.train_j = 0;
-                    element.to = 4;*/
+                    element.to = 2;*/
 
+                    if (MSOM.DEBUG) System.out.println("Learn command "+element.dataType + " to "+element.to);
                     sendOutTo(element, element.to);
                     return;
+                } else {
+                    if (MSOM.DEBUG) System.out.println("finished feedback");
                 }
             } else {
                 element = in.get(command_channel).take();
@@ -44,6 +47,7 @@ public class Prefilter extends defaultEmitter<SOMData> {
                     return;
                 }
 
+                if (MSOM.DEBUG) System.out.println("New command "+element.dataType);
                 // sending new command
                 sendOutToAll(element);
             }
@@ -53,6 +57,6 @@ public class Prefilter extends defaultEmitter<SOMData> {
     }
 
     public void EOS() {
-        System.out.println("Collector EOS received");
+        if (MSOM.DEBUG) System.out.println("Collector EOS received");
     }
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class SOMData {
     public Integer redirect = null;
-    public Integer replyredirect = null;
     public int train_i;
     public int train_j;
     public ArrayList<Double> neuron = null;
@@ -13,7 +12,10 @@ public class SOMData {
     public bestPosition searchResult;
     public int from;
     public int to;
+    public Integer replyredirect = null;
     int packetId;
+
+    String debugString = "";
 
     public static final int EOS = 0;
     public static final int SEARCH = 1;

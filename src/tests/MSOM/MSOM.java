@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import bbflow.*;
 
 public class MSOM {
+    public static final boolean DEBUG = false;
     int layers = 1;
     int size;
     int depth;
