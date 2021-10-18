@@ -201,6 +201,7 @@ public class ff_queue<T> {
                     }
 
                     Thread.sleep(bb_settings.backOff);
+                    waited += bb_settings.backOff;
                 }
             } else {
                 T i;
@@ -218,6 +219,7 @@ public class ff_queue<T> {
                     }
 
                     Thread.sleep(bb_settings.backOff);
+                    waited += bb_settings.backOff;
                 }
             }
         }
@@ -269,6 +271,7 @@ public class ff_queue<T> {
                     }
 
                     Thread.sleep(bb_settings.backOff);
+                    waited += bb_settings.backOff;
                 }
             } else { // unbounded, never return false
                 return nonblocking_queue.offer(i);
