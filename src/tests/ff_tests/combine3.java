@@ -46,15 +46,16 @@ public class combine3 {
         };
 
         defaultWorker<Long, Long> Filter1 = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
+            public Long runJob(Long x) {
                 System.out.println("F1 Received "+x+" from "+position);
-                sendOut(x);
+                return x;
             }
         };
 
         defaultWorker<Long, Long> Filter2 = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
+            public Long runJob(Long x) {
                 sendOutTo(x, x.intValue()%2);
+                return null;
             }
         };
 
@@ -67,23 +68,26 @@ public class combine3 {
         ff_farm stage1 = new ff_farm(3, Worker1);
         ff_farm stage2 = new ff_farm(3, Worker2);
 
+        ff_comb filter = new ff_comb(new ff_node(Filter1), new ff_node(Filter2));
+
         stage1.removeEmitter();
         stage1.emitter = new ff_node(Emitter);
         stage1.connectEmitterWorkers();
         stage1.removeCollector();
-        stage1.collector = new ff_node(Filter1);
+        stage1.collector = filter;
         stage1.connectWorkersCollector();
 
         stage2.removeEmitter();
-        stage2.emitter = new ff_node(Filter2);
+        stage2.emitter = filter;
         stage2.connectEmitterWorkers();
         stage2.removeCollector();
         stage2.collector = new ff_node(Filter3);
         stage2.connectWorkersCollector();
         stage2.addOutputChannel(new ff_queue());
 
-        ff_pipeline all = new ff_pipeline(stage1,stage2);
-        all.start();
-        all.join();
+        stage2.start();
+        stage1.start();
+        stage1.join();
+        stage2.join();
     }
 }

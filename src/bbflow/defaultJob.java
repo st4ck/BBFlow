@@ -88,6 +88,10 @@ public class defaultJob<T,U> implements Runnable {
 
     }
 
+    public void sendOutTo(U element, int combined_side, int index) {
+
+    }
+
     public void sendOutToAll(U element) {
         if (combined == null) {
             for (int i = 0; i < out.size(); i++) {
@@ -103,7 +107,11 @@ public class defaultJob<T,U> implements Runnable {
             if (index >= out.size()) { return; }
             out.get(index).put(element);
         } else {
-            combined.sendOut(element, combined_side);
+            if (combined_side == 1) {
+                combined.sendOutTo(element, combined_side, index);
+            } else {
+                combined.sendOut(element, combined_side);
+            }
         }
     }
 

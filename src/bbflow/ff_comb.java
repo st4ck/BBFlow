@@ -1,6 +1,7 @@
 package bbflow;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 
 /**
  * Combine two nodes (of any type) in one
@@ -18,10 +19,13 @@ public class ff_comb<T,V> extends ff_node<T,V> {
                 node2.mynode.job.init();
             }
 
-            public V runJob(T x) {
+            public void runJobMulti(T x, LinkedList<ff_queue<V>> o) {
                 try {
                     V t = (V) node1.mynode.job.runJob(x);
-                    return (V) node2.mynode.job.runJob(t);
+                    if (t != null) {
+                        t = (V) node2.mynode.job.runJob(t);
+                        if (t != null) sendOut(t);
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -33,8 +37,6 @@ public class ff_comb<T,V> extends ff_node<T,V> {
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 }
-
-                return null;
             }
 
             public void EOS() {
@@ -65,6 +67,11 @@ public class ff_comb<T,V> extends ff_node<T,V> {
                     e.printStackTrace();
                 }
             }
+            public void sendOutTo(V element, int combined_side, int index) {
+                if (element == null) { return; }
+                sendOutTo(element, index);
+            }
+
 
             public void sendEOS(int combined_side) {
                 if (combined_side == 0) {
@@ -80,7 +87,7 @@ public class ff_comb<T,V> extends ff_node<T,V> {
         node2.mynode.job.combined_side = 1;
 
         this.mynode = new node(combinedStage);
-        this.mynode.job.runType = defaultJob.INLINE;
+        this.mynode.job.runType = defaultJob.INLINE_MULTI;
     }
 
     public ff_comb(ff_node<T,Object> node1, ff_node<Object,V> node2) {

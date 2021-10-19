@@ -9,7 +9,7 @@ Java implementation of Fastflow's Bulding Blocks
 
 **ff_node** is the basic block entity composed by a set of input and output channels (LinkedBlockingQueue<T>) and a computation code (runJob())
 
-**ff_comb** combine two nodes in one in linear way. Output of first one is passed directly as input to second one
+**ff_comb** combine two nodes in one in linear way. Output of first one is passed directly as input to second one. The resultant node is of type multi-input/multi-output.
 
 ### Parallel Building Blocks
 
