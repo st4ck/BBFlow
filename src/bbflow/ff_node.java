@@ -83,7 +83,9 @@ public class ff_node<T,U> extends block<T,U> {
     }
 
     public void start() {
-        mynode.start();
+        if (!mynode.isAlive()) {
+            mynode.start();
+        }
     }
 
     public void join() {

@@ -134,11 +134,11 @@ public class ff_farm<T,U> extends ff_node<T,U> {
             workers.get(i).start(); // start all workers threads
         }
 
-        if ((collector != null) && (!collector.mynode.isAlive())) {
+        if (collector != null) {
             collector.start();
         }
 
-        if ((emitter != null) && (!emitter.mynode.isAlive())) {
+        if (emitter != null) {
             emitter.start();
         }
     }
