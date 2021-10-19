@@ -142,6 +142,18 @@ public class combine {
         w.end();
         w.printReport(true);
 
-        
+        w = new customWatch();
+        w.start();
+        ff_comb comb1 = new ff_comb(_1,_2);
+        ff_comb comb2 = new ff_comb(comb1,_3);
+        ff_comb comb3 = new ff_comb(comb2,_4);
+        ff_comb comb = new ff_comb(comb3,_5);
+
+        comb.start();
+        comb.join();
+        w.end();
+        w.printReport(true);
+
+
     }
 }

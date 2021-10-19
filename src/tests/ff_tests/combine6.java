@@ -107,8 +107,8 @@ public class combine6 {
         all.removeEmitter();
         all.removeCollector();
 
-        all.emitter = new ff_comb(g_f,new ff_node(Emitter));
-        all.collector = new ff_comb(new ff_node(Collector), f_g);
+        all.emitter = new ff_pipeline(g_f,new ff_node(Emitter));
+        all.collector = new ff_pipeline(new ff_node(Collector), f_g);
         all.collector.addOutputChannel(new ff_queue());
 
         all.connectEmitterWorkers();
