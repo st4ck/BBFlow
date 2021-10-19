@@ -13,6 +13,14 @@ public class ff_comb<T,V> extends ff_node<T,V> {
     }
 
     private void combine(ff_node<T, Object> node1, ff_node<Object,V> node2, int bufferSize) {
+        if (!((node1.getClass().equals(ff_node.class)) || (node1.getClass().equals(ff_comb.class)))) {
+            System.out.println("Wrong node1 type passed to the combiner. Must be of type ff_comb or ff_node");
+            System.exit(0);
+        } else if (!((node2.getClass().equals(ff_node.class)) || (node2.getClass().equals(ff_comb.class)))) {
+            System.out.println("Wrong node2 type passed to the combiner. Must be of type ff_comb or ff_node");
+            System.exit(0);
+        }
+
         defaultWorker<T, V> combinedStage = new defaultWorker<>() {
             public void init() {
                 node1.mynode.job.init();

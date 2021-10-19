@@ -191,7 +191,7 @@ public class combine {
 
         System.out.println("TEST2 Time");
         comb1 = new ff_comb(_1,_2);
-        comb2 = new ff_comb(_4,_5);
+        comb2 = new ff_comb(_4,new ff_farm(0, null));
         pipe = new ff_pipeline(comb1,_3);
         pipe.appendBlock(comb2, ff_pipeline.TYPE_1_1);
         pipe.addOutputChannel(new ff_queue());
