@@ -108,11 +108,12 @@ public class combine {
             }
         };
 
-        ff_node _1 = new ff_node(firstStage);
-        ff_node _2 = new ff_node(secondStage);
-        ff_node _3 = new ff_node(secondStage2);
-        ff_node _4 = new ff_node(secondStage3);
-        ff_node _5 = new ff_node(thirdStage);
+        ff_node _1, _2, _3, _4, _5;
+        _1 = new ff_node(defaultJob.uniqueJob(firstStage));
+        _2 = new ff_node(defaultJob.uniqueJob(secondStage));
+        _3 = new ff_node(defaultJob.uniqueJob(secondStage2));
+        _4 = new ff_node(defaultJob.uniqueJob(secondStage3));
+        _5 = new ff_node(defaultJob.uniqueJob(thirdStage));
 
         System.out.println("TEST  FOR  Time");
         customWatch w = new customWatch();
@@ -142,18 +143,84 @@ public class combine {
         w.end();
         w.printReport(true);
 
+        _1 = new ff_node(defaultJob.uniqueJob(firstStage));
+        _2 = new ff_node(defaultJob.uniqueJob(secondStage));
+        _3 = new ff_node(defaultJob.uniqueJob(secondStage2));
+        _4 = new ff_node(defaultJob.uniqueJob(secondStage3));
+        _5 = new ff_node(defaultJob.uniqueJob(thirdStage));
+
+        System.out.println("TEST0 Time");
+        ff_comb comb1 = new ff_comb(_1,_2);
+        ff_comb comb2 = new ff_comb(_3,_4);
+        ff_pipeline pipe = new ff_pipeline(comb1,comb2);
+        pipe.appendBlock(_5, ff_pipeline.TYPE_1_1);
+        pipe.addOutputChannel(new ff_queue());
+
         w = new customWatch();
         w.start();
-        ff_comb comb1 = new ff_comb(_1,_2);
-        ff_comb comb2 = new ff_comb(comb1,_3);
-        ff_comb comb3 = new ff_comb(comb2,_4);
-        ff_comb comb = new ff_comb(comb3,_5);
+        pipe.start();
+        pipe.join();
+        w.end();
+        w.printReport(true);
 
+        _1 = new ff_node(defaultJob.uniqueJob(firstStage));
+        _2 = new ff_node(defaultJob.uniqueJob(secondStage));
+        _3 = new ff_node(defaultJob.uniqueJob(secondStage2));
+        _4 = new ff_node(defaultJob.uniqueJob(secondStage3));
+        _5 = new ff_node(defaultJob.uniqueJob(thirdStage));
+
+        System.out.println("TEST1 Time");
+        ff_comb comb = new ff_comb(_1,_2);
+        comb = new ff_comb(comb,_3);
+        comb = new ff_comb(comb,_4);
+        comb = new ff_comb(comb,_5);
+        comb.addOutputChannel(new ff_queue());
+
+        w = new customWatch();
+        w.start();
         comb.start();
         comb.join();
         w.end();
         w.printReport(true);
 
+        _1 = new ff_node(defaultJob.uniqueJob(firstStage));
+        _2 = new ff_node(defaultJob.uniqueJob(secondStage));
+        _3 = new ff_node(defaultJob.uniqueJob(secondStage2));
+        _4 = new ff_node(defaultJob.uniqueJob(secondStage3));
+        _5 = new ff_node(defaultJob.uniqueJob(thirdStage));
 
+        System.out.println("TEST2 Time");
+        comb1 = new ff_comb(_1,_2);
+        comb2 = new ff_comb(_4,_5);
+        pipe = new ff_pipeline(comb1,_3);
+        pipe.appendBlock(comb2, ff_pipeline.TYPE_1_1);
+        pipe.addOutputChannel(new ff_queue());
+
+        w = new customWatch();
+        w.start();
+        pipe.start();
+        pipe.join();
+        w.end();
+        w.printReport(true);
+
+        _1 = new ff_node(defaultJob.uniqueJob(firstStage));
+        _2 = new ff_node(defaultJob.uniqueJob(secondStage));
+        _3 = new ff_node(defaultJob.uniqueJob(secondStage2));
+        _4 = new ff_node(defaultJob.uniqueJob(secondStage3));
+        _5 = new ff_node(defaultJob.uniqueJob(thirdStage));
+
+        System.out.println("TEST3 Time");
+        pipe = new ff_pipeline(_1,_2);
+        pipe.appendBlock(_3, ff_pipeline.TYPE_1_1);
+        comb2 = new ff_comb(_4,_5);
+        pipe.appendBlock(comb2, ff_pipeline.TYPE_1_1);
+        pipe.addOutputChannel(new ff_queue());
+
+        w = new customWatch();
+        w.start();
+        pipe.start();
+        pipe.join();
+        w.end();
+        w.printReport(true);
     }
 }

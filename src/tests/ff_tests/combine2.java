@@ -37,14 +37,15 @@ public class combine2 {
         };
 
         defaultWorker<Long, Long> Worker1 = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-                sendOut(x);
+            public Long runJob(Long x) {
+                return x;
             }
         };
 
         defaultWorker<Long, Long> Worker2 = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-                System.out.println("Worker2 (id="+id+") in="+x); sendOut(x);
+            public Long runJob(Long x) {
+                System.out.println("Worker2 (id="+id+") in="+x);
+                return x;
             }
         };
 
@@ -76,6 +77,7 @@ public class combine2 {
         stage2.connectEmitterWorkers();
 
         ff_pipeline all = new ff_pipeline(stage2,stage4);
+        all.addOutputChannel(new ff_queue());
 
         all.start();
         all.join();

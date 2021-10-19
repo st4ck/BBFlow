@@ -39,14 +39,15 @@ public class combine2_network_feedback {
         };
 
         defaultWorker<Long, Long> Worker1 = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-                sendOut(x);
+            public Long runJob(Long x) {
+                return x;
             }
         };
 
         defaultWorker<Long, Long> Worker2 = new defaultWorker<>() {
-            public void runJobMulti(Long x, LinkedList<ff_queue<Long>> out) {
-                System.out.println("Worker2 (id="+id+") in="+x); sendOut(x);
+            public Long runJob(Long x) {
+                System.out.println("Worker2 (id="+id+") in="+x);
+                return x;
             }
         };
 

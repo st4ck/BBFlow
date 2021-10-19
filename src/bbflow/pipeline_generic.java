@@ -153,7 +153,7 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
             }
 
             return;
-        } else if ((b1 instanceof ff_pipeline) || (b1 instanceof ff_comb)) {
+        } else if (b1 instanceof ff_pipeline) {
             ff_farm ret = ((ff_pipeline<T, U>) b1).getLastFarm();
             if (ret != null) {
                 connectPipeMulti(ret, b2, BLOCKING, BOUNDED, MULTI);

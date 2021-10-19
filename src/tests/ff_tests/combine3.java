@@ -82,7 +82,7 @@ public class combine3 {
         stage2.connectWorkersCollector();
         stage2.addOutputChannel(new ff_queue());
 
-        ff_comb all = new ff_comb(stage1,stage2);
+        ff_pipeline all = new ff_pipeline(stage1,stage2);
         all.start();
         all.join();
     }
