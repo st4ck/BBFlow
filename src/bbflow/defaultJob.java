@@ -24,6 +24,9 @@ public class defaultJob<T,U> implements Runnable {
     public int id = -1;
     public int position = 0;
 
+    public defaultJob combined = null;
+    public int combined_side;
+
     public defaultJob() {
 
     }
@@ -67,31 +70,55 @@ public class defaultJob<T,U> implements Runnable {
 
     int sendpos = 0;
     public void sendOut(U element) {
-        if (out.size() > 0) {
-            if (sendpos >= out.size()) {
-                sendpos = 0;
-            }
+        if (combined == null) {
+            if (out.size() > 0) {
+                if (sendpos >= out.size()) {
+                    sendpos = 0;
+                }
 
-            out.get(sendpos).put(element);
-            sendpos++;
+                out.get(sendpos).put(element);
+                sendpos++;
+            }
+        } else {
+            combined.sendOut(element, combined_side);
         }
     }
 
+    public void sendOut(U element, int combined_side) {
+
+    }
+
     public void sendOutToAll(U element) {
-        for (int i=0; i<out.size(); i++) {
-            out.get(i).put(element);
+        if (combined == null) {
+            for (int i = 0; i < out.size(); i++) {
+                out.get(i).put(element);
+            }
+        } else {
+            combined.sendOut(element, combined_side);
         }
     }
 
     public void sendOutTo(U element, int index) {
-        if (index >= out.size()) { return; }
-        out.get(index).put(element);
+        if (combined == null) {
+            if (index >= out.size()) { return; }
+            out.get(index).put(element);
+        } else {
+            combined.sendOut(element, combined_side);
+        }
     }
 
     public void sendEOS() {
-        for (int i=0; i<out.size(); i++) {
-            out.get(i).setEOS();
+        if (combined == null) {
+            for (int i=0; i<out.size(); i++) {
+                out.get(i).setEOS();
+            }
+        } else {
+            combined.sendEOS(combined_side);
         }
+    }
+
+    public void sendEOS(int combined_side) {
+
     }
 
     /**
@@ -133,7 +160,11 @@ public class defaultJob<T,U> implements Runnable {
                         } else {
                             U r = runJob(received);
                             if (r != null) {
-                                out_channel.put(r);
+                                if (combined == null) {
+                                    out_channel.put(r);
+                                } else {
+                                    combined.sendOut(r, combined_side);
+                                }
                             }
                         }
                         break;

@@ -20,20 +20,28 @@ public class ff_pipeline<T,V> extends ff_node<T,V> {
     }
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize) {
-        this(b1,b2,bufferSize,TYPE_1_1);
+        this(b1, b2, bufferSize, TYPE_1_1);
     }
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2, byte MULTI) {
-        pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
-        if (MULTI != TYPE_1_1) {
-            p.createPipeMulti(b1, b2, MULTI);
-        } else {
-            p.createPipe(b1, b2);
+        if (b1 != null) {
+            pipeline_generic<T, Object, V> p = new pipeline_generic<>(bufferSize);
+            if (MULTI != TYPE_1_1) {
+                p.createPipeMulti(b1, b2, MULTI);
+            } else {
+                p.createPipe(b1, b2);
+            }
+            pipe = p;
         }
-        pipe = p;
     }
 
     public ff_pipeline(block<T,Object> b1, block<Object,V> b2, int bufferSize, byte MULTI) {
+        if (b1 != null) {
+            ff_pipelineConstructor(b1, b2, bufferSize, MULTI);
+        }
+    }
+
+    public void ff_pipelineConstructor(block<T,Object> b1, block<Object,V> b2, int bufferSize, byte MULTI) {
         this.bufferSize = bufferSize;
         pipeline_generic<T,Object,V> p = new pipeline_generic<>(bufferSize);
         if (MULTI != TYPE_1_1) {
