@@ -17,6 +17,12 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
 
     public int mode = SLAVE;
 
+    public static final int circ = 5;
+
+    double[][][] som;
+    int size = 0;
+    int depth = 0;
+
     public void runJob() throws InterruptedException {
         SOMData element = null;
 
@@ -136,10 +142,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         }
     }
 
-    double[][][] som;
-    int size = 0;
-    int depth = 0;
-
     public SOM(int w, int h, int d, int id) {
         som = new double[w][h][d];
         this.size = w;
@@ -224,6 +226,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
 
         return b;
     }
+
     void learnVector(ArrayList<Double> neuron, int i, int j, double curve) {
         if (i<0) {
             if (j<0) {
@@ -262,7 +265,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
     }
 
     void learnVector(ArrayList<Double> neuron, int besti, int bestj) {
-        int circ = 5;
         waiting_learners++;
 
         for (int i=besti-circ; i<=besti+circ; i++) {
@@ -280,8 +282,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         if (MSOM.DEBUG) rd.debugString = "LOCAL_LEARN";
         in.get(4).put(rd);
     }
-
-    int counter = 0;
 
     private void train(Integer pos1, Integer pos2, ArrayList<Double> neuron, double curve, int i, int j) {
         if (out.get(pos1) == null) {

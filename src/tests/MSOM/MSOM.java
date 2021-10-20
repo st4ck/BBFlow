@@ -15,6 +15,11 @@ public class MSOM {
     ff_queue<SOMData> externalInput;
 
     public MSOM(int size, int depth, int split) {
+        if ((size/split) < (SOM.circ-1)) {
+            System.out.println("Each matrix must be at least of size "+SOM.circ+"x"+SOM.circ);
+            System.exit(0);
+        }
+
         this.parts = (int) Math.pow(split,2);
         int side = size/split;
         this.split = split;
