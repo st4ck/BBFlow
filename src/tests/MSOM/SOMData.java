@@ -25,6 +25,10 @@ public class SOMData {
     public static final int LEARN_FINISHED = 5;
     public static final int LEARN_NEIGHBOURS = 6;
 
+    public static final int LISTEN_NEIGHBOURS = 0;
+    public static final int LISTEN_COMMAND = 1;
+    public int communicationType = LISTEN_COMMAND;
+
     public SOMData(int t, int id) {
         dataType = t;
         packetId = id;

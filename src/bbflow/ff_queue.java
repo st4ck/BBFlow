@@ -82,7 +82,7 @@ public class ff_queue<T> {
                     }
 
                     try {
-                        Thread.sleep(bb_settings.backOff);
+                        sleepNanos(bb_settings.backOff);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -122,7 +122,7 @@ public class ff_queue<T> {
             } else {
                 T i;
                 while (true) {
-                    i = blocking_queue.poll(bb_settings.backOff, TimeUnit.MILLISECONDS);
+                    i = blocking_queue.poll(bb_settings.backOff, TimeUnit.NANOSECONDS);
                     if (i != null) {
                         return i;
                     } else if (this.EOS) {
@@ -144,7 +144,7 @@ public class ff_queue<T> {
                             return null;
                         }
 
-                        Thread.sleep(bb_settings.backOff);
+                        sleepNanos(bb_settings.backOff);
                     }
                 }
             } else {
@@ -160,7 +160,7 @@ public class ff_queue<T> {
                             return null;
                         }
 
-                        Thread.sleep(bb_settings.backOff);
+                        sleepNanos(bb_settings.backOff);
                     }
                 }
             }
@@ -184,7 +184,7 @@ public class ff_queue<T> {
         if (blocking) {
             return blocking_queue.poll(timeout, timeunit);
         } else {
-            long ms_timeout = TimeUnit.MILLISECONDS.convert(timeout, timeunit);
+            long ms_timeout = TimeUnit.NANOSECONDS.convert(timeout, timeunit);
             if (bounded) {
                 T i;
                 long waited = 0;
@@ -200,7 +200,7 @@ public class ff_queue<T> {
                         return null;
                     }
 
-                    Thread.sleep(bb_settings.backOff);
+                    sleepNanos(bb_settings.backOff);
                     waited += bb_settings.backOff;
                 }
             } else {
@@ -218,7 +218,7 @@ public class ff_queue<T> {
                         return null;
                     }
 
-                    Thread.sleep(bb_settings.backOff);
+                    sleepNanos(bb_settings.backOff);
                     waited += bb_settings.backOff;
                 }
             }
@@ -258,7 +258,7 @@ public class ff_queue<T> {
         if (blocking) {
             return blocking_queue.offer(i, timeout, timeunit);
         } else {
-            long ms_timeout = TimeUnit.MILLISECONDS.convert(timeout, timeunit);
+            long ms_timeout = TimeUnit.NANOSECONDS.convert(timeout, timeunit);
             if (bounded) {
                 long waited = 0;
                 while (true) {
@@ -270,7 +270,7 @@ public class ff_queue<T> {
                         return false;
                     }
 
-                    Thread.sleep(bb_settings.backOff);
+                    sleepNanos(bb_settings.backOff);
                     waited += bb_settings.backOff;
                 }
             } else { // unbounded, never return false
@@ -289,5 +289,26 @@ public class ff_queue<T> {
                 return nonblocking_queue.size();
             }
         }
+    }
+
+    private static final long SLEEP_PRECISION = TimeUnit.MILLISECONDS.toNanos(2);
+    private static final long SPIN_YIELD_PRECISION = TimeUnit.MILLISECONDS.toNanos(2);
+
+    public static void sleepNanos(long nanoDuration) throws InterruptedException {
+        final long end = System.nanoTime() + nanoDuration;
+        long timeLeft = nanoDuration;
+        do {
+            if (timeLeft > SLEEP_PRECISION) {
+                Thread.sleep(1);
+            } else {
+                if (timeLeft > SPIN_YIELD_PRECISION) {
+                    Thread.yield();
+                }
+            }
+            timeLeft = end - System.nanoTime();
+
+            if (Thread.interrupted())
+                throw new InterruptedException();
+        } while (timeLeft > 0);
     }
 }

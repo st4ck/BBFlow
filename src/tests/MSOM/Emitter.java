@@ -24,6 +24,9 @@ public class Emitter extends defaultEmitter<SOMData> {
                     element.train_i = element.searchResult.besti;
                     element.train_j = element.searchResult.bestj;
                     element.to = element.searchResult.id;
+                    int split = element.searchResult.split;
+                    int x = element.searchResult.id/split;
+                    int y = element.searchResult.id%split;
                     element.searchResult = null;
 
                     /*element.train_i = 0;
@@ -31,7 +34,19 @@ public class Emitter extends defaultEmitter<SOMData> {
                     element.to = 2;*/
 
                     if (MSOM.DEBUG) System.out.println("Learn command "+element.dataType + " to "+element.to);
+                    element.communicationType = SOMData.LISTEN_NEIGHBOURS;
                     sendOutTo(element, element.to);
+                    int to = element.to;
+
+                    element = new SOMData(SOMData.FINISHED, id);
+                    element.communicationType = SOMData.LISTEN_NEIGHBOURS;
+                    for (int i=Math.max(0, x-1); i<=Math.min(split-1,x+1); i++) {
+                        for (int j=Math.max(0, y-1); j<=Math.min(split-1,y+1); j++) {
+                            if (((i*split)+j) != (to)) {
+                                sendOutTo(element, (i * split) + j);
+                            }
+                        }
+                    }
                     return;
                 } else {
                     if (MSOM.DEBUG) System.out.println("finished feedback");

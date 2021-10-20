@@ -58,6 +58,7 @@ public class Collector extends defaultCollector<SOMData> {
                 result.besti = received.searchResult.besti;
                 result.bestj = received.searchResult.bestj;
                 result.id = received.from;
+                result.split = this.split;
             }
 
             if (receivedcount == parts) {

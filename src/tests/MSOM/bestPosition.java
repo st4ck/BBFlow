@@ -7,4 +7,5 @@ public class bestPosition {
     public int id = -1;
     public int i;
     public int j;
+    public int split;
 }

@@ -21,9 +21,9 @@ public class bb_settings {
 
     /**
      * back off time used in case push or pop from a queue fail (non-blocking queues)
-     * Milliseconds by default
+     * Unit is nanoseconds, 5ms by default
      */
-    public static int backOff = 5;
+    public static int backOff = 5000000;
 
     /**
      * listening port used as a base for INPUT network queues. Every INPUT channel will listen on

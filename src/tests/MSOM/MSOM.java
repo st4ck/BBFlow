@@ -25,6 +25,7 @@ public class MSOM {
                 s.in.add(null);
                 s.out.add(null);
             }
+
             soms.add(new ff_node(s));
         }
 

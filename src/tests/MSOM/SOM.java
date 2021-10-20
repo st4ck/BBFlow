@@ -12,25 +12,35 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
     public static final int RIGHT = 3;
     public int waiting_learners = 0;
 
+    public static final int SLAVE = 0;
+    public static final int LEARNING = 1;
+
+    public int mode = SLAVE;
+
     public void runJob() throws InterruptedException {
         SOMData element = null;
-        while (true) {
-            if (position>3) {
-                position = 0;
-            }
 
-            element = in.get(4).poll(5, TimeUnit.MILLISECONDS);
-            if (element != null) { position = 4; break; }
-
-            if (in.get(position) != null) {
-                element = in.get(position).poll(5, TimeUnit.MILLISECONDS);
-
-                if (element != null) {
-                    break;
+        if (mode == SLAVE) {
+            element = in.get(4).take();
+        } else if (mode == LEARNING){
+            while (true) {
+                if (position>3) {
+                    position = 0;
                 }
-            }
 
-            position++;
+                element = in.get(4).poll(5, TimeUnit.MILLISECONDS);
+                if (element != null) { position = 4; break; }
+
+                if (in.get(position) != null) {
+                    element = in.get(position).poll(5, TimeUnit.MILLISECONDS);
+
+                    if (element != null) {
+                        break;
+                    }
+                }
+
+                position++;
+            }
         }
 
         if (MSOM.DEBUG) System.out.println(id+" received "+element.dataType+" from "+element.packetId);
@@ -61,6 +71,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
                     } else {
                         // no SOM to train, reply with ACK
                         SOMData rd = new SOMData(SOMData.LEARN_FINISHED, id);
+                        rd.communicationType = SOMData.LISTEN_NEIGHBOURS;
                         if (MSOM.DEBUG) rd.debugString = "ACK";
                         sendOutTo(rd, position);
                     }
@@ -68,6 +79,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
                     //System.out.println("Training received vector from the border");
                     learnVector(element.neuron, element.train_i, element.train_j, element.curve);
                     SOMData rp = new SOMData(SOMData.LEARN_FINISHED, id);
+                    rp.communicationType = SOMData.LISTEN_NEIGHBOURS;
                     if (MSOM.DEBUG) rp.debugString = "REPLY";
 
                     if (element.replyredirect != null) {
@@ -93,6 +105,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
                     if (waiting_learners == 0) {
                         if (MSOM.DEBUG) System.out.println("Sending learn finished to collector");
                         SOMData rd = new SOMData(SOMData.LEARN_FINISHED, id);
+                        rd.communicationType = SOMData.LISTEN_NEIGHBOURS;
                         if (MSOM.DEBUG) rd.debugString = "LEARN_FINISHED";
                         sendOutTo(rd, 4);
                     }
@@ -105,6 +118,21 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
                 out.get(4).setEOS();
                 in = new LinkedList<>();
                 return;
+        }
+
+        switch (element.communicationType) {
+            case SOMData.LISTEN_NEIGHBOURS:
+                if (this.mode != LEARNING) {
+                    if (MSOM.DEBUG) System.out.println(id + " COMMUNICATION LEARNING");
+                    this.mode = LEARNING;
+                }
+                break;
+            case SOMData.LISTEN_COMMAND:
+                if (this.mode != SLAVE) {
+                    if (MSOM.DEBUG) System.out.println(id + " COMMUNICATION SLAVE");
+                    this.mode = SLAVE;
+                }
+                break;
         }
     }
 
@@ -248,6 +276,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         }
 
         SOMData rd = new SOMData(SOMData.LEARN_FINISHED, id);
+		rd.communicationType = SOMData.LISTEN_NEIGHBOURS;
         if (MSOM.DEBUG) rd.debugString = "LOCAL_LEARN";
         in.get(4).put(rd);
     }
@@ -265,6 +294,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         tosend.redirect = pos2;
         tosend.neuron = neuron;
         tosend.curve = curve;
+		tosend.communicationType = SOMData.LISTEN_NEIGHBOURS;
 
         switch (pos1) {
             case TOP:
