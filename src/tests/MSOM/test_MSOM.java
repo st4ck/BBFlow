@@ -27,16 +27,17 @@ public class test_MSOM {
     private static void testMSOM(int size, int split) {
         int depth = 100;
         MSOM z = new MSOM(size,depth,split);
+        ArrayList<Double> vector = new ArrayList<>();
+        for (int j=0; j<depth; j++) {
+            vector.add(Math.random()*255);
+        }
+        ArrayList<Double> neuron = SOM.normalize(vector,depth);
+
         z.start();
         customWatch myWatch = new customWatch();
         myWatch.start();
 
         for (int i=0; i<100; i++) {
-            ArrayList<Double> vector = new ArrayList<>();
-            for (int j=0; j<depth; j++) {
-                vector.add(Math.random()*255);
-            }
-            ArrayList<Double> neuron = SOM.normalize(vector,depth);
             SOMData searchLearn = new SOMData(SOMData.SEARCH_AND_LEARN, i);
             searchLearn.neuron = neuron;
             z.push(searchLearn);
