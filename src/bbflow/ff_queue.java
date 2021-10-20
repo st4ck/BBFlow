@@ -226,6 +226,29 @@ public class ff_queue<T> {
     }
 
     /**
+     * Retrieves and removes the head of this queue if available. Return null if not available
+     * if EOS reached, call take() function returning the element or null (if queue empty)
+     * @return the element or null. Null if EOS is true, means EOS reached.
+     * @throws InterruptedException
+     */
+    public T poll() throws InterruptedException {
+        if (this.EOS) {
+            // no waiting needed, take in EOS is already fine
+            return this.take();
+        }
+
+        if (blocking) {
+            return blocking_queue.poll();
+        } else {
+            if (bounded) {
+                return nonblocking_bounded_queue.poll();
+            } else {
+                return nonblocking_queue.poll();
+            }
+        }
+    }
+
+    /**
      * Inserts the specified element at the tail of this queue if it is possible to do so immediately without exceeding the queue's capacity, returning true upon success and false if this queue is full
      * @param i element to insert
      * @return true or false

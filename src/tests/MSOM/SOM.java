@@ -28,11 +28,11 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
                     position = 0;
                 }
 
-                element = in.get(4).poll(5, TimeUnit.MILLISECONDS);
+                element = in.get(4).poll();
                 if (element != null) { position = 4; break; }
 
                 if (in.get(position) != null) {
-                    element = in.get(position).poll(5, TimeUnit.MILLISECONDS);
+                    element = in.get(position).poll();
 
                     if (element != null) {
                         break;
