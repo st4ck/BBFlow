@@ -47,18 +47,11 @@ public class combine2_benchmark {
         defaultWorker<Double, Double> Worker2 = new defaultWorker<>() {
             public Double runJob(Double x) {
                 //System.out.println("Worker2 (id="+id+") in="+x);
-                for (int i=0; i<100; i++) {
+                for (int i=0; i<10000; i++) {
                     x *= 1.02;
                     x /= 1.01;
                 }
                 return x;
-            }
-        };
-
-        defaultWorker<Double, Double> Filter1 = new defaultWorker<>() {
-            public void runJobMulti(Double x, LinkedList<ff_queue<Double>> out) {
-                //System.out.println("Received "+x+" from "+position); sendOut(x);
-                sendOut(x);
             }
         };
 
@@ -69,7 +62,6 @@ public class combine2_benchmark {
         };
 
         ff_node stage1 = new ff_node(Emitter);
-        ff_node stage3 = new ff_node(Filter1);
         ff_node stage4 = new ff_node(Filter2);
 
 
@@ -79,7 +71,7 @@ public class combine2_benchmark {
         }
 
         stage2.emitter = stage1;
-        stage2.collector = stage3;
+        stage2.collector = new ff_node(new defaultCollector<Double>());
         stage2.connectWorkersCollector();
         stage2.connectEmitterWorkers();
 
