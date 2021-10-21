@@ -302,6 +302,10 @@ public class ff_queue<T> {
         }
     }
 
+    /**
+     * return size of the elements in the queue
+     * @return size
+     */
     public int size() {
         if (blocking) {
             return blocking_queue.size();
@@ -317,6 +321,11 @@ public class ff_queue<T> {
     private static final long SLEEP_PRECISION = TimeUnit.MILLISECONDS.toNanos(2);
     private static final long SPIN_YIELD_PRECISION = TimeUnit.MILLISECONDS.toNanos(2);
 
+    /**
+     * function to replace Thread.sleep that is inefficient, timewaster and unprecise
+     * @param nanoDuration nanoseconds to wait
+     * @throws InterruptedException
+     */
     public static void sleepNanos(long nanoDuration) throws InterruptedException {
         final long end = System.nanoTime() + nanoDuration;
         long timeLeft = nanoDuration;

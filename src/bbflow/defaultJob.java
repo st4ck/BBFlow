@@ -2,12 +2,10 @@ package bbflow;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Currency;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * default Job extecuted by the bbflow.ff_node. Should be extended and reimplemented with the custom code in runJob() function
+ * default Job extecuted by the bbflow.ff_node. Should be extended and reimplemented with the custom code. Take a look to examples to choose what you prefer.
  * check if there are at least one input or output channel
  * For more details see run() function doc
  * @param <T> Custom type of the channels
@@ -31,16 +29,32 @@ public class defaultJob<T,U> implements Runnable {
 
     }
 
+    /**
+     * default constructor
+     * @param id id of the job
+     */
     public defaultJob(int id) {
         this.id = id;
     }
 
+    /**
+     * set id
+     * @param id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * function to override called after start()
+     */
     public void init() { }
 
+    /**
+     * function to clone an object, using serialization
+     * @param obj object to clone
+     * @return cloned object
+     */
     public static defaultJob uniqueJob(defaultJob obj) {
         try {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -61,6 +75,12 @@ public class defaultJob<T,U> implements Runnable {
         return null;
     }
 
+    /**
+     * clone a defaultJob and make it unique (it's not a reference).
+     * @param obj job to clone
+     * @param id id to assign to the new job
+     * @return return the new cloned job
+     */
     public static defaultJob uniqueJob(defaultJob obj, int id) {
         defaultJob r = uniqueJob(obj);
         r.id = id;
@@ -69,6 +89,11 @@ public class defaultJob<T,U> implements Runnable {
 
 
     int sendpos = 0;
+
+    /**
+     * send element to the next out channel in ROUNDROBIN manner
+     * @param element element to send
+     */
     public void sendOut(U element) {
         if (combined == null) {
             if (out.size() > 0) {
@@ -92,6 +117,10 @@ public class defaultJob<T,U> implements Runnable {
 
     }
 
+    /**
+     * send element to all output channels
+     * @param element element to send
+     */
     public void sendOutToAll(U element) {
         if (combined == null) {
             for (int i = 0; i < out.size(); i++) {
@@ -102,6 +131,11 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * send element to the channel 'index'
+     * @param element element to send
+     * @param index index of the out channel
+     */
     public void sendOutTo(U element, int index) {
         if (combined == null) {
             if (index >= out.size()) { return; }
@@ -115,6 +149,9 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * send EOS to all output channels
+     */
     public void sendEOS() {
         if (combined == null) {
             for (int i=0; i<out.size(); i++) {
@@ -125,6 +162,10 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * method overwritten by ff_comb
+     * @param combined_side combined side (left/right)
+     */
     public void sendEOS(int combined_side) {
 
     }
@@ -216,15 +257,31 @@ public class defaultJob<T,U> implements Runnable {
     /**
      * blank function that should be overwritten by class extending bbflow.defaultJob.
      * Here main computation task is done once we're sure there's data in at least one of the input channels
+     * Lists 'in' and 'out' must be used manually and EOS() must be managed by the user.
      */
     public void runJob() throws InterruptedException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 
     }
 
+    /**
+     * runJob(T element) function to override
+     * @param element element received from first input channel
+     * @return return element to send to the first output channel or null if nothing
+     * @throws InterruptedException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     */
     public U runJob(T element) throws InterruptedException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         return null;
     }
 
+    /**
+     * runJobMulti(T element, LinkedList channels_output) function to override
+     * @param element element received from input in ROUNDROBIN
+     * @param channels_output output channels list is manual usage needed. sendOut, sendOutTo, sendOutToAll available anyway.
+     */
     public void runJobMulti(T element, LinkedList<ff_queue<U>> channels_output) {
 
     }
@@ -246,6 +303,11 @@ public class defaultJob<T,U> implements Runnable {
         out.add(output);
     }
 
+    /**
+     * remove input channel
+     * @param index index to remove
+     * @return result
+     */
     public boolean removeInputChannel(int index) {
         try {
             in.remove(index);
@@ -255,6 +317,11 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * remove output channel
+     * @param index index to remove
+     * @return result
+     */
     public boolean removeOutputChannel(int index) {
         try {
             out.remove(index);
@@ -264,6 +331,11 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * get output channel
+     * @param index index to get
+     * @return queue requested or null
+     */
     public ff_queue<U> getOutputChannel(int index) {
         try {
             return out.get(index);
@@ -272,6 +344,11 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * get input channel
+     * @param index index to get
+     * @return queue requested or null
+     */
     public ff_queue<T> getInputChannel(int index) {
         try {
             return in.get(index);
@@ -280,6 +357,9 @@ public class defaultJob<T,U> implements Runnable {
         }
     }
 
+    /**
+     * EOS() function to override
+     */
     public void EOS() {
 
     }

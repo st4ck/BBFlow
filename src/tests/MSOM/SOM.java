@@ -3,8 +3,11 @@ import bbflow.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * Workers of the MSOM containing a part of the neural network and communicating with neighbours (TOP, LEFT, BOTTOM, RIGHT)
+ * Receiving instructions from Emitter and sending results to Collector
+ */
 public class SOM extends defaultWorker<SOMData, SOMData> {
     public static final int TOP = 0;
     public static final int LEFT = 1;

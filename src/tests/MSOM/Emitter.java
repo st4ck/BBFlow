@@ -3,6 +3,10 @@ package tests.MSOM;
 import java.util.LinkedList;
 import bbflow.*;
 
+/**
+ * Emitter receives commands from the external and send to workers what to do. Also received feedbacks from Collector as ACK and if there is a new task to execute.
+ * For other informations about MSOM read the thesis.
+ */
 public class Emitter extends defaultEmitter<SOMData> {
     int command_channel = 0;
     int feedback_channel = 1;

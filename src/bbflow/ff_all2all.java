@@ -177,24 +177,38 @@ public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
         combine_farm(b1,b2,null,null,false);
     }
 
+    /**
+     * add input channel to the left side
+     * @param input input channel
+     */
     public void addInputChannel(ff_queue<T> input) {
         if (a2a.size() > 0) {
             a2a.getFirst().addInputChannel(input);
         }
     }
 
+    /**
+     * add output channel to the right side
+     * @param output output channel
+     */
     public void addOutputChannel(ff_queue<V> output) {
         if (a2a.size() > 0) {
             a2a.getLast().addOutputChannel(output);
         }
     }
 
+    /**
+     * start all blocks
+     */
     public void start() {
         for (int i=0; i<a2a.size(); i++) {
             a2a.get(i).start();
         }
     }
 
+    /**
+     * wait end of all blocks
+     */
     public void join() {
         for (int i = 0; i < a2a.size(); i++) {
             a2a.get(i).join();

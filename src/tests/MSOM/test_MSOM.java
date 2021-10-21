@@ -5,6 +5,9 @@ import bbflow.customWatch;
 
 import java.util.ArrayList;
 
+/**
+ * test function of MSOM with some benchmark with different number of cores used
+ */
 public class test_MSOM {
     public static void main (String[] args) {
         bb_settings.BLOCKING = true;

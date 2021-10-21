@@ -1,5 +1,8 @@
 package tests.MSOM;
 
+/**
+ * class keeping found position during SEARCH phase
+ */
 public class bestPosition {
     public int besti = 0;
     public int bestj = 0;

@@ -1,8 +1,6 @@
 package bbflow;
 
-import java.io.*;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -88,6 +86,9 @@ public class ff_node<T,U> extends block<T,U> {
         }
     }
 
+    /**
+     * default join function
+     */
     public void join() {
         try {
             mynode.join();
@@ -96,10 +97,20 @@ public class ff_node<T,U> extends block<T,U> {
         }
     }
 
+    /**
+     * get output channel
+     * @param index get output channel at index. Indexes starting from 0
+     * @return return channel retrieved
+     */
     public ff_queue<U> getOutputChannel(int index) {
         return mynode.getOutputChannel(index);
     }
 
+    /**
+     * get input channel
+     * @param index get input channel at index. Indexes starting from 0
+     * @return return channel retrieved
+     */
     public ff_queue<T> getInputChannel(int index) {
         return mynode.getInputChannel(index);
     }

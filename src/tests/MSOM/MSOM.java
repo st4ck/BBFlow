@@ -4,6 +4,9 @@ import java.util.LinkedList;
 
 import bbflow.*;
 
+/**
+ * MSOM class creating emitter, collector and connect workers each others and with emitter/collector
+ */
 public class MSOM {
     public static final boolean DEBUG = false;
     int parts;

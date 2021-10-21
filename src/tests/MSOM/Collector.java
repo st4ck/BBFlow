@@ -4,6 +4,10 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/**
+ * this is our Collector, waiting result from ALL workers in case of SEARCH and waiting ONLY from node involved in case of LEARN.
+ * Result sent to Emitter through feedback channel
+ */
 public class Collector extends defaultCollector<SOMData> {
     int receivedcount = 0;
     bestPosition result = new bestPosition();

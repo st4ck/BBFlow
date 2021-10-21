@@ -2,6 +2,9 @@ package tests.MSOM;
 
 import java.util.ArrayList;
 
+/**
+ * packet containing instructions and data exchanged between all nodes
+ */
 public class SOMData {
     public Integer redirect = null;
     public int train_i;

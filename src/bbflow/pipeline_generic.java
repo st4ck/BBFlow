@@ -27,12 +27,26 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         this.bufferSize = bufferSize;
     }
 
+    /**
+     * connect 1-1 the two blocks and add to pipeline
+     * @param b1 first block
+     * @param b2 second block
+     * @param BLOCKING type of channel
+     * @param BOUNDED type of channel
+     */
     public void createPipe(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED) {
         connect(b1,b2,BLOCKING,BOUNDED);
         pipe.add(b1);
         pipe.add(b2);
     }
 
+    /**
+     * connect 1-1 the two blocks
+     * @param b1 first block
+     * @param b2 second block
+     * @param BLOCKING type of channel
+     * @param BOUNDED type of channel
+     */
     public void connect(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED) {
         ff_queue<U> channel = new ff_queue<>(BLOCKING,BOUNDED,this.bufferSize);
 
@@ -40,10 +54,23 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         b2.addInputChannel(channel);
     }
 
+    /**
+     * connect 1-1 the two blocks and add to pipeline
+     * @param b1 first block
+     * @param b2 second block
+     */
     public void createPipe(block<T,U> b1, block<U,V> b2) {
         createPipe(b1,b2,bb_settings.BLOCKING, bb_settings.BOUNDED);
     }
 
+    /**
+     * connect two blocks and add to pipeline. See ff_pipeline for reference
+     * @param b1 first block
+     * @param b2 second block
+     * @param BLOCKING type of channel
+     * @param BOUNDED type of channel
+     * @param MULTI TYPE_1_1, TYPE_1_N, TYPE_Nx1, TYPE_N_N, TYPE_NxM
+     */
     public void createPipeMulti(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED, byte MULTI) {
         pipe.add(b1);
         pipe.add(b2);
@@ -51,6 +78,14 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         connectPipeMulti(b1,b2,BLOCKING,BOUNDED, MULTI);
     }
 
+    /**
+     * connect two blocks. See ff_pipeline for reference
+     * @param b1 first block
+     * @param b2 second block
+     * @param BLOCKING type of channel
+     * @param BOUNDED type of channel
+     * @param MULTI TYPE_1_1, TYPE_1_N, TYPE_Nx1, TYPE_N_N, TYPE_NxM
+     */
     public void connectPipeMulti(block<T,U> b1, block<U,V> b2, boolean BLOCKING, boolean BOUNDED, byte MULTI) {
         if (b1 instanceof ff_farm) {
             //now we need to determine size of b2 on first layer
@@ -167,34 +202,58 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         }
     }
 
+    /**
+     * connect two blocks and add to pipeline. See ff_pipeline for reference
+     * @param b1 first block
+     * @param b2 second block
+     * @param MULTI TYPE_1_1, TYPE_1_N, TYPE_Nx1, TYPE_N_N, TYPE_NxM
+     */
     public void createPipeMulti(block<T,U> b1, block<U,V> b2, byte MULTI) {
         createPipeMulti(b1,b2,bb_settings.BLOCKING, bb_settings.BOUNDED, MULTI);
     }
 
+    /**
+     * add input channel to first block in pipe
+     * @param input
+     */
     public void addInputChannel(ff_queue<T> input) {
         if (pipe.size() > 0) {
             pipe.getFirst().addInputChannel(input);
         }
     }
 
+    /**
+     * add output channel to the last element in pipe
+     * @param output
+     */
     public void addOutputChannel(ff_queue<V> output) {
         if (pipe.size() > 0) {
             pipe.getLast().addOutputChannel(output);
         }
     }
 
+    /**
+     * start all blocks in pipe
+     */
     public void start() {
         for (int i=0; i<pipe.size(); i++) {
             pipe.get(i).start();
         }
     }
 
+    /**
+     * wait end of all blocks in pipe
+     */
     public void join() {
         for (int i = 0; i < pipe.size(); i++) {
             pipe.get(i).join();
         }
     }
 
+    /**
+     * get first farm of the pipeline
+     * @return first farm or null
+     */
     public ff_farm getFirstFarm() {
         if (pipe.size() == 0) {
             return null;
@@ -217,6 +276,10 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         return null;
     }
 
+    /**
+     * get last farm of pipeline
+     * @return last farm or null
+     */
     public ff_farm getLastFarm() {
         if (pipe.size() == 0) {
             return null;
