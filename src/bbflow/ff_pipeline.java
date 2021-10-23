@@ -93,6 +93,16 @@ public class ff_pipeline<T,V> extends ff_node<T,V> {
     }
 
     /**
+     * append a new block to pipeline connected
+     * @param newblock
+     */
+    public void appendBlock(block<Object,Object> newblock) {
+        if (pipe != null) {
+            pipe.appendBlock(newblock, TYPE_1_1);
+        }
+    }
+
+    /**
      * add a new input channel to the first block of the pipeline
      * @param input input channel
      */
