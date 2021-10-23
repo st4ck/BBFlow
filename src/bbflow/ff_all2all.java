@@ -74,16 +74,12 @@ public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
 
                 a2a.add(R_G);
             } else { // both pointers valid
-                // default collector + compose R & G as new Emitter (in pipeline)
-                ff_node<U,U> collector = new ff_node<U,U>(new defaultCollector<U>(defaultCollector.ROUNDROBIN));
-                ff_pipeline<U,V> R_G = new ff_pipeline<U,V>(customEmitterR, customCollectorG);
-                ff_queue<U> collector_R_G = new ff_queue<>();
-                collector.addOutputChannel(collector_R_G);
-                R_G.addInputChannel(collector_R_G);
+                // no collector + combine R & G as new Emitter
+                ff_comb<U,V> R_G = new ff_comb<>(customEmitterR,customCollectorG);
 
                 for (int i = 0; i < b1.workers.size(); i++) {
                     ff_queue<U> x = b1.workers.get(i).getOutputChannel(0);
-                    collector.addInputChannel(x);
+                    R_G.addInputChannel(x);
 
                     for (int j = 0; j < b2.workers.size(); j++) {
                         ff_queue<V> y = b2.workers.get(j).getInputChannel(0);
@@ -91,7 +87,6 @@ public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
                     }
                 }
 
-                a2a.add(collector);
                 a2a.add(R_G);
             }
         } else {
@@ -118,55 +113,79 @@ public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
                 /**
                  * works in this way:
                  * remove collector from old farm and emitter from new farm
-                 * use old channels (connecting old workers with old collector) to connect old workers to customEmitterR
-                 * and use old channels (connecting new emitter with new collector) to connect customEmitterR to all new workers
+                 * replace L-workers with a combination of L-workers and customerEmitterR
                  */
-                for (int i = 0; i < b1.workers.size(); i++) {
-                    ff_queue<U> x = b1.workers.get(i).getOutputChannel(0);
-                    // connect old workers with R (one per worker)
+                for (int i = b1.workers.size()-1; i >= 0; i--) {
+                    b1.workers.get(i).removeOutputChannel(0);
+                    b1.workers.get(i).removeInputChannel(0);
+                    b1.emitter.removeOutputChannel(i);
+
                     ff_node<U,Object> newR = new ff_node<U,Object>(customEmitterR);
-                    a2a.add(newR);
-                    newR.addInputChannel(x);
-                    for (int j = 0; j < b2.workers.size(); j++) {
+                    ff_comb new_worker = new ff_comb(b1.workers.get(i),newR);
+                    b1.workers.remove(i);
+                    b1.workers.add(i,new_worker);
+
+                    for (int j = b2.workers.size()-1; j >= 0; j--) {
                         // connect each R to all R-workers
                         ff_queue<V> y = b2.workers.get(j).getInputChannel(0);
-                        newR.addOutputChannel((ff_queue<Object>) y);
+                        new_worker.addOutputChannel((ff_queue<Object>) y);
                     }
                 }
+
+                b1.connectEmitterWorkers();
             } else if ((customEmitterR == null) && (customCollectorG != null)) {
                 /**
                  * works in this way:
                  * remove collector from old farm and emitter from new farm
-                 * use old channels (connecting old workers with old collector) to connect old workers to all customCollectorG
-                 * and use old channels (connecting new emitter with new collector) to connect customCollectorG to workers
+                 * replace R-workers with a combination of customCollectorG and R-workers
                  */
-                for (int j = 0; j < b2.workers.size(); j++) {
-                    ff_queue<V> x = b2.workers.get(j).getInputChannel(0);
+
+                for (int j = b2.workers.size()-1; j >= 0; j--) {
+                    b2.workers.get(j).removeOutputChannel(0);
+                    b2.workers.get(j).removeInputChannel(0);
+                    b2.collector.removeInputChannel(j);
+
                     ff_node<Object,V> newG = new ff_node<Object,V>(customCollectorG);
-                    a2a.add(newG);
-                    newG.addOutputChannel(x);
-                    for (int i = 0; i < b1.workers.size(); i++) {
+                    ff_comb new_worker = new ff_comb(newG, b2.workers.get(j));
+                    b2.workers.remove(j);
+                    b2.workers.add(j,new_worker);
+
+                    for (int i = b1.workers.size()-1; i >= 0; i--) {
                         ff_queue<U> y = b1.workers.get(i).getOutputChannel(0);
-                        newG.addInputChannel((ff_queue<Object>) y);
+                        new_worker.addInputChannel((ff_queue<Object>) y);
                     }
                 }
+
+                b2.connectWorkersCollector();
             } else { // both pointers valid
-                for (int i = 0; i < b1.workers.size(); i++) {
-                    ff_queue<U> x = b1.workers.get(i).getOutputChannel(0);
+                for (int i = b1.workers.size()-1; i >= 0; i--) {
+                    b1.workers.get(i).removeOutputChannel(0);
+                    b1.workers.get(i).removeInputChannel(0);
+                    b1.emitter.removeOutputChannel(i);
+
                     ff_node<U,Object> newR = new ff_node<U,Object>(customEmitterR);
-                    a2a.add(newR);
-                    newR.addInputChannel(x);
-                    for (int j = 0; j < b2.workers.size(); j++) {
-                        ff_queue<V> y = b2.workers.get(j).getInputChannel(0);
+                    ff_comb new_worker_L = new ff_comb(b1.workers.get(i),newR);
+                    b1.workers.remove(i);
+                    b1.workers.add(i,new_worker_L);
+
+                    for (int j = b2.workers.size()-1; j >= 0; j--) {
+                        b2.workers.get(j).removeOutputChannel(0);
+                        b2.workers.get(j).removeInputChannel(0);
+                        b2.collector.removeInputChannel(j);
+
                         ff_node<Object,V> newG = new ff_node<Object,V>(customCollectorG);
-                        a2a.add(newG);
-                        newG.addOutputChannel(y);
+                        ff_comb new_worker_R = new ff_comb(newG, b2.workers.get(j));
+                        b2.workers.remove(j);
+                        b2.workers.add(j,new_worker_R);
 
                         ff_queue<Object> z = new ff_queue<>(bufferSize);
-                        newR.addOutputChannel(z);
-                        newG.addInputChannel(z);
+                        new_worker_L.addOutputChannel(z);
+                        new_worker_R.addInputChannel(z);
                     }
                 }
+
+                b1.connectEmitterWorkers();
+                b2.connectWorkersCollector();
             }
         }
 
