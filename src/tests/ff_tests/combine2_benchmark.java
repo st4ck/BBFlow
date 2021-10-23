@@ -6,13 +6,12 @@ import java.util.LinkedList;
 
 /*
  *
- *  |<------ farm without collector ------->|   |<--------- comb2 --------->|
  *  |                |<---- comb1 ---->|        |<- multi-input ->|
  *
  *
  *               |--> Worker1-->Worker2 -->|
  *               |                         |
- *   Emitter --> |--> Worker1-->Worker2 -->|-------> Filter1 ---------> Filter2
+ *   Emitter --> |--> Worker1-->Worker2 -->|-------> Collector ---------> Filter1
  *               |                         |
  *               |--> Worker1-->Worker2 -->|
  *
@@ -51,7 +50,12 @@ public class combine2_benchmark {
                     x *= 1.02;
                     x /= 1.01;
                 }
-                return x;
+
+                if (x%10 == 0) {
+                    return x;
+                } else {
+                    return null;
+                }
             }
         };
 
@@ -64,9 +68,13 @@ public class combine2_benchmark {
         ff_node stage1 = new ff_node(Emitter);
         ff_node stage4 = new ff_node(Filter2);
 
+        int n_workers = 16;
+        if (args.length == 1) {
+            n_workers = Integer.parseInt(args[0]);
+        }
 
         ff_farm stage2 = new ff_farm<Double,Double>(0, null);
-        for (int i=0; i<Integer.parseInt(args[0]); i++) {
+        for (int i=0; i<n_workers; i++) {
             stage2.workers.push(new ff_comb(new ff_node(defaultJob.uniqueJob(Worker1, i)), new ff_node(defaultJob.uniqueJob(Worker2, i))));
         }
 

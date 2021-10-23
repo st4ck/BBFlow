@@ -67,7 +67,6 @@ public class ff_queue<T> {
      */
     public void put(T i) {
         if (this.EOS) { return; }
-
         if (blocking) {
             try {
                 blocking_queue.put(i);

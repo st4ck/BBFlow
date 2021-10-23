@@ -181,6 +181,8 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
                 }
 
                 return;
+            } else {
+                connect(b1,b2,BLOCKING,BOUNDED);
             }
         } else if (b1 instanceof ff_all2all) {
             if (((ff_all2all<?, ?, ?, ?>) b1).a2a.size() > 0) {
