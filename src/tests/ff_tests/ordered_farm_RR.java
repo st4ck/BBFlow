@@ -4,6 +4,9 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/**
+ * Example of Ordered Farm using Emitter and Collector in ROUNDROBIN
+ */
 public class ordered_farm_RR {
     public static void main (String[] args) {
         defaultWorker<Integer, Integer> Generator = new defaultWorker<>() {

@@ -1,12 +1,14 @@
 package tests.ff_tests;
 
 import bbflow.*;
-import com.sun.source.tree.Tree;
 
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.TreeSet;
 
+/**
+ * Example of Ordered Farm using packets with label sorted on the collector side and emitted in the correct order by Filter1
+ */
 public class ordered_farm_labeling {
     public static void main (String[] args) {
         class packet<T> {
