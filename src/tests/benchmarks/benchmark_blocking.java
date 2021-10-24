@@ -21,23 +21,12 @@ public class benchmark_blocking {
         };
 
         defaultWorker<Long, Long> Filter1 = new defaultWorker<>() {
-            @Override
-            public void runJob() throws InterruptedException {
-                ff_queue<Long> in_channel = in.get(0);
-
-                while (true) {
-                    Long x = in_channel.take();
-                    if (x == null) {
-                        in.remove(0);
-                        return;
-                    }
-                    x *= 2;
-                }
+            public Long runJob(Long x) {
+                x *= 2;
                 //System.out.println("Received "+x+" from "+position); sendOut(x);
+                return null;
             }
         };
-
-        Filter1.runType = defaultJob.CUSTOM_FUNCTION;
 
         bb_settings.BLOCKING = true;
 
