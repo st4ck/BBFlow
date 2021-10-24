@@ -13,6 +13,9 @@ public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
     LinkedList<block> a2a;
     int bufferSize = bb_settings.defaultBufferSize;
 
+    public static void preload() {
+    }
+
     public ff_all2all() {
         a2a = new LinkedList<>();
     }

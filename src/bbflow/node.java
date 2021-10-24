@@ -15,6 +15,9 @@ public class node<T,U> extends Thread {
         job.run();
     }
 
+    public static void preload() {
+    }
+
     /**
      * add a Input channel to the bbflow.ff_node. LinkedList is O(1) adding/removing first element
      * @param input input channel

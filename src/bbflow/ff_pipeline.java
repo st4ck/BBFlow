@@ -7,6 +7,9 @@ public class ff_pipeline<T,V> extends ff_node<T,V> {
     pipeline_generic pipe = null;
     int bufferSize = bb_settings.defaultBufferSize;
 
+    public static void preload() {
+    }
+
     /**
      * one single channel between two blocks. Using addInputChannel and addOutputChannel. If emitter or collector null in case of farm, 1_N or N_1 or N_N or NxM used.
      */

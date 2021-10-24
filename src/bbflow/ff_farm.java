@@ -19,6 +19,9 @@ public class ff_farm<T,U> extends ff_node<T,U> {
     private ff_queue<T> input;
     private int bufferSize;
 
+    public static void preload() {
+    }
+
     /**
      * constructor given a list of defaultJob, Emitter strategy, Collector strategy and buffer size
      * @param worker_job the list of jobs (one for each worker) to be executed of type bbflow.defaultJob. They can be different if needed

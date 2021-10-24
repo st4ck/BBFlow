@@ -13,6 +13,9 @@ public class squeue<T> extends ConcurrentLinkedQueue<T> {
     private final AtomicLong size = new AtomicLong(0L);
     private final long maxSize;
 
+    public static void preload() {
+    }
+
     public squeue() {
         this(Long.MAX_VALUE);
     }

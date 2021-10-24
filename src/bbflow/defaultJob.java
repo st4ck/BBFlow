@@ -25,6 +25,9 @@ public class defaultJob<T,U> implements Runnable {
     public defaultJob combined = null;
     public int combined_side;
 
+    public static void preload() {
+    }
+
     public defaultJob() {
 
     }

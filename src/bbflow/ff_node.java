@@ -13,6 +13,9 @@ import java.util.Arrays;
 public class ff_node<T,U> extends block<T,U> {
     public node mynode;
 
+    public static void preload() {
+    }
+
     /**
      * default constructor for different blocks extending ff_node
      */

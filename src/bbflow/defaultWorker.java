@@ -8,5 +8,6 @@ import java.io.Serializable;
  * @param <T> Custom type of the channels
  */
 public class defaultWorker<T,U> extends defaultJob<T,U> implements Serializable {
-
+    public static void preload() {
+    }
 }

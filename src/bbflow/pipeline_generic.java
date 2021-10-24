@@ -27,6 +27,9 @@ public class pipeline_generic<T,U,V> extends block<T,V> {
         this.bufferSize = bufferSize;
     }
 
+    public static void preload() {
+    }
+
     /**
      * connect 1-1 the two blocks and add to pipeline
      * @param b1 first block

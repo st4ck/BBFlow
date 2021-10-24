@@ -17,6 +17,9 @@ public class defaultCollector<T> extends defaultJob<T,T> {
     int strategy;
     public int position = 0;
 
+    public static void preload() {
+    }
+
     public defaultCollector() {
         this.strategy = FIRSTCOME;
     }

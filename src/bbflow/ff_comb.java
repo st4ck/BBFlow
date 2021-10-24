@@ -9,6 +9,9 @@ import java.util.LinkedList;
  * @param <V> Custom type of output channels
  */
 public class ff_comb<T,V> extends ff_node<T,V> {
+    public static void preload() {
+    }
+
     /**
      * Combine constructor
      * @param node1 first node

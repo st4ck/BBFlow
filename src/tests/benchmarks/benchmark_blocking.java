@@ -7,6 +7,8 @@ import bbflow.*;
  */
 public class benchmark_blocking {
     public static void main (String[] args) {
+        preloader.preloadJVM();
+
         int n = 1000;
         if (args.length == 1) {
             n = Integer.parseInt(args[0]);

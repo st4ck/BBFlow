@@ -19,6 +19,9 @@ public class defaultEmitter<T> extends defaultJob<T,T> { // Runnable job
     int strategy;
     int position = 0;
 
+    public static void preload() {
+    }
+
     public defaultEmitter() {
         this.strategy = ROUNDROBIN;
     }

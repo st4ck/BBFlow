@@ -6,6 +6,9 @@ package bbflow;
  * @param <T>
  */
 public class block<T,U> {
+    public static void preload() {
+    }
+
     public void addInputChannel(ff_queue<T> input) {
     }
 

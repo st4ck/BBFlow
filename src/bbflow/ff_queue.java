@@ -17,6 +17,9 @@ public class ff_queue<T> {
     boolean blocking = false;
     boolean bounded = false;
 
+    public static void preload() {
+    }
+
     /**
      * Default constructor of the queue. Types available are 4:
      * BLOCKING / BOUNDED
