@@ -13,8 +13,8 @@ public class benchmark_blocking {
             }
 
             public void init() {
-                for (long i = 1; i <=1000000; ++i) {
-                    sendOutTo(i, ((int)i)%out.size());
+                for (long i = 1; i <=10000000; ++i) {
+                    sendOut(i);
                 }
                 sendEOS();
             }
