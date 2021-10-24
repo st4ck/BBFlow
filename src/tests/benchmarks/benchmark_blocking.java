@@ -7,13 +7,19 @@ import bbflow.*;
  */
 public class benchmark_blocking {
     public static void main (String[] args) {
+        int n = 1000;
+        if (args.length == 1) {
+            n = Integer.parseInt(args[0]);
+        }
+        int finalN = n;
+
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
             public Long runJob(Long x) {
                 return null;
             }
 
             public void init() {
-                for (long i = 1; i <=10000000; ++i) {
+                for (long i = 1; i <= finalN; ++i) {
                     sendOut(i);
                 }
                 sendEOS();
