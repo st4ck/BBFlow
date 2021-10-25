@@ -16,15 +16,15 @@ public class benchmark_farm {
         }
 
 
-        int finalN = n;
+        Long finalN = Long.valueOf(n);
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
             public Long runJob(Long x) {
                 return null;
             }
 
             public void init() {
-                for (Integer i = 1; i <= finalN; ++i) {
-                    sendOut(Long.valueOf(i));
+                for (long i = 1; i <= finalN; ++i) {
+                    sendOut(i);
                 }
                 sendEOS();
             }
@@ -32,6 +32,11 @@ public class benchmark_farm {
 
         defaultWorker<Long, Long> Worker1 = new defaultWorker<>() {
             public Long runJob(Long x) {
+                try {
+                    ff_queue.sleepNanos(5000000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 return x;
             }
         };
