@@ -32,10 +32,15 @@ public class benchmark_farm {
 
         defaultWorker<Long, Long> Worker1 = new defaultWorker<>() {
             public Long runJob(Long x) {
-                try {
+                /*try {
                     ff_queue.sleepNanos(5000000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }*/
+
+                for (int i=0; i<1000; i++) {
+                    x *= 1000;
+                    x /= 999;
                 }
                 return x;
             }
