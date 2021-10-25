@@ -3,6 +3,8 @@ package bbflow;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Default class of the queues. Queues are channels 1-1 between nodes of type SPSC and FIFO
@@ -13,6 +15,7 @@ public class ff_queue<T> {
     ConcurrentLinkedQueue<T> nonblocking_queue;
     squeue<T> nonblocking_bounded_queue;
     boolean EOS = false;
+    AtomicInteger nonblocking_queue_elements = new AtomicInteger(0);
 
     boolean blocking = false;
     boolean bounded = false;
@@ -92,6 +95,7 @@ public class ff_queue<T> {
             } else {
                 // no wait needed, unbounded
                 nonblocking_queue.add(i);
+                nonblocking_queue_elements.incrementAndGet();
             }
         }
     }
@@ -155,11 +159,14 @@ public class ff_queue<T> {
                 } else {
                     T i;
                     while (true) {
-                        i = nonblocking_queue.poll();
-                        if (i != null) {
-                            return i;
-                        } else if (this.EOS) {
-                            return null;
+                        if ((this.EOS) || (nonblocking_queue_elements.get() > 0)) {
+                            i = nonblocking_queue.poll();
+                            if (i != null) {
+                                nonblocking_queue_elements.decrementAndGet();
+                                return i;
+                            } else if (this.EOS) {
+                                return null;
+                            }
                         }
 
                         sleepNanos(bb_settings.backOff);

@@ -8,12 +8,18 @@ public class benchmark_farm {
     public static void main (String[] args) {
         preloader.preloadJVM();
 
+        bb_settings.backOff = 100;
+
         int n = 1000;
         int n_workers = 16;
-        if (args.length == 2) {
+        if (args.length >= 2) {
             n = Integer.parseInt(args[0]);
             n_workers = Integer.parseInt(args[1]);
+            if (args.length == 3) {
+                bb_settings.backOff = Integer.parseInt(args[2]);
+            }
         }
+
 
         Long finalN = Long.valueOf(n);
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
@@ -36,12 +42,12 @@ public class benchmark_farm {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }*/
-
+                long y = x;
                 for (int i=0; i<1000000; i++) {
-                    x *= 1000;
-                    x /= 999;
+                    y *= 1000;
+                    y /= 999;
                 }
-                return x;
+                return y;
             }
         };
 
