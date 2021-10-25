@@ -24,7 +24,8 @@ public class benchmark_farm {
 
             public void init() {
                 for (long i = 1; i <= finalN; ++i) {
-                    sendOut(i);
+                    Long x = i;
+                    sendOut(x);
                 }
                 sendEOS();
             }
