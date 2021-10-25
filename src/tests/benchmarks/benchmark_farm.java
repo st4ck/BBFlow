@@ -24,8 +24,7 @@ public class benchmark_farm {
 
             public void init() {
                 for (long i = 1; i <= finalN; ++i) {
-                    Long x = i;
-                    sendOut(x);
+                    sendOut(i);
                 }
                 sendEOS();
             }
@@ -39,7 +38,7 @@ public class benchmark_farm {
                     e.printStackTrace();
                 }*/
 
-                for (int i=0; i<1000; i++) {
+                for (int i=0; i<1000000; i++) {
                     x *= 1000;
                     x /= 999;
                 }
