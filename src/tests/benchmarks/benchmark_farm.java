@@ -15,7 +15,6 @@ public class benchmark_farm {
             n_workers = Integer.parseInt(args[1]);
         }
 
-
         Long finalN = Long.valueOf(n);
         defaultWorker<Long, Long> Emitter = new defaultWorker<>() {
             public Long runJob(Long x) {
