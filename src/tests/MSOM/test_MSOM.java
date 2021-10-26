@@ -45,7 +45,7 @@ public class test_MSOM {
         customWatch myWatch = new customWatch();
         myWatch.start();
 
-        for (int i=0; i<100000; i++) {
+        for (int i=0; i<100; i++) {
             SOMData searchLearn = new SOMData(SOMData.SEARCH_AND_LEARN, i);
             searchLearn.neuron = d_neuron;
             z.push(searchLearn);

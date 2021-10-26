@@ -83,6 +83,7 @@ public class MSOM {
         all.emitter = new ff_node(new Emitter());
         all.connectWorkersCollector();
         all.connectEmitterWorkers();
+        ((Collector)all.collector.mynode.job).initChannels();
 
         externalInput = new ff_queue<>();
         all.emitter.addInputChannel(externalInput);
