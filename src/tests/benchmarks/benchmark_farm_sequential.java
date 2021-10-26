@@ -1,5 +1,8 @@
 package tests.benchmarks;
 
+/**
+ * Sequential version of the computation did by the Farm benchmark (and also by the pipeline). Used to calculate Tseq
+ */
 public class benchmark_farm_sequential {
     public static void main (String[] args) {
         int n = 1000;

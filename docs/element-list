@@ -1,5 +1,6 @@
 bbflow
 bbflow_network
 tests
+tests.benchmarks
 tests.ff_tests
 tests.MSOM

@@ -2,8 +2,9 @@ package tests.benchmarks;
 
 import bbflow.*;
 
-import java.util.LinkedList;
-
+/**
+ * Pipeline benchmark with N nodes
+ */
 public class benchmark_pipeline {
     public static void main (String[] args) {
         preloader.preloadJVM();

@@ -4,6 +4,9 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/**
+ * Benchmark of a farm with N workers
+ */
 public class benchmark_farm {
     public static void main (String[] args) {
         preloader.preloadJVM();
