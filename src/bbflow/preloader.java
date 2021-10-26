@@ -3,6 +3,9 @@ package bbflow;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * Class providing a static method used to invite JVM to preload main classes used in BBFlow.
+ */
 public class preloader {
     public static void preloadJVM() {
         ff_queue.preload();
