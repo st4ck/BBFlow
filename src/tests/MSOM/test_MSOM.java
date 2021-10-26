@@ -12,6 +12,7 @@ public class test_MSOM {
     public static void main (String[] args) {
         bb_settings.BLOCKING = false;
         bb_settings.BOUNDED = false;
+        bb_settings.backOff = 5000;
 
         //testMSOM(Integer.parseInt(args[0]));
         testMSOM(1024,1);
@@ -28,7 +29,7 @@ public class test_MSOM {
     }
 
     private static void testMSOM(int size, int split) {
-        int depth = 100;
+        int depth = 3;
         MSOM z = new MSOM(size,depth,split);
         ArrayList<Double> vector = new ArrayList<>();
         for (int j=0; j<depth; j++) {
@@ -40,7 +41,7 @@ public class test_MSOM {
         customWatch myWatch = new customWatch();
         myWatch.start();
 
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<100000; i++) {
             SOMData searchLearn = new SOMData(SOMData.SEARCH_AND_LEARN, i);
             searchLearn.neuron = neuron;
             z.push(searchLearn);
