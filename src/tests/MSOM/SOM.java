@@ -200,12 +200,18 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         int bestj = 0;
         double bestdist = Double.MAX_VALUE;
 
+        // static copy of neuron to primitive type to reduce access time to it
+        double[] d_neuron = new double[depth];
+        for (int i=0; i<depth; i++) {
+            d_neuron[i] = neuron.get(i);
+        }
+
         for (int w=0; w<size; w++) {
             for (int h=0; h<size; h++) {
                 // Euclidean distance between D-dimensional points
                 double distance = 0;
                 for (int d=0; d<depth; d++) {
-                    distance += (som[w][h][d] - neuron.get(d)) * (som[w][h][d] - neuron.get(d));
+                    distance += (som[w][h][d] - d_neuron[d]) * (som[w][h][d] - d_neuron[d]);
 
                     if (distance > bestdist) { // avoid unuseful loops
                         break;
