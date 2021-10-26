@@ -242,6 +242,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         b.bestj = bestj;
         b.bestdist = bestdist;
 
+        // saving search results in case the input vector is the same and the matrix doesn't change
         AIT_result = b;
         AIT_neuron = d_neuron;
 
