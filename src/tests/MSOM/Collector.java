@@ -30,19 +30,22 @@ public class Collector extends defaultCollector<SOMData> {
 
         switch (listeningState) {
             case defaultCollector.ROUNDROBIN:
-                received = in.get(position).take();
-                if (received == null) {
-                    in.remove(position); // input channel not needed anymore
-                    position--;
+                while (received == null) {
+                    received = in.get(position).poll();
+                    if ((received == null) && in.get(position).getEOS()) {
+                        in.remove(position); // input channel not needed anymore
+                        position--; // stepping back of 1 position because next there's the increment to the next position that now has the same index
 
-                    if (in.size() == 0) { // no more input channels, EOS only last time
-                        out_channel.setEOS();
+                        if (in.size() == 0) { // no more input channels, EOS only last time
+                            out_channel.setEOS();
+                            break;
+                        }
                     }
-                }
 
-                position++;
-                if (position >= in.size()) {
-                    position = 0;
+                    position++;
+                    if (position >= in.size()) {
+                        position = 0;
+                    }
                 }
                 break;
             case WAITSINGLE:
