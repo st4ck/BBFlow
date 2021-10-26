@@ -9,7 +9,7 @@ public class SOMData {
     public Integer redirect = null;
     public int train_i;
     public int train_j;
-    public ArrayList<Double> neuron = null;
+    public double[] neuron;
     public double curve;
     public int dataType;
     public bestPosition searchResult;

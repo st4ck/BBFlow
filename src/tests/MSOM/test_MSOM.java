@@ -36,6 +36,10 @@ public class test_MSOM {
             vector.add(Math.random()*255);
         }
         ArrayList<Double> neuron = SOM.normalize(vector,depth);
+        double[] d_neuron = new double[depth];
+        for (int j=0; j<depth; j++) {
+            d_neuron[j] = neuron.get(j);
+        }
 
         z.start();
         customWatch myWatch = new customWatch();
@@ -43,7 +47,7 @@ public class test_MSOM {
 
         for (int i=0; i<100000; i++) {
             SOMData searchLearn = new SOMData(SOMData.SEARCH_AND_LEARN, i);
-            searchLearn.neuron = neuron;
+            searchLearn.neuron = d_neuron;
             z.push(searchLearn);
         }
         z.setEOS();

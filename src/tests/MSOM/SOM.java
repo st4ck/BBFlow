@@ -194,17 +194,11 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         return neuron;
     }
 
-    public bestPosition searchBestPosition(ArrayList<Double> neuron) {
+    public bestPosition searchBestPosition(double[] d_neuron) {
         //Searching nearest similar vector
         int besti = 0;
         int bestj = 0;
         double bestdist = Double.MAX_VALUE;
-
-        // static copy of neuron to primitive type to reduce access time to it
-        double[] d_neuron = new double[depth];
-        for (int i=0; i<depth; i++) {
-            d_neuron[i] = neuron.get(i);
-        }
 
         for (int w=0; w<size; w++) {
             for (int h=0; h<size; h++) {
@@ -236,7 +230,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         return b;
     }
 
-    void learnVector(ArrayList<Double> neuron, int i, int j, double curve) {
+    void learnVector(double[] neuron, int i, int j, double curve) {
         if (i<0) {
             if (j<0) {
                 train(TOP, LEFT, neuron, curve, i, j);
@@ -264,7 +258,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         }
 
         for (int d=0; d<depth; d++) {
-            som[i][j][d] = som[i][j][d] * (1-curve) + neuron.get(d) * curve;
+            som[i][j][d] = som[i][j][d] * (1-curve) + neuron[d] * curve;
             som[i][j][d] = Math.round(som[i][j][d]*100)/100;
         }
 
@@ -273,7 +267,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         }
     }
 
-    void learnVector(ArrayList<Double> neuron, int besti, int bestj) {
+    void learnVector(double[] neuron, int besti, int bestj) {
         waiting_learners++;
 
         for (int i=besti-circ; i<=besti+circ; i++) {
@@ -292,7 +286,7 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         in.get(4).put(rd);
     }
 
-    private void train(Integer pos1, Integer pos2, ArrayList<Double> neuron, double curve, int i, int j) {
+    private void train(Integer pos1, Integer pos2, double[] neuron, double curve, int i, int j) {
         if (out.get(pos1) == null) {
             // NO OUT CHANNEL
             waiting_learners--;
