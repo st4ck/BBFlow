@@ -203,6 +203,20 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         int bestj = 0;
         double bestdist = Double.MAX_VALUE;
 
+        if (AIT_result != null) {
+            boolean AIT = true;
+            for (int d = 0; d < depth; d++) {
+                if (d_neuron[d] != AIT_neuron[d]) {
+                    AIT = false;
+                    break;
+                }
+            }
+
+            if (AIT) {
+                return AIT_result;
+            }
+        }
+
         for (int w=0; w<size; w++) {
             for (int h=0; h<size; h++) {
                 // Euclidean distance between D-dimensional points
