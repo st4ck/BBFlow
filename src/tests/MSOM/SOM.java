@@ -26,6 +26,9 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
     int size = 0;
     int depth = 0;
 
+    bestPosition AIT_result = null;
+    double[] AIT_neuron;
+
     public void runJob() throws InterruptedException {
         SOMData element = null;
 
@@ -225,6 +228,9 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         b.bestj = bestj;
         b.bestdist = bestdist;
 
+        AIT_result = b;
+        AIT_neuron = d_neuron;
+
         //System.out.println("Best vector position " + besti + ":" + bestj + " Distance: " + bestdist);
 
         return b;
@@ -256,6 +262,8 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
             train(RIGHT, null, neuron, curve, i, j);
             return;
         }
+
+        AIT_result = null;
 
         for (int d=0; d<depth; d++) {
             som[i][j][d] = som[i][j][d] * (1-curve) + neuron[d] * curve;
