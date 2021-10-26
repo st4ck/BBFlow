@@ -38,7 +38,7 @@ public class Collector extends defaultCollector<SOMData> {
 
                         if (in.size() == 0) { // no more input channels, EOS only last time
                             out_channel.setEOS();
-                            break;
+                            return;
                         }
                     }
 
@@ -46,6 +46,8 @@ public class Collector extends defaultCollector<SOMData> {
                     if (position >= in.size()) {
                         position = 0;
                     }
+
+                    ff_queue.sleepNanos(bb_settings.backOff);
                 }
                 break;
             case WAITSINGLE:
