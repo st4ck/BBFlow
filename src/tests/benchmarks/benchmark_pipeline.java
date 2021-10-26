@@ -2,6 +2,8 @@ package tests.benchmarks;
 
 import bbflow.*;
 
+import java.util.LinkedList;
+
 public class benchmark_pipeline {
     public static void main (String[] args) {
         preloader.preloadJVM();
@@ -44,12 +46,19 @@ public class benchmark_pipeline {
             }
         };
 
+        defaultWorker<Long, Long> Final = new defaultWorker<>() {
+            public Long runJob(Long x) {
+                return null;
+            }
+        };
+
         ff_pipeline all = new ff_pipeline(new ff_node(Generator), new ff_node(defaultJob.uniqueJob(Worker)));
 
         for (int i=0; i<n_workers-1; i++) {
             all.appendBlock(new ff_node<>(defaultJob.uniqueJob(Worker)), ff_pipeline.TYPE_1_1);
         }
 
+        all.appendBlock(new ff_node<>(Final), ff_pipeline.TYPE_1_1);
         all.addOutputChannel(new ff_queue());
 
         customWatch x = new customWatch();
