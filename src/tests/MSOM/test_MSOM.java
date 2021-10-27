@@ -15,13 +15,13 @@ public class test_MSOM {
         bb_settings.backOff = 5000;
 
         //testMSOM(Integer.parseInt(args[0]));
-        /*testMSOM(1024,1);
+        testMSOM(1024,1);
         testMSOM(1024,2);
         testMSOM(1023,3);
         testMSOM(1024,4);
         testMSOM(1025,5);
         testMSOM(1026,6);
-        testMSOM(1029,7);*/
+        testMSOM(1029,7);
         testMSOM(1024,8);
         testMSOM(1026,9);
         testMSOM(1030,10);
