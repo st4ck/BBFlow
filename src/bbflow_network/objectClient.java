@@ -38,6 +38,8 @@ public class objectClient {
 
     long lastFlush = System.nanoTime();
 
+    public static long flushThreshold = 1000000;
+
     public void tryToPut(Object i, boolean flush) throws IOException, InterruptedException {
         while(true) {
             if (cc.outToServer == null) {
@@ -45,7 +47,7 @@ public class objectClient {
                 continue;
             }
 
-            if (System.nanoTime()-lastFlush > 1000000) {
+            if (System.nanoTime()-lastFlush > flushThreshold) {
                 cc.outToServer.flush();
                 lastFlush = System.nanoTime();
             }

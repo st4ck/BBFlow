@@ -1,6 +1,7 @@
 package tests.benchmarks;
 
 import bbflow.*;
+import bbflow_network.*;
 
 /**
  * Benchmark of two nodes connected each other
@@ -9,9 +10,12 @@ public class benchmark_network {
     public static void main (String[] args) {
         preloader.preloadJVM();
 
-        int n = 10000;
-        if (args.length == 1) {
+        int n = 1000;
+        if (args.length > 0) {
             n = Integer.parseInt(args[0]);
+            if (args.length == 2) {
+                objectClient.flushThreshold = Long.parseLong(args[1]);
+            }
         }
         int finalN = n;
 
