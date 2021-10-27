@@ -4,6 +4,9 @@ import bbflow.customWatch;
 
 import java.util.ArrayList;
 
+/**
+ * Sequential version of the MSOM implementation. Used to calculate the Tseq
+ */
 public class SOM_sequential {
     static int depth = 3;
     static int width = 1024;

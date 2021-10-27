@@ -4,7 +4,7 @@ import bbflow.*;
 import bbflow_network.*;
 
 /**
- * Benchmark of two nodes connected each other
+ * Benchmark of two nodes connected each other with a network channel (TCP)
  */
 public class benchmark_network {
     public static void main (String[] args) {

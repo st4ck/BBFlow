@@ -13,7 +13,12 @@ public class objectClient {
     String host;
     clientThread cc;
     Thread ccThread;
+
+    /**
+     * delay in Output Stream flushing in nanoseconds.
+     */
     public static long flushThreshold = 1000000;
+
     public objectClient(int connectionId, String host) throws IOException, InterruptedException {
         connPort = serverPort+connectionId;
         this.host = host;
