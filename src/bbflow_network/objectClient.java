@@ -13,6 +13,7 @@ public class objectClient {
     String host;
     clientThread cc;
     Thread ccThread;
+    public static long flushThreshold = 1000000;
     public objectClient(int connectionId, String host) throws IOException, InterruptedException {
         connPort = serverPort+connectionId;
         this.host = host;
@@ -37,8 +38,6 @@ public class objectClient {
     }
 
     long lastFlush = System.nanoTime();
-
-    public static long flushThreshold = 1000000;
 
     public void tryToPut(Object i, boolean flush) throws IOException, InterruptedException {
         while(true) {
