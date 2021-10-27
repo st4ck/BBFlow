@@ -2,6 +2,7 @@ package bbflow_network;
 
 import bbflow.*;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
@@ -58,7 +59,7 @@ public class objectServer<T> implements Runnable {
     public void receiveData(Socket clientSocket) {
         try {
             InputStream input = clientSocket.getInputStream();
-            ObjectInputStream ois = new ObjectInputStream(input);
+            ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(input));
 
             while (true) {
                 Object o = ois.readObject();

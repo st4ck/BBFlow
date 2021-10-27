@@ -21,10 +21,10 @@ public class objectClient {
         ccThread.start();
     }
 
-    public void put(Object i) throws InterruptedException {
+    public void put(Object i, boolean flush) throws InterruptedException {
         while(true) {
             try {
-                tryToPut(i);
+                tryToPut(i, flush);
                 break;
             } catch (IOException e) {
                 Thread.sleep(100);
@@ -32,15 +32,31 @@ public class objectClient {
         }
     }
 
-    public void tryToPut(Object i) throws IOException, InterruptedException {
+    public void put(Object i) throws InterruptedException {
+        put(i, false);
+    }
+
+    long lastFlush = System.nanoTime();
+
+    public void tryToPut(Object i, boolean flush) throws IOException, InterruptedException {
         while(true) {
             if (cc.outToServer == null) {
-                Thread.sleep(100);
+                Thread.sleep(10);
                 continue;
             }
 
+            if (System.nanoTime()-lastFlush > 1000000) {
+                cc.outToServer.flush();
+                lastFlush = System.nanoTime();
+            }
+
             try {
+                long s = System.nanoTime();
                 cc.outToServer.writeObject(i);
+
+                if (flush) {
+                    cc.outToServer.flush();
+                }
                 break;
             } catch (IOException e) { // try until sent, connection closed?
                 if (!cc.clientSocket.isConnected()) {
@@ -51,6 +67,6 @@ public class objectClient {
     }
 
     public void setEOS() throws InterruptedException {
-        put("EOS");
+        put("EOS", true);
     }
 }

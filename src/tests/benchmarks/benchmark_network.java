@@ -9,7 +9,7 @@ public class benchmark_network {
     public static void main (String[] args) {
         preloader.preloadJVM();
 
-        int n = 1000;
+        int n = 10000;
         if (args.length == 1) {
             n = Integer.parseInt(args[0]);
         }

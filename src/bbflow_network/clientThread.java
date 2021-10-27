@@ -1,5 +1,6 @@
 package bbflow_network;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
@@ -30,7 +31,7 @@ public class clientThread implements Runnable {
                 if ((clientSocket == null) || (!clientSocket.isConnected())) {
                     clientSocket = new Socket(host, connPort);
                 }
-                outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+                outToServer = new ObjectOutputStream(new BufferedOutputStream(clientSocket.getOutputStream()));
                 break;
             } catch (IOException e) {
                 try {

@@ -59,7 +59,7 @@ public class ff_queue_TCP<T> extends ff_queue<T> {
     public void setEOS() {
         if (sockettype == OUTPUT) {
             try {
-                client.put("EOS");
+                client.put("EOS", true);
             } catch (InterruptedException e) {
 
             }
