@@ -1,4 +1,4 @@
-package tests.benchmarks;
+package tests.benchmarks.distributed;
 
 import bbflow.*;
 import bbflow_network.*;
