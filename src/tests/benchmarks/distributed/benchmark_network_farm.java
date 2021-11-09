@@ -73,13 +73,13 @@ public class benchmark_network_farm {
         // connect emitter, workers and collector with network channels
         for (int i=0; i<n_workers; i++) {
             if (startEC) {
-                farm.emitter.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, i, host));
+                farm.emitter.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, i, host_W));
                 farm.collector.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, i + n_workers));
             }
 
             if (startW) {
                 ((ff_node<Long, Long>) farm.workers.get(i)).addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, i));
-                ((ff_node<Long, Long>) farm.workers.get(i)).addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, i + n_workers, host));
+                ((ff_node<Long, Long>) farm.workers.get(i)).addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, i + n_workers, host_EC));
             }
         }
 
