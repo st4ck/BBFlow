@@ -11,7 +11,7 @@ public class benchmark_network_farm {
         preloader.preloadJVM();
 
         int n = 1000;
-        int start_nodes = 0;
+        int start_nodes = 1;
         String host_EC = "127.0.0.1";
         String host_W = "127.0.0.1";
         if (args.length > 0) {
@@ -80,6 +80,8 @@ public class benchmark_network_farm {
             if (startW) {
                 ((ff_node<Long, Long>) farm.workers.get(i)).addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, i));
                 ((ff_node<Long, Long>) farm.workers.get(i)).addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, i + n_workers, host_EC));
+            } else {
+                farm.workers.clear();
             }
         }
 
