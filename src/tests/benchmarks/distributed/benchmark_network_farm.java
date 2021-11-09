@@ -11,7 +11,7 @@ public class benchmark_network_farm {
         preloader.preloadJVM();
 
         int n = 1000;
-        int start_nodes = -1;
+        int start_nodes = 0;
         String host = "127.0.0.1";
         if (args.length > 0) {
             n = Integer.parseInt(args[0]);
@@ -55,7 +55,6 @@ public class benchmark_network_farm {
         if ((start_nodes == -1) || (start_nodes == 1)) startW = true;
 
         int n_workers = 3;
-        if (!startW) { n_workers = 0; }
 
         ff_farm farm = new ff_farm<Long,Long>(n_workers, Worker);
         farm.removeEmitter();
