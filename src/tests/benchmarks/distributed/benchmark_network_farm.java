@@ -12,16 +12,21 @@ public class benchmark_network_farm {
 
         int n = 1000;
         int start_nodes = 0;
-        String host = "127.0.0.1";
+        String host_EC = "127.0.0.1";
+        String host_W = "127.0.0.1";
         if (args.length > 0) {
             n = Integer.parseInt(args[0]);
             if (args.length > 1) {
                 start_nodes = Integer.parseInt(args[1]); // node to start, [0,1]. 0=E+C, 1=Ws, -1 for all
                 if (args.length > 2) {
-                    host = args[2]; // host for the client node
-                    if (args.length > 3) {
-                        objectClient.flushThreshold = Long.parseLong(args[1]);
+                    host_EC = args[2]; // host for the client node
+                    if (args.length > 4) {
+                        host_W = args[3];
+                        if (args.length > 3) {
+                            objectClient.flushThreshold = Long.parseLong(args[4]);
+                        }
                     }
+
                 }
 
             }

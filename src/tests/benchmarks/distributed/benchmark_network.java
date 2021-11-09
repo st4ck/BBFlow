@@ -21,7 +21,7 @@ public class benchmark_network {
                 if (args.length > 2) {
                     host = args[2]; // host for the client node
                     if (args.length > 3) {
-                        objectClient.flushThreshold = Long.parseLong(args[1]);
+                        objectClient.flushThreshold = Long.parseLong(args[3]);
                     }
                 }
 
