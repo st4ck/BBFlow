@@ -30,4 +30,9 @@ public class bb_settings {
      * port = serverPort + channelId
      */
     public static int serverPort = 44444;
+
+    /**
+     * buffering in TCP channels. True by default. Unbuffered behavior not advised.
+     */
+    public static boolean bufferedTCP = true;
 }

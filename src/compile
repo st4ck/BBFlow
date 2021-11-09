@@ -1,1 +1,3 @@
 javac tests/*.java
+javac tests/*/*.java
+javac tests/*/*/*.java

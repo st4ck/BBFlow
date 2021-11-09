@@ -59,7 +59,14 @@ public class objectServer<T> implements Runnable {
     public void receiveData(Socket clientSocket) {
         try {
             InputStream input = clientSocket.getInputStream();
-            ObjectInputStream ois = new ObjectInputStream(new BufferedInputStream(input));
+
+            ObjectInputStream ois;
+
+            if (bb_settings.bufferedTCP) {
+                ois = new ObjectInputStream(new BufferedInputStream(input));
+            } else {
+                ois = new ObjectInputStream(input);
+            }
 
             while (true) {
                 Object o = ois.readObject();
