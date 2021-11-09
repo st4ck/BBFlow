@@ -11,10 +11,20 @@ public class benchmark_network {
         preloader.preloadJVM();
 
         int n = 1000;
+        int start_nodes = -1;
+        String host = "127.0.0.1";
         if (args.length > 0) {
             n = Integer.parseInt(args[0]);
-            if (args.length == 2) {
-                objectClient.flushThreshold = Long.parseLong(args[1]);
+
+            if (args.length > 1) {
+                start_nodes = Integer.parseInt(args[1]); // node to start, [0,1]. -1 for both
+                if (args.length > 2) {
+                    host = args[2]; // host for the client node
+                    if (args.length > 3) {
+                        objectClient.flushThreshold = Long.parseLong(args[1]);
+                    }
+                }
+
             }
         }
         int finalN = n;
@@ -39,19 +49,29 @@ public class benchmark_network {
                 return null;
             }
         };
+
+
         ff_node E = new ff_node(Emitter);
         ff_node F = new ff_node(Filter1);
 
-        E.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT,1, "127.0.0.1"));
-        F.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
+        boolean startE = false;
+        boolean startF = false;
+
+        if ((start_nodes == -1) || (start_nodes == 0)) startE = true;
+        if ((start_nodes == -1) || (start_nodes == 1)) startF = true;
+
+        if (startE) E.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, 1, host));
+        if (startF) F.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
         F.addOutputChannel(new ff_queue());
 
         customWatch w = new customWatch();
         w.start();
-        E.start();
-        F.start();
-        F.join();
-        E.join();
+
+        if (startE) E.start();
+        if (startF) F.start();
+        if (startF) F.join();
+        if (startE) E.join();
+
         w.end();
         w.printReport(true);
     }
