@@ -15,17 +15,55 @@ public class test_MSOM {
         bb_settings.backOff = 5000;
 
         //testMSOM(Integer.parseInt(args[0]));
-        testMSOM(1024,1);
-        testMSOM(1024,2);
-        testMSOM(1023,3);
-        testMSOM(1024,4);
-        testMSOM(1025,5);
-        testMSOM(1026,6);
-        testMSOM(1029,7);
-        testMSOM(1024,8);
-        testMSOM(1026,9);
-        testMSOM(1030,10);
-        testMSOM(1023,11);
+        if (args.length == 0) {
+            testMSOM(1024, 1);
+            testMSOM(1024, 2);
+            testMSOM(1023, 3);
+            testMSOM(1024, 4);
+            testMSOM(1025, 5);
+            testMSOM(1026, 6);
+            testMSOM(1029, 7);
+            testMSOM(1024, 8);
+            testMSOM(1026, 9);
+            testMSOM(1030, 10);
+            testMSOM(1023, 11);
+        } else {
+            switch (Integer.parseInt(args[0])) {
+                case 1:
+                    testMSOM(1024, 1);
+                    break;
+                case 2:
+                    testMSOM(1024, 2);
+                    break;
+                case 3:
+                    testMSOM(1023, 3);
+                    break;
+                case 4:
+                    testMSOM(1024, 4);
+                    break;
+                case 5:
+                    testMSOM(1025, 5);
+                    break;
+                case 6:
+                    testMSOM(1026, 6);
+                    break;
+                case 7:
+                    testMSOM(1029, 7);
+                    break;
+                case 8:
+                    testMSOM(1024, 8);
+                    break;
+                case 9:
+                    testMSOM(1026, 9);
+                    break;
+                case 10:
+                    testMSOM(1030, 10);
+                    break;
+                case 11:
+                    testMSOM(1023, 11);
+                    break;
+            }
+        }
     }
 
     private static void testMSOM(int size, int split) {
