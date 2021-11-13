@@ -41,8 +41,18 @@ public class ff_all2all<T,U,V,W> extends ff_node<T,V> {
 
         if (merge) {
             if ((customEmitterR == null) && (customCollectorG == null)) {
-                a2a.remove(b1);
-                combine_farm(b1, b2, null, null, false);
+                if (b1.workers.size() == b2.workers.size()) { // same parallelism degree
+                    b1.removeCollector();
+                    b2.removeEmitter();
+                    for (int i=0; i<b1.workers.size(); i++) {
+                        ff_queue<U> chan = new ff_queue<>();
+                        b1.workers.get(i).addOutputChannel(chan);
+                        b2.workers.get(i).addInputChannel(chan);
+                    }
+                } else {
+                    a2a.remove(b1);
+                    combine_farm(b1, b2, null, null, false);
+                }
                 return;
             } else if ((customEmitterR != null) && (customCollectorG == null)) {
                 // default collector + R as new Emitter

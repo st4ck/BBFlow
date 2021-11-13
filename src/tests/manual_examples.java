@@ -176,5 +176,22 @@ public class manual_examples {
 
         pipe.start();
         pipe.join();
+
+
+        defaultJob<Long,Long> myjob = new defaultJob<>() {
+            public Long runJob(Long x) {
+                if (x%5 == 0) {
+                    x += 2;
+                    sendOut(x);
+                }
+
+                return null;
+            }
+        };
+        ff_node mynode = new ff_node(myjob);
+
+        /*myjob job = new myjob();
+        ff_node mynode = new ff_node(job);*/
+
     }
 }
