@@ -45,10 +45,18 @@ public class ff_comb<T,V> extends ff_node<T,V> {
 
             public void runJobMulti(T x, LinkedList<ff_queue<V>> o) {
                 try {
-                    V t = (V) node1.mynode.job.runJob(x);
-                    if (t != null) {
-                        t = (V) node2.mynode.job.runJob(t);
-                        if (t != null) sendOut(t);
+                    if (node1.mynode.job.runType == INLINE) {
+                        V t = (V) node1.mynode.job.runJob(x);
+                        if (t != null) {
+                            if (node1.mynode.job.runType == INLINE) {
+                                t = (V) node2.mynode.job.runJob(t);
+                                if (t != null) sendOut(t);
+                            } else if (node1.mynode.job.runType == INLINE_MULTI) {
+                                node2.mynode.job.runJobMulti(t, out);
+                            }
+                        }
+                    } else if (node1.mynode.job.runType == INLINE_MULTI) {
+                        node1.mynode.job.runJobMulti(x, null);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -73,9 +81,15 @@ public class ff_comb<T,V> extends ff_node<T,V> {
 
                 try {
                     if (combined_side == 0) {
-                        V res = (V) node2.mynode.job.runJob(element);
-                        if (res == null) { return; }
-                        sendOut(res);
+                        if (node2.mynode.job.runType == INLINE) {
+                            V res = (V) node2.mynode.job.runJob(element);
+                            if (res == null) {
+                                return;
+                            }
+                            sendOut(res);
+                        } else if (node2.mynode.job.runType == INLINE_MULTI) {
+                            node2.mynode.job.runJobMulti(element, out);
+                        }
                     } else {
                         sendOut(element);
                     }
@@ -95,7 +109,6 @@ public class ff_comb<T,V> extends ff_node<T,V> {
                 if (element == null) { return; }
                 sendOutTo(element, index);
             }
-
 
             public void sendEOS(int combined_side) {
                 if (combined_side == 0) {
