@@ -67,7 +67,6 @@ public class benchmark_farm {
         farm.collector = c;
         farm.connectWorkersCollector();
         farm.connectEmitterWorkers();
-        farm.addOutputChannel(new ff_queue());
 
         customWatch x = new customWatch();
         x.start();

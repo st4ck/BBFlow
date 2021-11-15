@@ -77,7 +77,6 @@ public class combine2 {
         stage2.connectEmitterWorkers();
 
         ff_pipeline all = new ff_pipeline(stage2,stage4);
-        all.addOutputChannel(new ff_queue());
 
         all.start();
         all.join();

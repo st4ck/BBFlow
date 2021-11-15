@@ -133,7 +133,6 @@ public class combine {
         all.appendBlock(_3,ff_pipeline.TYPE_1_1);
         all.appendBlock(_4,ff_pipeline.TYPE_1_1);
         all.appendBlock(_5,ff_pipeline.TYPE_1_1);
-        all.addOutputChannel(new ff_queue<>());
 
         System.out.println("TEST  PIPE  Time");
         w = new customWatch();
@@ -154,7 +153,6 @@ public class combine {
         ff_comb comb2 = new ff_comb(_3,_4);
         ff_pipeline pipe = new ff_pipeline(comb1,comb2);
         pipe.appendBlock(_5, ff_pipeline.TYPE_1_1);
-        pipe.addOutputChannel(new ff_queue());
 
         w = new customWatch();
         w.start();
@@ -174,7 +172,6 @@ public class combine {
         comb = new ff_comb(comb,_3);
         comb = new ff_comb(comb,_4);
         comb = new ff_comb(comb,_5);
-        comb.addOutputChannel(new ff_queue());
 
         w = new customWatch();
         w.start();
@@ -194,7 +191,6 @@ public class combine {
         comb2 = new ff_comb(_4,_5);
         pipe = new ff_pipeline(comb1,_3);
         pipe.appendBlock(comb2, ff_pipeline.TYPE_1_1);
-        pipe.addOutputChannel(new ff_queue());
 
         w = new customWatch();
         w.start();
@@ -214,7 +210,6 @@ public class combine {
         pipe.appendBlock(_3, ff_pipeline.TYPE_1_1);
         comb2 = new ff_comb(_4,_5);
         pipe.appendBlock(comb2, ff_pipeline.TYPE_1_1);
-        pipe.addOutputChannel(new ff_queue());
 
         w = new customWatch();
         w.start();

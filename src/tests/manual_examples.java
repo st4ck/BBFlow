@@ -84,7 +84,6 @@ public class manual_examples {
 
         ff_pipeline pipe = new ff_pipeline(generator,farm);
         pipe.appendBlock(filter);
-        pipe.addOutputChannel(new ff_queue());
 
         pipe.start();
         pipe.join();*/
@@ -123,7 +122,6 @@ public class manual_examples {
         farm.workers = workers;
         farm.connectEmitterWorkers();
         farm.connectWorkersCollector();
-        farm.addOutputChannel(new ff_queue());
 
         farm.start();
         farm.join();
@@ -135,7 +133,6 @@ public class manual_examples {
         farm.collector = new ff_node(Collector);
         farm.connectEmitterWorkers();
         farm.connectWorkersCollector();
-        farm.addOutputChannel(new ff_queue());
 
         farm.start();
         farm.join();*/
@@ -172,7 +169,6 @@ public class manual_examples {
 
         ff_pipeline pipe = new ff_pipeline(stage1,stage2);
         pipe.appendBlock(stage3);
-        pipe.addOutputChannel(new ff_queue());
 
         pipe.start();
         pipe.join();

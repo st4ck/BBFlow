@@ -84,7 +84,6 @@ public class combine2_benchmark {
         stage2.connectEmitterWorkers();
 
         ff_pipeline all = new ff_pipeline(stage2,stage4);
-        all.addOutputChannel(new ff_queue());
 
         customWatch x = new customWatch();
         x.start();

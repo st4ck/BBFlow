@@ -60,7 +60,6 @@ public class benchmark_pipeline {
         }
 
         all.appendBlock(new ff_node<>(Final), ff_pipeline.TYPE_1_1);
-        all.addOutputChannel(new ff_queue());
 
         customWatch x = new customWatch();
         x.start();

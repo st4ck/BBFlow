@@ -30,9 +30,6 @@ public class networkTest {
         ff_node stage2 = new ff_node<Double,Integer>(new complete_farm_testOutnode<Double,Integer>(15));
         stage2.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
 
-
-        stage2.addOutputChannel(new ff_queue<>());
-
         stage1.start();
         stage2.start();
 

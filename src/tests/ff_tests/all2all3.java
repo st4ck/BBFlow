@@ -105,7 +105,6 @@ public class all2all3 {
         stage2.removeCollector();
         stage2.collector = new ff_node(Sink);
         stage2.connectWorkersCollector();
-        stage2.addOutputChannel(new ff_queue());
 
         ff_all2all stages = new ff_all2all();
         stages.combine_farm(stage1,stage2);

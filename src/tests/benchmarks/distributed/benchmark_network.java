@@ -62,7 +62,6 @@ public class benchmark_network {
 
         if (startE) E.addOutputChannel(new ff_queue_TCP(ff_queue_TCP.OUTPUT, 1, host));
         if (startF) F.addInputChannel(new ff_queue_TCP(ff_queue_TCP.INPUT, 1));
-        F.addOutputChannel(new ff_queue());
 
         customWatch w = new customWatch();
         w.start();

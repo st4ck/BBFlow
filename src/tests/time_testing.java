@@ -31,7 +31,6 @@ public class time_testing {
 
         ff_pipeline<Integer,Integer> pipe = new ff_pipeline<Integer,Integer>(stage1,stage2,bufferSize);
         pipe.addInputChannel(input_data);
-        pipe.addOutputChannel(new ff_queue<Integer>());
         pipe.start();
 
         myWatch.watch();

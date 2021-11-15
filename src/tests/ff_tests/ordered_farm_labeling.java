@@ -115,7 +115,6 @@ public class ordered_farm_labeling {
         ff_pipeline all = new ff_pipeline(stage1, stage2);
         all.appendBlock(stage3, ff_pipeline.TYPE_1_1);
         all.appendBlock(stage4, ff_pipeline.TYPE_1_1);
-        all.addOutputChannel(new ff_queue());
 
         customWatch x = new customWatch();
         x.start();

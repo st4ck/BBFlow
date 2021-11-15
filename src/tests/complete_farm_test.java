@@ -26,7 +26,6 @@ public class complete_farm_test {
 
         ff_node y = new ff_node<Integer,Integer>(new complete_farm_testOutnode<Integer,Integer>(1));
         y.addInputChannel(farm_outnode);
-        y.addOutputChannel(new ff_queue<Integer>());
 
         x.start();
         y.start();

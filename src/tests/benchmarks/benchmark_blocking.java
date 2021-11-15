@@ -39,7 +39,6 @@ public class benchmark_blocking {
         bb_settings.BLOCKING = true;
 
         ff_pipeline all = new ff_pipeline(new ff_node(Emitter),new ff_node(Filter1));
-        all.addOutputChannel(new ff_queue());
 
         customWatch w = new customWatch();
         w.start();

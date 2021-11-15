@@ -51,7 +51,6 @@ public class pipelineInline {
 
         ff_pipeline<Integer,String> pipe = new ff_pipeline<>(stage1,stage2,bufferSize);
         pipe.addInputChannel(input_data);
-        pipe.addOutputChannel(new ff_queue<String>());
         pipe.start();
 
         for (int i = 0; i < 10000; i++) {

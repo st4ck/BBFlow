@@ -183,7 +183,7 @@ public class defaultJob<T,U> implements Runnable {
         init();
 
         if (in.size() == 0) { return; } // no input channels
-        if (out.size() == 0) { return; } // no output channels
+        if (out.size() == 0) { addOutputChannel(new ff_queue<>()); } // no output channels
 
         while (true) {
             if (in.size() == 0) {

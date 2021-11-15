@@ -83,7 +83,6 @@ public class combine3 {
         stage2.removeCollector();
         stage2.collector = new ff_node(Filter3);
         stage2.connectWorkersCollector();
-        stage2.addOutputChannel(new ff_queue());
 
         stage2.start();
         stage1.start();

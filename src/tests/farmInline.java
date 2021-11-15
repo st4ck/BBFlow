@@ -53,7 +53,6 @@ public class farmInline {
         x.addOutputChannel(farm_outnode);
         ff_node y = new ff_node<>(outNode);
         y.addInputChannel(farm_outnode);
-        y.addOutputChannel(new ff_queue<Integer>());
 
         x.start();
         y.start();

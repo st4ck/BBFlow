@@ -11,7 +11,7 @@ public class benchmark_network_farm {
         preloader.preloadJVM();
 
         int n = 1000;
-        int start_nodes = 0;
+        int start_nodes = -1;
         String host_EC = "127.0.0.1";
         String host_W = "127.0.0.1";
         if (args.length > 0) {
@@ -71,7 +71,6 @@ public class benchmark_network_farm {
         if (startEC) {
             farm.emitter = new ff_node(Emitter);
             farm.collector = new ff_node(new defaultCollector<Long>());
-            farm.collector.addOutputChannel(new ff_queue());
         }
 
         // connect emitter, workers and collector with network channels
