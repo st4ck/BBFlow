@@ -4,16 +4,17 @@ import bbflow.*;
 import bbflow_network.*;
 
 /**
- * Benchmark of two nodes connected each other with a network channel (TCP)
+ * Two nodes connected each other with a network channel (TCP)
  */
 public class pipeline_network {
     public static void main (String[] args) {
         preloader.preloadJVM();
 
         boolean node1 = false;
-        String host = "127.0.0.1";
+        String host;
         if (args.length < 2) {
             System.out.println("Please specify which node to start and the host");
+            return;
         } else {
             if (Integer.parseInt(args[0]) == 0) { node1 = true; }
             host = args[1]; // host for the client node
