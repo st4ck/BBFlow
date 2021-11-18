@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * For more details see run() function doc
  * @param <T> Custom type of the channels
  */
-public class defaultJob<T,U> implements Runnable {
+public class defaultJob<T,U> implements Runnable, Serializable {
     public LinkedList<ff_queue<T>> in = new LinkedList<>();
     public LinkedList<ff_queue<U>> out = new LinkedList<>();
 
