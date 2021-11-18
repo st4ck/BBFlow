@@ -3,6 +3,9 @@ package tests;
 import bbflow.defaultJob;
 import bbflow.ff_queue;
 
+/**
+ * a defaultJob used for the thesis
+ */
 public class myjob extends defaultJob<Long,Long> {
     public void runJob() throws InterruptedException {
         Long received;

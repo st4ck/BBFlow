@@ -4,6 +4,9 @@ import bbflow.*;
 
 import java.util.LinkedList;
 
+/**
+ * Various tests used for the thesis
+ */
 public class manual_examples {
     public static void main (String[] args) {
         /*defaultJob <Long, Long> Worker1 = new defaultJob<>() {
