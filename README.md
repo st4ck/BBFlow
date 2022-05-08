@@ -71,3 +71,6 @@ There are different examples in src/tests directory to run and to take inspirati
 
 ### JavaDoc Documentation
 JavaDoc Documentation can be found at https://st4ck.github.io/BBFlow/
+
+### Detailed Documentation
+A detailed documentation about development, programming choices and architecture can be found here https://www.cyberdynamic.eu/BBFlow_documentation.pdf
