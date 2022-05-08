@@ -27,6 +27,7 @@ public class SOMData {
     public static final int FINISHED = 4;
     public static final int LEARN_FINISHED = 5;
     public static final int LEARN_NEIGHBOURS = 6;
+    public static final int SEARCH_FINISHED = 7;
 
     public static final int LISTEN_NEIGHBOURS = 0;
     public static final int LISTEN_COMMAND = 1;

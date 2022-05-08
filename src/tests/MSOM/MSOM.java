@@ -93,6 +93,26 @@ public class MSOM {
         all.emitter.addInputChannel(feedback);
     }
 
+    public void randomize(int low, int high, double divider) {
+        for (int i=0; i<soms.size(); i++) {
+            ((SOM)soms.get(i).mynode.job).randomize(low,high,divider);
+        }
+    }
+
+    public LinkedList<SOMData> getResults() {
+        return ((Emitter)all.emitter.mynode.job).results;
+    }
+
+    public SOMData getOlderResult() {
+        if (((Emitter)all.emitter.mynode.job).results.size() > 0) {
+            SOMData result = ((Emitter) all.emitter.mynode.job).results.get(0);
+            ((Emitter) all.emitter.mynode.job).results.remove(0);
+            return result;
+        } else {
+            return null;
+        }
+    }
+
     public void start() {
         for (int x=0; x<split; x++) {
             for (int y = 0; y < split; y++) {

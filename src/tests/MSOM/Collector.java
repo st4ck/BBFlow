@@ -89,12 +89,35 @@ public class Collector extends defaultCollector<SOMData> {
                 received.searchResult = result;
                 received.from = -1;
                 sendOut(received);
-                for (int i=0; i<in.size(); i++) {
+                for (int i = 0; i < in.size(); i++) {
                     ignore_channels[i] = false;
                 }
                 listeningState = WAITSINGLE;
                 waitingnode = result.id;
 
+            }
+        } else if (received.dataType == SOMData.SEARCH) {
+            ignore_channels[last_position] = true;
+
+            receivedcount++;
+            if (result.bestdist > received.searchResult.bestdist) {
+                result.bestdist = received.searchResult.bestdist;
+                result.besti = received.searchResult.besti;
+                result.bestj = received.searchResult.bestj;
+                result.id = received.from;
+                result.split = this.split;
+            }
+
+            if (receivedcount == parts) {
+                received.dataType = SOMData.SEARCH_FINISHED;
+                receivedcount = 0;
+                received.searchResult = result;
+                received.from = -1;
+                sendOut(received);
+                for (int i = 0; i < in.size(); i++) {
+                    ignore_channels[i] = false;
+                }
+                listeningState = defaultCollector.ROUNDROBIN;
             }
         } else if (received.dataType == SOMData.EOS) {
             in = new LinkedList<>();

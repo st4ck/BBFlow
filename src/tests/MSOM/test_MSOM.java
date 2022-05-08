@@ -69,6 +69,8 @@ public class test_MSOM {
     private static void testMSOM(int size, int split) {
         int depth = 3;
         MSOM z = new MSOM(size,depth,split);
+        z.randomize(0,255,1);
+
         ArrayList<Double> vector = new ArrayList<>();
         for (int j=0; j<depth; j++) {
             vector.add(Math.random()*255);

@@ -153,8 +153,6 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         this.size = w;
         this.depth = d;
         this.id = id;
-
-        randomize();
     }
 
     public SOM(int w, int h, int d, double[][][] som, int id) {
@@ -164,12 +162,22 @@ public class SOM extends defaultWorker<SOMData, SOMData> {
         this.id = id;
     }
 
-    void randomize() {
+    /**
+     * @param low lowest random number generated
+     * @param high highest random number generated
+     * @param divider the random number generated will be divided by divider. If divider is 1, the random number will be an integer. If divider is 0, SOM will be initialized to 0
+     */
+    void randomize(int low, int high, double divider) {
         for (int w=0; w<size; w++) {
             for (int h=0; h<size; h++) {
                 for (int d=0; d<depth; d++) {
-                    som[w][h][d] = (int)(Math.random()*255);
-                    //som[w][h][d] = 0;
+                    if (divider == 1) {
+                        som[w][h][d] = (int) (low + (Math.random() * high));
+                    } else if (divider == 0) {
+                        som[w][h][d] = 0;
+                    } else {
+                        som[w][h][d] = (low + (Math.random() * high))/divider;
+                    }
                 }
             }
         }

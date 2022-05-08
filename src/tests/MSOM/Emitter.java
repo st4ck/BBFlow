@@ -13,6 +13,8 @@ public class Emitter extends defaultEmitter<SOMData> {
 
     boolean commandRunning = false;
 
+    public LinkedList<SOMData> results = new LinkedList<>();
+
     @Override
     public void runJob() {
         try {
@@ -52,6 +54,9 @@ public class Emitter extends defaultEmitter<SOMData> {
                         }
                     }
                     return;
+                } else if (element.dataType == SOMData.SEARCH_FINISHED){
+                    results.add(element);
+                    if (MSOM.DEBUG) System.out.println("Result available");
                 } else {
                     if (MSOM.DEBUG) System.out.println("finished feedback");
                 }
