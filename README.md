@@ -1,7 +1,8 @@
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://github.com/st4ck/BBFlow/blob/master/LICENSE)
 
 # BBFlow
-Java implementation of Fastflow's Bulding Blocks
+Java implementation of a parallel programming framework based on concept of building blocks.
+This work, started as a master's degree thesis, is inspired by FastFlow bulding blocks implementation.
 
 ### Sequential Building Blocks
 
